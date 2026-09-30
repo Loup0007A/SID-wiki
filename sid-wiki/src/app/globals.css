@@ -1,0 +1,33 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+body {
+  @apply bg-kraft-100 text-ink font-body;
+  background-image: radial-gradient(rgba(0, 0, 0, 0.04) 1px, transparent 1px);
+  background-size: 14px 14px;
+}
+
+@layer components {
+  .card {
+    @apply rounded border-2 border-olive-800/40 bg-kraft-50 shadow-sm;
+  }
+  .btn {
+    @apply inline-flex items-center justify-center rounded border-2 border-olive-800 bg-olive-700 px-3 py-1.5 font-typewriter text-sm uppercase tracking-wider text-kraft-50 transition hover:bg-olive-800 disabled:opacity-50;
+  }
+  .btn-ghost {
+    @apply inline-flex items-center justify-center rounded border-2 border-olive-800/60 px-3 py-1.5 font-typewriter text-sm uppercase tracking-wider text-olive-800 transition hover:bg-kraft-200 disabled:opacity-50;
+  }
+  .btn-danger {
+    @apply inline-flex items-center justify-center rounded border-2 border-stamp px-3 py-1.5 font-typewriter text-sm uppercase tracking-wider text-stamp transition hover:bg-stamp hover:text-kraft-50 disabled:opacity-50;
+  }
+  .input {
+    @apply w-full rounded border-2 border-olive-800/40 bg-kraft-50 px-3 py-2 font-body text-ink outline-none focus:border-brass-500;
+  }
+  .label {
+    @apply mb-1 block font-typewriter text-xs uppercase tracking-widest text-olive-800;
+  }
+  .stamp {
+    @apply inline-block rotate-[-4deg] border-2 border-stamp px-2 py-0.5 font-typewriter text-xs font-bold uppercase tracking-widest text-stamp;
+  }
+}
