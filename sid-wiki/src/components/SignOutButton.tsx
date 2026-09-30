@@ -7,7 +7,7 @@ export default function SignOutButton() {
   const router = useRouter();
   return (
     <button
-      className="font-typewriter text-xs uppercase tracking-wider text-kraft-200 hover:text-brass-300"
+      className="font-typewriter text-xs font-bold text-olive-700 hover:text-stamp"
       onClick={async () => {
         await createClient().auth.signOut();
         router.replace('/login');

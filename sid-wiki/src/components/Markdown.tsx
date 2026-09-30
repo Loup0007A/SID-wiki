@@ -11,7 +11,7 @@ import { isCategory, preprocessWikiLinks } from '@/lib/wiki';
  */
 export default function Markdown({ children }: { children: string }) {
   return (
-    <div className="prose prose-stone max-w-none prose-headings:font-typewriter prose-headings:uppercase prose-headings:tracking-wide prose-a:text-olive-700">
+    <div className="prose prose-stone max-w-none prose-headings:font-typewriter prose-headings:text-olive-800 prose-a:text-olive-700">
       <ReactMarkdown
         remarkPlugins={[remarkGfm]}
         components={{

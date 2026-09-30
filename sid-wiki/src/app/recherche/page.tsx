@@ -18,20 +18,20 @@ export default async function SearchPage({ searchParams }: { searchParams: { q?:
 
   return (
     <div>
-      <h1 className="mb-4 font-typewriter text-3xl font-bold uppercase tracking-widest text-olive-800">Recherche</h1>
+      <h1 className="mb-4 font-typewriter text-3xl font-bold text-olive-800">Recherche</h1>
       <form className="mb-6 flex gap-2">
-        <input name="q" defaultValue={q} type="search" autoFocus placeholder="Titre, texte, tag, numéro…" className="input" />
-        <button className="btn">Chercher</button>
+        <input name="q" defaultValue={q} type="search" autoFocus placeholder="Monstre, arme, lieu, tag, numéro…" className="input" />
+        <button className="btn">Fouiner !</button>
       </form>
 
-      {q && results.length === 0 && <p className="italic text-olive-700">Aucun résultat pour « {q} ».</p>}
+      {q && results.length === 0 && <p className="italic text-olive-700">Rien trouvé pour « {q} »… peut-être pas encore découvert !</p>}
 
       {CATEGORIES.map((c) => {
         const list = results.filter((r) => r.category === c);
         if (list.length === 0) return null;
         return (
           <section key={c} className="mb-8">
-            <h2 className="mb-2 font-typewriter text-lg uppercase tracking-widest">
+            <h2 className="mb-2 font-typewriter text-lg">
               {CATEGORY_LABELS[c].icon} {CATEGORY_LABELS[c].label} ({list.length})
             </h2>
             <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">

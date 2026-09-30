@@ -20,31 +20,36 @@ export default async function EntryPage({ params }: { params: { category: string
   const entry = data as EntryFull;
   const isAdmin = entry.id !== null;
   const label = CATEGORY_LABELS[entry.category];
-  const hiddenForUser = !entry.discovered;
-  const showMasked = hiddenForUser && entry.title === null;
+  const showMasked = !entry.discovered;
 
   return (
     <article className="mx-auto max-w-3xl">
-      <nav className="mb-3 font-typewriter text-xs uppercase tracking-widest text-olive-700">
-        <Link href="/" className="hover:underline">Archives</Link> /{' '}
+      <nav className="mb-3 font-typewriter text-xs text-olive-700">
+        <Link href="/" className="hover:underline">Accueil</Link> /{' '}
         <Link href={`/${entry.category}`} className="hover:underline">{label.label}</Link> / N° {pad(entry.number)}
       </nav>
 
       {showMasked ? (
         <div className="card p-10 text-center">
           <div className="text-8xl font-bold text-olive-800/50">?</div>
-          <p className="mt-3 font-typewriter uppercase tracking-widest">
+          <p className="mt-3 font-typewriter">
             {label.singular} N° {pad(entry.number)}
           </p>
-          <span className="stamp mt-3">Classifié — non découvert</span>
+          <span className="stamp mt-3">À découvrir en chasse !</span>
+          {isAdmin && (
+            <div className="mt-4">
+              <Link href={`/admin/edit/${entry.category}/${pad(entry.number)}`} className="btn-ghost">
+                Modifier (admin)
+              </Link>
+            </div>
+          )}
         </div>
       ) : (
         <div className="card p-6">
           <div className="flex flex-wrap items-start justify-between gap-2">
             <h1 className="text-3xl font-bold">{entry.title}</h1>
             <div className="flex items-center gap-2">
-              {hiddenForUser && <span className="stamp">Masqué au public</span>}
-              {isAdmin && (
+                            {isAdmin && (
                 <Link href={`/admin/edit/${entry.category}/${pad(entry.number)}`} className="btn-ghost">
                   Modifier
                 </Link>
@@ -58,7 +63,7 @@ export default async function EntryPage({ params }: { params: { category: string
                 <Link
                   key={t}
                   href={`/${entry.category}?tag=${encodeURIComponent(t)}`}
-                  className="rounded bg-brass-300/50 px-1.5 py-0.5 font-typewriter text-xs uppercase hover:bg-brass-300"
+                  className="rounded bg-brass-300/50 px-1.5 py-0.5 font-typewriter text-xs hover:bg-brass-300"
                 >
                   #{t}
                 </Link>
@@ -81,12 +86,12 @@ export default async function EntryPage({ params }: { params: { category: string
 
           {entry.related.length > 0 && (
             <section className="mt-8 border-t-2 border-olive-800/30 pt-4">
-              <h2 className="mb-2 font-typewriter text-sm uppercase tracking-widest text-olive-800">Voir aussi</h2>
+              <h2 className="mb-2 font-typewriter text-sm text-olive-800">Voir aussi</h2>
               <ul className="flex flex-wrap gap-x-5 gap-y-2">
                 {entry.related.map((r) => (
                   <li key={`${r.category}/${r.number}`}>
                     <EntryLink category={r.category} number={r.number}>
-                      {r.title ?? `? (${r.category} ${pad(r.number)})`}
+                      {r.title ?? '?'}
                     </EntryLink>
                   </li>
                 ))}

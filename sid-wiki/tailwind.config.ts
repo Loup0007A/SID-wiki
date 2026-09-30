@@ -1,37 +1,41 @@
 import type { Config } from 'tailwindcss';
 import typography from '@tailwindcss/typography';
 
+// Les noms de tokens (kraft / olive / brass / stamp / ink) sont conservés,
+// mais la palette est maintenant bleu ciel :
+//   kraft = bleus très clairs (fonds, verre)   olive = bleus profonds (texte, boutons)
+//   brass = jaune soleil (accents)             stamp = corail (alertes, « ? »)
 const config: Config = {
   content: ['./src/**/*.{ts,tsx}'],
   theme: {
     extend: {
       colors: {
         kraft: {
-          50: '#f7f0e2',
-          100: '#eee0c4',
-          200: '#e0cba0',
-          300: '#cdb27c',
-          400: '#b89659',
-          500: '#9a7a43',
+          50: '#f4fbff',
+          100: '#e3f4ff',
+          200: '#c9e9fb',
+          300: '#a5d8f5',
+          400: '#7cc3ee',
+          500: '#4fa8e0',
         },
         olive: {
-          600: '#4d5a22',
-          700: '#3f4a1c',
-          800: '#2f3815',
-          900: '#1f260e',
+          600: '#2f7fd1',
+          700: '#2563b8',
+          800: '#1c4a94',
+          900: '#14336b',
         },
         brass: {
-          300: '#e3c67c',
-          400: '#cfa64c',
-          500: '#b08d3c',
-          600: '#8f6f2b',
+          300: '#ffe08a',
+          400: '#ffcb45',
+          500: '#f5a623',
+          600: '#d98614',
         },
-        ink: '#2b2419',
-        stamp: '#a3241f',
+        ink: '#16305a',
+        stamp: '#ef5b4c',
       },
       fontFamily: {
-        typewriter: ['"Courier New"', 'Courier', 'monospace'],
-        body: ['Georgia', '"Times New Roman"', 'serif'],
+        typewriter: ['"Baloo 2"', 'system-ui', 'sans-serif'],
+        body: ['Nunito', 'system-ui', 'sans-serif'],
       },
     },
   },

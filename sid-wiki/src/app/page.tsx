@@ -17,12 +17,12 @@ export default async function HomePage() {
 
   return (
     <div>
-      <h1 className="mb-1 font-typewriter text-3xl font-bold uppercase tracking-widest text-olive-800">Archives</h1>
-      <p className="mb-6 text-olive-700">Tout ce que la S.I.D. a répertorié — le reste demeure classifié.</p>
+      <h1 className="mb-1 font-typewriter text-3xl font-bold text-olive-800">Bienvenue, chasseur !</h1>
+      <p className="mb-6 text-olive-700">Retrouve ici tout ce que la S.I.D. a déjà croisé en chasse. Le reste ? Il reste à découvrir !</p>
 
       <form action="/recherche" className="mb-8 flex gap-2">
-        <input name="q" type="search" placeholder="Rechercher une fiche, un tag, un numéro…" className="input" />
-        <button className="btn">Chercher</button>
+        <input name="q" type="search" placeholder="Un monstre, une arme, un lieu, un tag, un numéro…" className="input" />
+        <button className="btn">Fouiner !</button>
       </form>
 
       <div className="grid gap-4 sm:grid-cols-2">
@@ -32,7 +32,7 @@ export default async function HomePage() {
           return (
             <Link key={c} href={`/${c}`} className="card p-5 transition hover:-translate-y-0.5 hover:border-brass-500">
               <div className="text-3xl">{CATEGORY_LABELS[c].icon}</div>
-              <h2 className="mt-2 font-typewriter text-xl font-bold uppercase tracking-widest">{CATEGORY_LABELS[c].label}</h2>
+              <h2 className="mt-2 font-typewriter text-xl font-bold">{CATEGORY_LABELS[c].label}</h2>
               <p className="text-sm text-olive-700">
                 {s.found} / {s.total} découvert{s.found > 1 ? 's' : ''}
               </p>

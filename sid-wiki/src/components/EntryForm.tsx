@@ -124,7 +124,7 @@ export default function EntryForm({ initial }: { initial: FormEntry }) {
 
   return (
     <form onSubmit={save} className="mx-auto max-w-4xl space-y-5">
-      <h1 className="font-typewriter text-3xl font-bold uppercase tracking-widest text-olive-800">
+      <h1 className="font-typewriter text-3xl font-bold text-olive-800">
         {isNew ? 'Nouvelle fiche' : `Modifier ${category} ${pad(initial.number)}`}
       </h1>
 
@@ -143,7 +143,7 @@ export default function EntryForm({ initial }: { initial: FormEntry }) {
         </div>
         <label className="flex items-end gap-2 pb-2">
           <input type="checkbox" checked={discovered} onChange={(e) => setDiscovered(e.target.checked)} className="h-5 w-5" />
-          <span className="font-typewriter text-sm uppercase tracking-wider">Découvert</span>
+          <span className="font-typewriter text-sm">Découvert</span>
         </label>
 
         <div className="sm:col-span-3">

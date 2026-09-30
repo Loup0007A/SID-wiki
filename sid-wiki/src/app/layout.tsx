@@ -3,8 +3,8 @@ import './globals.css';
 import Header from '@/components/Header';
 
 export const metadata: Metadata = {
-  title: 'Archives S.I.D. — Wiki',
-  description: 'Le wiki de la Section d’Intervention Discrète',
+  title: 'Wiki du S.I.D.',
+  description: 'Le wiki de la S.I.D. : lieux, armes, monstres et trésors à découvrir !',
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {

@@ -30,11 +30,11 @@ export default function LoginPage() {
   return (
     <div className="mx-auto mt-16 max-w-sm">
       <div className="card p-6">
-        <span className="stamp">Accès restreint</span>
-        <h1 className="mb-1 mt-3 font-typewriter text-2xl font-bold uppercase tracking-widest text-olive-800">
-          Archives S.I.D.
+        <span className="stamp">Chasseurs uniquement !</span>
+        <h1 className="mb-1 mt-3 font-typewriter text-2xl font-bold text-olive-800">
+          Wiki du S.I.D.
         </h1>
-        <p className="mb-5 text-sm text-olive-700">Utilise le compte de ton Dossier Central.</p>
+        <p className="mb-5 text-sm text-olive-700">Connecte-toi avec ton compte de chasseur (celui du Dossier Central).</p>
 
         <form onSubmit={onSubmit} className="space-y-4">
           <div>
@@ -47,13 +47,13 @@ export default function LoginPage() {
           </div>
           {error && <p className="text-sm text-stamp">{error}</p>}
           <button className="btn w-full" disabled={loading}>
-            {loading ? 'Connexion…' : 'Se connecter'}
+            {loading ? 'Connexion…' : 'En chasse !'}
           </button>
         </form>
 
         {applyUrl && (
           <p className="mt-4 text-center text-sm">
-            <a href={applyUrl} className="underline">Pas de compte ? Candidater</a>
+            <a href={applyUrl} className="underline">Pas encore de compte ? Rejoins la chasse !</a>
           </p>
         )}
       </div>

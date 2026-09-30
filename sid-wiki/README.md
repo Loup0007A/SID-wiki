@@ -5,7 +5,7 @@ Wiki RP (lieux, armes, mobs, objets) branché sur le **même projet Supabase** q
 ## Installation
 
 1. `cp .env.example .env.local` et renseigne l'URL + la clé **anon** du projet Supabase existant.
-2. Exécute `supabase/migrations/0200_wiki.sql` dans le SQL Editor (après tes migrations existantes).
+2. Exécute `supabase/migrations/0200_wiki.sql` puis `0201_wiki_hide_names_for_admins.sql` dans le SQL Editor.
 3. Donne la permission `manage_wiki` à un rôle (bloc commenté en fin de migration — adapte les noms de colonnes de `role_permissions`). Le Fondateur l'a d'office via `has_permission`.
 4. `npm install && npm run dev`
 

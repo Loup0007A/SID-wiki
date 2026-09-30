@@ -68,7 +68,7 @@ export default function AdminDashboard() {
   return (
     <div>
       <div className="mb-4 flex flex-wrap items-center justify-between gap-3">
-        <h1 className="font-typewriter text-3xl font-bold uppercase tracking-widest text-olive-800">Dashboard</h1>
+        <h1 className="font-typewriter text-3xl font-bold text-olive-800">Dashboard</h1>
         <Link href={`/admin/edit/${category}/new`} className="btn">
           + Nouvelle fiche
         </Link>
@@ -93,7 +93,7 @@ export default function AdminDashboard() {
 
       <div className="card overflow-x-auto">
         <table className="w-full text-left text-sm">
-          <thead className="border-b-2 border-olive-800/40 font-typewriter uppercase tracking-wider">
+          <thead className="border-b-2 border-olive-800/40 font-typewriter">
             <tr>
               <th className="p-2">N°</th>
               <th className="p-2">Titre</th>

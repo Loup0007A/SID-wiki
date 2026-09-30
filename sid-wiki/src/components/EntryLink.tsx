@@ -63,17 +63,17 @@ export default function EntryLink({
       {open && (
         <span
           role="tooltip"
-          className="absolute left-0 top-full z-50 mt-1 block w-72 rounded border-2 border-olive-800 bg-kraft-50 p-3 text-left text-sm font-normal text-ink shadow-lg"
+          className="absolute left-0 top-full z-50 mt-1 block w-72 rounded border border-white/80 bg-white/70 backdrop-blur-xl p-3 text-left text-sm font-normal text-ink shadow-lg"
         >
           {!preview && <span className="italic text-olive-700">Chargement…</span>}
           {preview && !preview.exists && <span className="italic">Fiche inexistante.</span>}
           {preview && preview.exists && !preview.discovered && (
             <span className="block">
-              <span className="block font-typewriter text-xs uppercase tracking-widest text-olive-700">
+              <span className="block font-typewriter text-xs text-olive-700">
                 {category} · {pad(number)}
               </span>
               <span className="block text-2xl font-bold text-stamp">?</span>
-              <span className="italic">Non découvert.</span>
+              <span className="italic">À découvrir !</span>
             </span>
           )}
           {preview && preview.exists && preview.discovered && (
@@ -83,7 +83,7 @@ export default function EntryLink({
                 <img src={preview.image_url} alt="" className="h-16 w-16 flex-none rounded border border-olive-800/40 object-cover" />
               )}
               <span className="block min-w-0">
-                <span className="block font-typewriter text-xs uppercase tracking-widest text-olive-700">
+                <span className="block font-typewriter text-xs text-olive-700">
                   {category} · {pad(number)}
                 </span>
                 <span className="block font-bold">{preview.title}</span>

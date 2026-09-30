@@ -16,34 +16,29 @@ export default async function Header() {
   }
 
   return (
-    <header className="border-b-4 border-olive-800 bg-olive-700 text-kraft-50">
-      <div className="mx-auto flex max-w-6xl flex-wrap items-center gap-x-6 gap-y-2 px-4 py-3">
-        <Link href="/" className="font-typewriter text-lg font-bold uppercase tracking-widest text-brass-300">
-          S.I.D. · Archives
+    <header className="sticky top-0 z-40 border-b border-white/70 bg-white/40 shadow-[0_4px_24px_rgba(37,99,184,0.12)] backdrop-blur-xl">
+      <div className="mx-auto flex max-w-6xl flex-wrap items-center gap-x-5 gap-y-2 px-4 py-3">
+        <Link href="/" className="font-typewriter text-2xl font-extrabold text-olive-700">
+          ⚔️ Wiki du <span className="rounded-lg bg-brass-400 px-2 text-ink">S.I.D.</span>
         </Link>
 
         {user && (
           <>
-            <nav className="flex flex-wrap gap-4 font-typewriter text-sm uppercase tracking-wider">
+            <nav className="flex flex-wrap gap-1 font-typewriter text-base font-bold">
               {CATEGORIES.map((c) => (
-                <Link key={c} href={`/${c}`} className="hover:text-brass-300">
-                  {CATEGORY_LABELS[c].label}
+                <Link key={c} href={`/${c}`} className="rounded-full px-3 py-1 text-olive-800 transition hover:bg-white/70">
+                  {CATEGORY_LABELS[c].icon} {CATEGORY_LABELS[c].label}
                 </Link>
               ))}
               {isAdmin && (
-                <Link href="/admin" className="text-brass-300 hover:text-brass-400">
-                  Dashboard
+                <Link href="/admin" className="rounded-full bg-brass-400 px-3 py-1 text-ink transition hover:bg-brass-300">
+                  🛠 Dashboard
                 </Link>
               )}
             </nav>
 
             <form action="/recherche" className="ml-auto flex items-center gap-2">
-              <input
-                name="q"
-                type="search"
-                placeholder="Rechercher…"
-                className="w-44 rounded border border-kraft-300 bg-kraft-50 px-2 py-1 text-sm text-ink outline-none focus:border-brass-400 sm:w-60"
-              />
+              <input name="q" type="search" placeholder="🔍 Rechercher…" className="input !w-44 !rounded-full !py-1 text-sm sm:!w-60" />
             </form>
             <SignOutButton />
           </>

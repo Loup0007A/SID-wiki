@@ -41,7 +41,7 @@ export default async function CategoryPage({
 
   return (
     <div>
-      <h1 className="mb-4 font-typewriter text-3xl font-bold uppercase tracking-widest text-olive-800">
+      <h1 className="mb-4 font-typewriter text-3xl font-bold text-olive-800">
         {CATEGORY_LABELS[category].icon} {CATEGORY_LABELS[category].label}
       </h1>
 
@@ -61,7 +61,7 @@ export default async function CategoryPage({
       </div>
 
       {entries.length === 0 ? (
-        <p className="italic text-olive-700">Aucune fiche.</p>
+        <p className="italic text-olive-700">Rien ici pour l’instant !</p>
       ) : (
         <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
           {entries.map((e) => (
