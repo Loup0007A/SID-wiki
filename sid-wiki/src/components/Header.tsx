@@ -30,6 +30,12 @@ export default async function Header() {
                   {CATEGORY_LABELS[c].icon} {CATEGORY_LABELS[c].label}
                 </Link>
               ))}
+              <Link href="/favoris" className="rounded-full px-3 py-1 text-olive-800 transition hover:bg-white/70">
+                ⭐ Favoris
+              </Link>
+              <Link href="/hasard" className="rounded-full px-3 py-1 text-olive-800 transition hover:bg-white/70">
+                🎲
+              </Link>
               {isAdmin && (
                 <Link href="/admin" className="rounded-full bg-brass-400 px-3 py-1 text-ink transition hover:bg-brass-300">
                   🛠 Dashboard
@@ -38,7 +44,7 @@ export default async function Header() {
             </nav>
 
             <form action="/recherche" className="ml-auto flex items-center gap-2">
-              <input name="q" type="search" placeholder="🔍 Rechercher…" className="input !w-44 !rounded-full !py-1 text-sm sm:!w-60" />
+              <input id="global-search" name="q" type="search" placeholder="🔍 Rechercher… ( / )" className="input !w-44 !rounded-full !py-1 text-sm sm:!w-60" />
             </form>
             <SignOutButton />
           </>

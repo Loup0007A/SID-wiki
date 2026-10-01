@@ -29,6 +29,10 @@ export default async function EditPage({ params }: { params: { category: string;
       tags: [],
       discovered: false,
       discovered_by: null,
+      rarity: null,
+      infobox: [],
+      model_url: null,
+      model_animation: null,
       links: [],
     };
     return <EntryForm initial={empty} />;
@@ -68,6 +72,10 @@ export default async function EditPage({ params }: { params: { category: string;
         tags: entry.tags ?? [],
         discovered: entry.discovered,
         discovered_by: entry.discovered_by ?? null,
+        rarity: entry.rarity ?? null,
+        infobox: Array.isArray(entry.infobox) ? entry.infobox : [],
+        model_url: entry.model_url ?? null,
+        model_animation: entry.model_animation ?? null,
         links,
       }}
     />

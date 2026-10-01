@@ -1,4 +1,4 @@
-export const CATEGORIES = ['lieux', 'armes', 'mobs', 'objets'] as const;
+export const CATEGORIES = ['lieux', 'armes', 'mobs', 'objets', 'skills'] as const;
 export type Category = (typeof CATEGORIES)[number];
 
 export const CATEGORY_LABELS: Record<Category, { label: string; singular: string; icon: string }> = {
@@ -6,7 +6,13 @@ export const CATEGORY_LABELS: Record<Category, { label: string; singular: string
   armes: { label: 'Armes', singular: 'Arme', icon: '⚔' },
   mobs: { label: 'Mobs', singular: 'Mob', icon: '☠' },
   objets: { label: 'Objets', singular: 'Objet', icon: '🎒' },
+  skills: { label: 'Skills', singular: 'Skill', icon: '✨' },
 };
+
+/** Regex d'un lien interne /categorie/NNN */
+export const ENTRY_HREF_RE = new RegExp(`^/(${CATEGORIES.join('|')})/(\\d{1,3})$`);
+
+export type InfoRow = { label: string; value: string };
 
 export function isCategory(v: string): v is Category {
   return (CATEGORIES as readonly string[]).includes(v);
@@ -29,6 +35,17 @@ export type EntrySummary = {
   summary: string | null;
   image_url: string | null;
   tags: string[] | null;
+  rarity: number | null;
+  has_model: boolean;
+};
+
+export type RecentEntry = {
+  category: Category;
+  number: number;
+  title: string;
+  image_url: string | null;
+  discovered_at: string | null;
+  discoverer: string | null;
 };
 
 export type RelatedEntry = {
@@ -50,6 +67,13 @@ export type EntryFull = {
   tags: string[] | null;
   updated_at: string | null;
   discoverer: string | null;
+  infobox: InfoRow[] | null;
+  rarity: number | null;
+  model_url: string | null;
+  model_animation: string | null;
+  favorited: boolean;
+  prev: number | null;
+  next: number | null;
   related: RelatedEntry[];
 };
 
@@ -139,7 +163,7 @@ export function preprocessMentions(md: string): string {
  */
 export function preprocessWikiLinks(md: string): string {
   return md.replace(
-    /\[\[(lieux|armes|mobs|objets)\/(\d{1,3})(?:\|([^\]]+))?\]\]/g,
+    new RegExp(`\\[\\[(${CATEGORIES.join('|')})/(\\d{1,3})(?:\\|([^\\]]+))?\\]\\]`, 'g'),
     (_m, cat: string, num: string, label?: string) =>
       `[${label ?? `${cat}/${pad(parseInt(num, 10))}`}](/${cat}/${pad(parseInt(num, 10))})`
   );

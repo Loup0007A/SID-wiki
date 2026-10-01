@@ -7,6 +7,10 @@ import Mention from '@/components/Mention';
 import Comments from '@/components/Comments';
 import EntryLink from '@/components/EntryLink';
 import AccessDenied from '@/components/AccessDenied';
+import Infobox from '@/components/Infobox';
+import Rarity from '@/components/Rarity';
+import ModelViewer from '@/components/ModelViewer';
+import FavoriteButton from '@/components/FavoriteButton';
 
 export const dynamic = 'force-dynamic';
 
@@ -23,6 +27,7 @@ export default async function EntryPage({ params }: { params: { category: string
   const isAdmin = entry.id !== null;
   const label = CATEGORY_LABELS[entry.category];
   const showMasked = !entry.discovered;
+  const infoRows = (entry.infobox ?? []).filter((r) => r.label);
 
   return (
     <article className="mx-auto max-w-3xl">
@@ -49,9 +54,13 @@ export default async function EntryPage({ params }: { params: { category: string
       ) : (
         <div className="card p-6">
           <div className="flex flex-wrap items-start justify-between gap-2">
-            <h1 className="text-3xl font-bold">{entry.title}</h1>
-            <div className="flex items-center gap-2">
-                            {isAdmin && (
+            <div>
+              <h1 className="text-3xl font-bold">{entry.title}</h1>
+              <Rarity value={entry.rarity} className="text-xl" />
+            </div>
+            <div className="flex flex-wrap items-center gap-2">
+              <FavoriteButton category={entry.category} number={entry.number} initial={entry.favorited} />
+              {isAdmin && (
                 <Link href={`/admin/edit/${entry.category}/${pad(entry.number)}`} className="btn-ghost">
                   Modifier
                 </Link>
@@ -65,17 +74,12 @@ export default async function EntryPage({ params }: { params: { category: string
                 <Link
                   key={t}
                   href={`/${entry.category}?tag=${encodeURIComponent(t)}`}
-                  className="rounded bg-brass-300/50 px-1.5 py-0.5 font-typewriter text-xs hover:bg-brass-300"
+                  className="rounded-full bg-brass-300/60 px-2 py-0.5 font-typewriter text-xs hover:bg-brass-300"
                 >
                   #{t}
                 </Link>
               ))}
             </div>
-          )}
-
-          {entry.image_url && (
-            // eslint-disable-next-line @next/next/no-img-element
-            <img src={entry.image_url} alt={entry.title ?? ''} className="mt-4 max-h-96 w-full rounded border border-olive-800/30 object-cover" />
           )}
 
           {entry.discoverer && (
@@ -86,15 +90,25 @@ export default async function EntryPage({ params }: { params: { category: string
 
           {entry.summary && <p className="mt-4 text-lg italic text-olive-800">{entry.summary}</p>}
 
-          {entry.content && (
+          {entry.model_url && (
             <div className="mt-4">
-              <Markdown toc>{entry.content}</Markdown>
+              <ModelViewer src={entry.model_url} animation={entry.model_animation} />
             </div>
           )}
 
+          {entry.image_url && (
+            // eslint-disable-next-line @next/next/no-img-element
+            <img src={entry.image_url} alt={entry.title ?? ''} className="mt-4 max-h-96 w-full rounded-2xl border border-white/70 object-cover" />
+          )}
+
+          <div className="mt-4 flow-root">
+            <Infobox rows={infoRows} />
+            {entry.content && <Markdown toc>{entry.content}</Markdown>}
+          </div>
+
           {entry.related.length > 0 && (
-            <section className="mt-8 border-t-2 border-olive-800/30 pt-4">
-              <h2 className="mb-2 font-typewriter text-sm text-olive-800">Voir aussi</h2>
+            <section className="mt-8 border-t border-white/70 pt-4">
+              <h2 className="mb-2 font-typewriter text-lg font-bold text-olive-800">Voir aussi</h2>
               <ul className="flex flex-wrap gap-x-5 gap-y-2">
                 {entry.related.map((r) => (
                   <li key={`${r.category}/${r.number}`}>
@@ -106,9 +120,27 @@ export default async function EntryPage({ params }: { params: { category: string
               </ul>
             </section>
           )}
+
           <Comments category={entry.category} number={entry.number} />
         </div>
       )}
+
+      <div className="mt-4 flex justify-between font-typewriter text-sm">
+        {entry.prev !== null ? (
+          <Link href={`/${entry.category}/${pad(entry.prev)}`} className="btn-ghost">
+            ← N° {pad(entry.prev)}
+          </Link>
+        ) : (
+          <span />
+        )}
+        {entry.next !== null ? (
+          <Link href={`/${entry.category}/${pad(entry.next)}`} className="btn-ghost">
+            N° {pad(entry.next)} →
+          </Link>
+        ) : (
+          <span />
+        )}
+      </div>
     </article>
   );
 }
