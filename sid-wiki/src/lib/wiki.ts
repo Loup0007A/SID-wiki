@@ -49,8 +49,89 @@ export type EntryFull = {
   image_url: string | null;
   tags: string[] | null;
   updated_at: string | null;
+  discoverer: string | null;
   related: RelatedEntry[];
 };
+
+export type WikiComment = {
+  id: string;
+  author_id: string;
+  author_nickname: string;
+  body: string;
+  created_at: string;
+  can_delete: boolean;
+};
+
+export type Heading = { level: 1 | 2; text: string; slug: string; number: string; line: number };
+
+export function slugify(text: string): string {
+  return (
+    text
+      .toLowerCase()
+      .normalize('NFD')
+      .replace(/[\u0300-\u036f]/g, '')
+      .replace(/[^a-z0-9]+/g, '-')
+      .replace(/^-+|-+$/g, '') || 'section'
+  );
+}
+
+/**
+ * Titres du contenu, à la Wikipédia : `#` et `##` = section (1, 2…), `###` = sous-section (1.1, 1.2…).
+ * Les blocs de code sont ignorés. Les slugs sont uniques (-2, -3…).
+ */
+export function extractHeadings(md: string): Heading[] {
+  const out: Heading[] = [];
+  const used = new Map<string, number>();
+  let inFence = false;
+  let a = 0;
+  let b = 0;
+
+  const lines = md.split('\n');
+  for (let i = 0; i < lines.length; i++) {
+    const line = lines[i];
+    if (/^\s*(```|~~~)/.test(line)) {
+      inFence = !inFence;
+      continue;
+    }
+    if (inFence) continue;
+    const m = line.match(/^(#{1,3})\s+(.+?)\s*#*\s*$/);
+    if (!m) continue;
+
+    const level: 1 | 2 = m[1].length === 3 ? 2 : 1;
+    const text = m[2].replace(/[*_`]|\[([^\]]*)\]\([^)]*\)/g, '$1').trim();
+    let number: string;
+    if (level === 1) {
+      a += 1;
+      b = 0;
+      number = String(a);
+    } else {
+      if (a === 0) a = 1;
+      b += 1;
+      number = `${a}.${b}`;
+    }
+    const base = slugify(text);
+    const n = (used.get(base) ?? 0) + 1;
+    used.set(base, n);
+    out.push({ level, text, slug: n === 1 ? base : `${base}-${n}`, number, line: i + 1 });
+  }
+  return out;
+}
+
+/** `@pseudo` → lien interne /mention/pseudo (rendu en pastille). Le code est ignoré. */
+export function preprocessMentions(md: string): string {
+  return md
+    .split(/(```[\s\S]*?```|~~~[\s\S]*?~~~|`[^`\n]+`)/g)
+    .map((part, i) =>
+      i % 2 === 1
+        ? part
+        : part.replace(
+            /(^|[^\p{L}\p{N}_@/\\])@([\p{L}\p{N}_](?:[\p{L}\p{N}_.-]{0,30}[\p{L}\p{N}_])?)/gu,
+            (_m, pre: string, nick: string) =>
+              `${pre}[@${nick.replace(/_/g, '\\_')}](/mention/${encodeURIComponent(nick)})`
+          )
+    )
+    .join('');
+}
 
 /**
  * Syntaxe wiki : [[armes/012]] ou [[armes/012|texte affiché]]

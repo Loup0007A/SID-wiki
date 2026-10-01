@@ -1,6 +1,6 @@
 'use client';
 
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { createClient } from '@/lib/supabase/client';
 import { CATEGORIES, CATEGORY_LABELS, pad, type Category } from '@/lib/wiki';
@@ -18,6 +18,7 @@ export type FormEntry = {
   image_url: string | null;
   tags: string[];
   discovered: boolean;
+  discovered_by: string | null;
   links: LinkedEntry[];
 };
 
@@ -34,6 +35,8 @@ export default function EntryForm({ initial }: { initial: FormEntry }) {
   const [imageUrl, setImageUrl] = useState<string | null>(initial.image_url);
   const [tags, setTags] = useState(initial.tags.join(', '));
   const [discovered, setDiscovered] = useState(initial.discovered);
+  const [discoveredBy, setDiscoveredBy] = useState<string>(initial.discovered_by ?? '');
+  const [members, setMembers] = useState<{ id: string; nickname: string }[]>([]);
   const [links, setLinks] = useState<LinkedEntry[]>(initial.links);
   const [preview, setPreview] = useState(false);
   const [saving, setSaving] = useState(false);
@@ -42,6 +45,10 @@ export default function EntryForm({ initial }: { initial: FormEntry }) {
   // Sélecteur de fiches à lier
   const [q, setQ] = useState('');
   const [candidates, setCandidates] = useState<LinkedEntry[]>([]);
+
+  useEffect(() => {
+    supabase.rpc('wiki_members').then(({ data }) => setMembers((data ?? []) as { id: string; nickname: string }[]));
+  }, [supabase]);
 
   async function searchCandidates(value: string) {
     setQ(value);
@@ -81,6 +88,7 @@ export default function EntryForm({ initial }: { initial: FormEntry }) {
       image_url: imageUrl,
       tags: Array.from(new Set(tags.split(',').map((t) => t.trim().toLowerCase()).filter(Boolean))),
       discovered,
+      discovered_by: discoveredBy || null,
     };
 
     let id = initial.id;
@@ -147,6 +155,16 @@ export default function EntryForm({ initial }: { initial: FormEntry }) {
         </label>
 
         <div className="sm:col-span-3">
+          <label className="label">Découvert par (facultatif — affiché « Découvert par @pseudo »)</label>
+          <select className="input" value={discoveredBy} onChange={(e) => setDiscoveredBy(e.target.value)}>
+            <option value="">Personne / anonyme</option>
+            {members.map((m) => (
+              <option key={m.id} value={m.id}>@{m.nickname}</option>
+            ))}
+          </select>
+        </div>
+
+        <div className="sm:col-span-3">
           <label className="label">Titre</label>
           <input className="input" value={title} onChange={(e) => setTitle(e.target.value)} required />
         </div>
@@ -175,7 +193,7 @@ export default function EntryForm({ initial }: { initial: FormEntry }) {
           <textarea className="input min-h-[16rem] font-typewriter text-sm" value={content} onChange={(e) => setContent(e.target.value)} />
         )}
         <p className="mt-2 text-xs text-olive-700">
-          Markdown complet (titres, listes, tableaux, **gras**…). Lie une fiche avec <code>[[armes/012]]</code> ou{' '}
+          Markdown complet (tableaux, **gras**…). Les titres <code>##</code> / <code>###</code> deviennent des sections numérotées avec sommaire. Mentionne un chasseur avec <code>@pseudo</code>. Lie une fiche avec <code>[[armes/012]]</code> ou{' '}
           <code>[[armes/012|texte affiché]]</code> : un aperçu apparaît au survol.
         </p>
       </div>

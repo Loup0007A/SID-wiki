@@ -3,6 +3,8 @@ import { notFound } from 'next/navigation';
 import { createClient } from '@/lib/supabase/server';
 import { CATEGORY_LABELS, isCategory, pad, parseNumber, type EntryFull } from '@/lib/wiki';
 import Markdown from '@/components/Markdown';
+import Mention from '@/components/Mention';
+import Comments from '@/components/Comments';
 import EntryLink from '@/components/EntryLink';
 import AccessDenied from '@/components/AccessDenied';
 
@@ -76,11 +78,17 @@ export default async function EntryPage({ params }: { params: { category: string
             <img src={entry.image_url} alt={entry.title ?? ''} className="mt-4 max-h-96 w-full rounded border border-olive-800/30 object-cover" />
           )}
 
+          {entry.discoverer && (
+            <p className="mt-3 text-sm text-olive-800">
+              🏆 Découvert par <Mention nickname={entry.discoverer} />
+            </p>
+          )}
+
           {entry.summary && <p className="mt-4 text-lg italic text-olive-800">{entry.summary}</p>}
 
           {entry.content && (
             <div className="mt-4">
-              <Markdown>{entry.content}</Markdown>
+              <Markdown toc>{entry.content}</Markdown>
             </div>
           )}
 
@@ -98,6 +106,7 @@ export default async function EntryPage({ params }: { params: { category: string
               </ul>
             </section>
           )}
+          <Comments category={entry.category} number={entry.number} />
         </div>
       )}
     </article>

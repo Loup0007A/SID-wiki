@@ -28,6 +28,7 @@ export default async function EditPage({ params }: { params: { category: string;
       image_url: null,
       tags: [],
       discovered: false,
+      discovered_by: null,
       links: [],
     };
     return <EntryForm initial={empty} />;
@@ -66,6 +67,7 @@ export default async function EditPage({ params }: { params: { category: string;
         image_url: entry.image_url,
         tags: entry.tags ?? [],
         discovered: entry.discovered,
+        discovered_by: entry.discovered_by ?? null,
         links,
       }}
     />
