@@ -1,7 +1,7 @@
 'use client';
 
 import Link from 'next/link';
-import { useRef, useState } from 'react';
+import { useLayoutEffect, useRef, useState } from 'react';
 import { createClient } from '@/lib/supabase/client';
 import { pad } from '@/lib/wiki';
 
@@ -26,6 +26,20 @@ export default function EntryLink({
   const [preview, setPreview] = useState<Preview | null>(cache.get(key) ?? null);
   const [open, setOpen] = useState(false);
   const timer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const tip = useRef<HTMLSpanElement | null>(null);
+  const [shift, setShift] = useState(0);
+
+  // Décale l'infobulle pour qu'elle ne dépasse jamais de l'écran (téléphone)
+  useLayoutEffect(() => {
+    if (!open || !tip.current) return;
+    const r = tip.current.getBoundingClientRect();
+    const margin = 8;
+    const base = r.left - shift;
+    let next = 0;
+    if (base + r.width > window.innerWidth - margin) next = window.innerWidth - margin - (base + r.width);
+    if (base + next < margin) next = margin - base;
+    if (next !== shift) setShift(next);
+  }, [open, preview, shift]);
 
   async function load() {
     if (cache.has(key)) {
@@ -63,7 +77,9 @@ export default function EntryLink({
       {open && (
         <span
           role="tooltip"
-          className="absolute left-0 top-full z-50 mt-1 block w-72 rounded border border-white/80 bg-white/70 backdrop-blur-xl p-3 text-left text-sm font-normal text-ink shadow-lg"
+          ref={tip}
+          style={{ transform: `translateX(${shift}px)` }}
+          className="absolute left-0 top-full z-50 mt-1 block w-72 max-w-[calc(100vw-1rem)] rounded border border-white/80 bg-white/70 backdrop-blur-xl p-3 text-left text-sm font-normal text-ink shadow-lg"
         >
           {!preview && <span className="italic text-olive-700">Chargement…</span>}
           {preview && !preview.exists && <span className="italic">Fiche inexistante.</span>}

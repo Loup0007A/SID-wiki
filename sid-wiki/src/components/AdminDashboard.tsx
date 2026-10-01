@@ -178,13 +178,13 @@ export default function AdminDashboard() {
   return (
     <div>
       <div className="mb-4 flex flex-wrap items-center justify-between gap-3">
-        <h1 className="font-typewriter text-3xl font-bold text-olive-800">🛠 Dashboard</h1>
+        <h1 className="font-typewriter text-2xl font-bold text-olive-800 sm:text-3xl">🛠 Dashboard</h1>
         <Link href={`/admin/edit/${category}/new`} className="btn">
           + Nouvelle fiche
         </Link>
       </div>
 
-      <div className="mb-4 flex flex-wrap gap-2">
+      <div className="-mx-4 mb-4 flex gap-2 overflow-x-auto px-4 pb-1 [scrollbar-width:none] sm:mx-0 sm:flex-wrap sm:overflow-visible sm:px-0 [&>*]:shrink-0 [&>*]:whitespace-nowrap">
         {CATEGORIES.map((c) => (
           <button key={c} onClick={() => setCategory(c)} className={c === category ? 'btn' : 'btn-ghost'}>
             {CATEGORY_LABELS[c].icon} {CATEGORY_LABELS[c].label}
@@ -229,7 +229,7 @@ export default function AdminDashboard() {
       {info && <p className="mb-3 font-bold text-olive-700">{info}</p>}
 
       <div className="card overflow-x-auto">
-        <table className="w-full text-left text-sm">
+        <table className="w-full min-w-[22rem] text-left text-sm">
           <thead className="border-b border-white/70 font-typewriter">
             <tr>
               <th className="p-2">
@@ -237,7 +237,7 @@ export default function AdminDashboard() {
               </th>
               <th className="p-2">N°</th>
               <th className="p-2">Titre</th>
-              <th className="p-2">Tags</th>
+              <th className="hidden p-2 md:table-cell">Tags</th>
               <th className="p-2">Statut</th>
               <th className="p-2 text-right">Actions</th>
             </tr>
@@ -264,7 +264,7 @@ export default function AdminDashboard() {
                   {r.rarity ? <span className="ml-2 text-brass-500">{'★'.repeat(r.rarity)}</span> : null}
                   {r.model_url ? <span className="ml-2" title="Modèle 3D">🎬</span> : null}
                 </td>
-                <td className="p-2">{r.tags.map((t) => `#${t}`).join(' ')}</td>
+                <td className="hidden p-2 md:table-cell">{r.tags.map((t) => `#${t}`).join(' ')}</td>
                 <td className="p-2">
                   {r.discovered ? (
                     <span className="font-semibold text-olive-700">Découvert</span>
@@ -272,16 +272,18 @@ export default function AdminDashboard() {
                     <span className="font-bold text-stamp">? Masqué</span>
                   )}
                 </td>
-                <td className="space-x-2 whitespace-nowrap p-2 text-right">
-                  <button className="btn-ghost !px-3 !py-0.5" onClick={() => setDiscovered([r.id], !r.discovered)}>
-                    {r.discovered ? 'Masquer' : 'Découvrir'}
-                  </button>
-                  <Link className="btn-ghost !px-3 !py-0.5" href={`/admin/edit/${r.category}/${pad(r.number)}`}>
-                    Éditer
-                  </Link>
-                  <button className="btn-danger !px-3 !py-0.5" onClick={() => removeMany([r.id])}>
-                    Suppr.
-                  </button>
+                <td className="p-2">
+                  <div className="flex flex-wrap justify-end gap-1">
+                    <button className="btn-ghost !px-3 !py-0.5" onClick={() => setDiscovered([r.id], !r.discovered)}>
+                      {r.discovered ? 'Masquer' : 'Découvrir'}
+                    </button>
+                    <Link className="btn-ghost !px-3 !py-0.5" href={`/admin/edit/${r.category}/${pad(r.number)}`}>
+                      Éditer
+                    </Link>
+                    <button className="btn-danger !px-3 !py-0.5" onClick={() => removeMany([r.id])}>
+                      Suppr.
+                    </button>
+                  </div>
                 </td>
               </tr>
             ))}

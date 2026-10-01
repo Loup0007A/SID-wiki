@@ -43,3 +43,10 @@ Wiki RP (lieux, armes, mobs, objets, skills) branché sur le **même projet Supa
 - **Raccourci** : `/` met le focus sur la recherche.
 - **Historique des versions** : chaque modification est sauvegardée (50 versions par fiche) ; « Restaurer » recharge une ancienne version dans le formulaire.
 - **Dashboard** : sélection multiple (découvrir / masquer / supprimer en masse), **export** et **import JSON** par catégorie.
+
+## Téléphone et installation
+
+- **Mobile first** : sous 768 px, barre d'onglets en bas (Accueil, Chercher, Favoris, Hasard, Menu), menu coulissant avec les 5 catégories, cartes en 2 colonnes, tableaux markdown défilables, infobulles gardées dans l'écran, boutons de 40 px minimum, champs en 16 px (pas de zoom iOS), barre « Enregistrer » collée en bas dans l'éditeur.
+- **Installable (PWA)** : « Ajouter à l'écran d'accueil » (Android : menu ⋮ → Installer l'application ; iPhone : Partager → Sur l'écran d'accueil). Manifest dans `src/app/manifest.ts`, icônes dans `public/icons/` (remplace-les par les tiennes si tu veux).
+- Pas de mode hors-ligne pour l'instant.
+

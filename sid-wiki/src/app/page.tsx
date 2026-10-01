@@ -25,22 +25,22 @@ export default async function HomePage() {
   return (
     <div>
       <div className="mb-1 flex flex-wrap items-center justify-between gap-3">
-        <h1 className="font-typewriter text-3xl font-bold text-olive-800">Bienvenue, chasseur !</h1>
+        <h1 className="font-typewriter text-2xl font-bold text-olive-800 sm:text-3xl">Bienvenue, chasseur !</h1>
         <Link href="/hasard" className="btn">🎲 Fiche au hasard</Link>
       </div>
       <p className="mb-6 text-olive-700">Retrouve ici tout ce que la S.I.D. a déjà croisé en chasse. Le reste ? Il reste à découvrir !</p>
 
       <form action="/recherche" className="mb-8 flex gap-2">
-        <input name="q" type="search" placeholder="Un monstre, une arme, un skill, un lieu, un tag… (appuie sur / pour chercher partout)" className="input" />
+        <input name="q" type="search" placeholder="Un monstre, une arme, un skill…" className="input" />
         <button className="btn">Fouiner !</button>
       </form>
 
-      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+      <div className="grid grid-cols-2 gap-3 sm:gap-4 lg:grid-cols-3">
         {CATEGORIES.map((c: Category) => {
           const s = stats.get(c) ?? { total: 0, found: 0 };
           const pct = s.total ? Math.round((s.found / s.total) * 100) : 0;
           return (
-            <Link key={c} href={`/${c}`} className="card p-5 transition hover:-translate-y-0.5 hover:border-brass-500">
+            <Link key={c} href={`/${c}`} className="card p-4 transition hover:-translate-y-0.5 hover:border-brass-500 sm:p-5">
               <div className="text-3xl">{CATEGORY_LABELS[c].icon}</div>
               <h2 className="mt-2 font-typewriter text-xl font-bold">{CATEGORY_LABELS[c].label}</h2>
               <p className="text-sm text-olive-700">

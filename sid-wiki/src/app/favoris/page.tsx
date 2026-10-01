@@ -16,7 +16,7 @@ export default async function FavoritesPage() {
       {entries.length === 0 ? (
         <p className="italic text-olive-700">Pas encore de favori. Clique sur « ☆ Ajouter aux favoris » sur une fiche !</p>
       ) : (
-        <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+        <div className="grid grid-cols-2 gap-2 sm:grid-cols-3 sm:gap-3 lg:grid-cols-4">
           {entries.map((e) => (
             <EntryCard key={`${e.category}${e.number}`} entry={e} showCategory />
           ))}

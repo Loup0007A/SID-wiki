@@ -37,7 +37,7 @@ export default async function EntryPage({ params }: { params: { category: string
       </nav>
 
       {showMasked ? (
-        <div className="card p-10 text-center">
+        <div className="card p-8 text-center sm:p-10">
           <div className="text-8xl font-bold text-olive-800/50">?</div>
           <p className="mt-3 font-typewriter">
             {label.singular} N° {pad(entry.number)}
@@ -52,13 +52,13 @@ export default async function EntryPage({ params }: { params: { category: string
           )}
         </div>
       ) : (
-        <div className="card p-6">
+        <div className="card p-4 sm:p-6">
           <div className="flex flex-wrap items-start justify-between gap-2">
             <div>
-              <h1 className="text-3xl font-bold">{entry.title}</h1>
+              <h1 className="text-2xl font-bold sm:text-3xl">{entry.title}</h1>
               <Rarity value={entry.rarity} className="text-xl" />
             </div>
-            <div className="flex flex-wrap items-center gap-2">
+            <div className="flex w-full flex-wrap items-center gap-2 sm:w-auto">
               <FavoriteButton category={entry.category} number={entry.number} initial={entry.favorited} />
               {isAdmin && (
                 <Link href={`/admin/edit/${entry.category}/${pad(entry.number)}`} className="btn-ghost">
@@ -125,7 +125,7 @@ export default async function EntryPage({ params }: { params: { category: string
         </div>
       )}
 
-      <div className="mt-4 flex justify-between font-typewriter text-sm">
+      <div className="mt-4 flex justify-between gap-2 font-typewriter text-sm">
         {entry.prev !== null ? (
           <Link href={`/${entry.category}/${pad(entry.prev)}`} className="btn-ghost">
             ← N° {pad(entry.prev)}

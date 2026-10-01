@@ -41,11 +41,11 @@ export default async function CategoryPage({
 
   return (
     <div>
-      <h1 className="mb-4 font-typewriter text-3xl font-bold text-olive-800">
+      <h1 className="mb-4 font-typewriter text-2xl font-bold text-olive-800 sm:text-3xl">
         {CATEGORY_LABELS[category].icon} {CATEGORY_LABELS[category].label}
       </h1>
 
-      <div className="mb-5 flex flex-wrap items-center gap-2 text-sm">
+      <div className="-mx-4 mb-5 flex items-center gap-2 overflow-x-auto px-4 pb-1 text-sm [scrollbar-width:none] sm:mx-0 sm:flex-wrap sm:overflow-visible sm:px-0 [&>*]:shrink-0 [&>*]:whitespace-nowrap">
         <Link href={q({ show: onlyFound ? undefined : 'found' })} className="btn-ghost">
           {onlyFound ? 'Afficher tout' : 'Découverts seulement'}
         </Link>
@@ -63,7 +63,7 @@ export default async function CategoryPage({
       {entries.length === 0 ? (
         <p className="italic text-olive-700">Rien ici pour l’instant !</p>
       ) : (
-        <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+        <div className="grid grid-cols-2 gap-2 sm:grid-cols-3 sm:gap-3 lg:grid-cols-4">
           {entries.map((e) => (
             <EntryCard key={e.number} entry={e} />
           ))}

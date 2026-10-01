@@ -18,6 +18,16 @@ body {
     radial-gradient(circle at 70% 92%, rgba(124, 195, 238, 0.7) 0, transparent 45%),
     linear-gradient(160deg, #e6f6ff 0%, #bfe3fb 45%, #86c2f2 100%);
   background-attachment: fixed;
+  -webkit-tap-highlight-color: transparent;
+  overflow-wrap: anywhere;
+  overscroll-behavior-y: none;
+}
+
+@media (max-width: 767px) {
+  /* Le fond « fixed » saccade sur iOS/Android : on le fait défiler avec la page */
+  body {
+    background-attachment: scroll;
+  }
 }
 
 @layer components {
@@ -26,16 +36,16 @@ body {
     @apply rounded-2xl border border-white/70 bg-white/40 shadow-[0_8px_32px_rgba(37,99,184,0.15)] backdrop-blur-xl;
   }
   .btn {
-    @apply inline-flex items-center justify-center rounded-full border border-white/60 bg-gradient-to-b from-kraft-500 to-olive-700 px-4 py-1.5 font-typewriter text-base font-bold text-white shadow-md transition hover:-translate-y-0.5 hover:from-kraft-400 hover:to-olive-600 disabled:opacity-50;
+    @apply inline-flex min-h-[2.5rem] items-center justify-center rounded-full border border-white/60 bg-gradient-to-b from-kraft-500 to-olive-700 px-4 py-1.5 font-typewriter text-base font-bold text-white shadow-md transition hover:-translate-y-0.5 hover:from-kraft-400 hover:to-olive-600 disabled:opacity-50;
   }
   .btn-ghost {
-    @apply inline-flex items-center justify-center rounded-full border border-white/70 bg-white/40 px-4 py-1.5 font-typewriter text-base font-bold text-olive-800 backdrop-blur transition hover:bg-white/70 disabled:opacity-50;
+    @apply inline-flex min-h-[2.5rem] items-center justify-center rounded-full border border-white/70 bg-white/40 px-4 py-1.5 font-typewriter text-base font-bold text-olive-800 backdrop-blur transition hover:bg-white/70 disabled:opacity-50;
   }
   .btn-danger {
-    @apply inline-flex items-center justify-center rounded-full border border-stamp/60 bg-white/40 px-4 py-1.5 font-typewriter text-base font-bold text-stamp transition hover:bg-stamp hover:text-white disabled:opacity-50;
+    @apply inline-flex min-h-[2.5rem] items-center justify-center rounded-full border border-stamp/60 bg-white/40 px-4 py-1.5 font-typewriter text-base font-bold text-stamp transition hover:bg-stamp hover:text-white disabled:opacity-50;
   }
   .input {
-    @apply w-full rounded-xl border border-white/80 bg-white/60 px-3 py-2 font-body text-ink outline-none backdrop-blur transition placeholder:text-olive-600/50 focus:border-kraft-500 focus:ring-2 focus:ring-kraft-400/50;
+    @apply w-full rounded-xl border border-white/80 bg-white/60 px-3 py-2 font-body text-base text-ink outline-none backdrop-blur transition placeholder:text-olive-600/50 focus:border-kraft-500 focus:ring-2 focus:ring-kraft-400/50;
   }
   .label {
     @apply mb-1 block font-typewriter text-sm font-bold text-olive-800;

@@ -81,10 +81,10 @@ export default function ModelViewer({ src, animation, onAnimations, showAnimatio
           interaction-prompt="auto"
           auto-rotate={rotate ? '' : undefined}
           animation-name={current ?? undefined}
-          style={{ width: '100%', height: '22rem', background: 'transparent', ['--poster-color' as string]: 'transparent' }}
+          style={{ width: '100%', height: 'clamp(16rem, 70vw, 22rem)', background: 'transparent', ['--poster-color' as string]: 'transparent' }}
         />
       ) : (
-        <div className="flex h-[22rem] items-center justify-center font-typewriter text-olive-700">Chargement du modèle 3D…</div>
+        <div className="flex h-64 items-center justify-center font-typewriter text-olive-700">Chargement du modèle 3D…</div>
       )}
 
       <div className="flex flex-wrap items-center gap-2 border-t border-white/70 bg-white/40 p-2 text-sm">

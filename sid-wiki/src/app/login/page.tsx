@@ -28,7 +28,7 @@ export default function LoginPage() {
   const applyUrl = process.env.NEXT_PUBLIC_DOSSIER_CENTRAL_URL;
 
   return (
-    <div className="mx-auto mt-16 max-w-sm">
+    <div className="mx-auto mt-6 max-w-sm sm:mt-16">
       <div className="card p-6">
         <span className="stamp">Chasseurs uniquement !</span>
         <h1 className="mb-1 mt-3 font-typewriter text-2xl font-bold text-olive-800">

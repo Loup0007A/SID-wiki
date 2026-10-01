@@ -9,7 +9,7 @@ export default function EntryCard({ entry, showCategory = false }: { entry: Entr
   return (
     <Link
       href={`/${entry.category}/${pad(entry.number)}`}
-      className={`card block p-3 transition hover:-translate-y-0.5 hover:border-brass-500 ${hidden ? 'bg-white/25' : ''}`}
+      className={`card block p-2.5 transition sm:p-3 hover:-translate-y-0.5 hover:border-brass-500 ${hidden ? 'bg-white/25' : ''}`}
     >
       <div className="flex items-start justify-between gap-2">
         <span className="font-typewriter text-xs text-olive-700">
@@ -26,7 +26,7 @@ export default function EntryCard({ entry, showCategory = false }: { entry: Entr
         <>
           {entry.image_url && (
             // eslint-disable-next-line @next/next/no-img-element
-            <img src={entry.image_url} alt="" className="mt-2 h-28 w-full rounded-lg border border-white/70 object-cover" />
+            <img src={entry.image_url} alt="" className="mt-2 h-24 w-full sm:h-28 rounded-lg border border-white/70 object-cover" />
           )}
           <h3 className="mt-2 font-bold">{entry.title}</h3>
           <Rarity value={entry.rarity} className="text-sm" />

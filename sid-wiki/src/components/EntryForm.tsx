@@ -185,11 +185,11 @@ export default function EntryForm({ initial }: { initial: FormEntry }) {
 
   return (
     <form onSubmit={save} className="mx-auto max-w-4xl space-y-5">
-      <h1 className="font-typewriter text-3xl font-bold text-olive-800">
+      <h1 className="font-typewriter text-2xl font-bold text-olive-800 sm:text-3xl">
         {isNew ? 'Nouvelle fiche' : `Modifier ${category} ${pad(initial.number)}`}
       </h1>
 
-      <div className="card grid gap-4 p-5 sm:grid-cols-3">
+      <div className="card grid gap-4 p-4 sm:grid-cols-3 sm:p-5">
         <div>
           <label className="label">Catégorie</label>
           <select className="input" value={category} onChange={(e) => setCategory(e.target.value as Category)}>
@@ -404,9 +404,9 @@ export default function EntryForm({ initial }: { initial: FormEntry }) {
 
       {error && <p className="text-stamp">{error}</p>}
 
-      <div className="flex gap-3">
-        <button className="btn" disabled={saving || uploadingModel}>{saving ? 'Enregistrement…' : 'Enregistrer'}</button>
-        <button type="button" className="btn-ghost" onClick={() => router.back()}>Annuler</button>
+      <div className="card sticky bottom-[4.5rem] z-30 flex gap-3 p-3 md:static md:border-0 md:bg-transparent md:p-0 md:shadow-none md:backdrop-blur-none">
+        <button className="btn flex-1 md:flex-none" disabled={saving || uploadingModel}>{saving ? 'Enregistrement…' : 'Enregistrer'}</button>
+        <button type="button" className="btn-ghost flex-1 md:flex-none" onClick={() => router.back()}>Annuler</button>
       </div>
     </form>
   );

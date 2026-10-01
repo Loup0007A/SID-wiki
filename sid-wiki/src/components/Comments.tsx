@@ -82,7 +82,7 @@ export default function Comments({ category, number }: { category: string; numbe
           placeholder="Ton commentaire… (markdown, @pseudo pour mentionner un chasseur)"
         />
         {error && <p className="text-sm text-stamp">{error}</p>}
-        <button className="btn" disabled={sending || !body.trim()}>
+        <button className="btn w-full sm:w-auto" disabled={sending || !body.trim()}>
           {sending ? 'Envoi…' : 'Publier'}
         </button>
       </form>

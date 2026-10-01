@@ -47,7 +47,7 @@ export default function Markdown({ children, toc = false }: { children: string; 
   return (
     <div className="prose prose-stone max-w-none prose-a:text-olive-700">
       {toc && headings.length >= 3 && (
-        <details open className="not-prose float-none mb-5 inline-block min-w-[16rem] max-w-full rounded-xl border border-white/80 bg-white/50 p-3 backdrop-blur sm:float-right sm:ml-5">
+        <details open className="not-prose float-none mb-5 block w-full rounded-xl border border-white/80 bg-white/50 p-3 backdrop-blur sm:float-right sm:clear-right sm:ml-5 sm:inline-block sm:w-auto sm:min-w-[16rem]">
           <summary className="cursor-pointer select-none text-center font-typewriter font-bold text-olive-800">Sommaire</summary>
           <ol className="mt-2 space-y-0.5 text-sm">
             {headings.map((h) => (
@@ -65,6 +65,15 @@ export default function Markdown({ children, toc = false }: { children: string; 
       <ReactMarkdown
         remarkPlugins={[remarkGfm]}
         components={{
+          table: ({ children }) => (
+            <div className="not-prose my-4 overflow-x-auto rounded-xl border border-white/80 bg-white/40">
+              <table className="w-full min-w-[20rem] text-left text-sm [&_td]:border-t [&_td]:border-white/70 [&_td]:p-2 [&_th]:whitespace-nowrap [&_th]:bg-white/60 [&_th]:p-2 [&_th]:font-typewriter">{children}</table>
+            </div>
+          ),
+          img: ({ src, alt }) => (
+            // eslint-disable-next-line @next/next/no-img-element
+            <img src={typeof src === 'string' ? src : undefined} alt={alt ?? ''} className="h-auto max-w-full rounded-xl" loading="lazy" />
+          ),
           h1: H2,
           h2: H2,
           h3: H3,
