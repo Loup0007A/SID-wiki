@@ -12,11 +12,11 @@ export default async function FavoritesPage() {
 
   return (
     <div>
-      <h1 className="mb-4 font-typewriter text-3xl font-bold text-olive-800">⭐ Mes favoris</h1>
+      <h1 className="title-grad mb-4 font-typewriter text-3xl font-bold text-olive-800">⭐ Mes favoris</h1>
       {entries.length === 0 ? (
         <p className="italic text-olive-700">Pas encore de favori. Clique sur « ☆ Ajouter aux favoris » sur une fiche !</p>
       ) : (
-        <div className="grid grid-cols-2 gap-2 sm:grid-cols-3 sm:gap-3 lg:grid-cols-4">
+        <div className="stagger grid grid-cols-2 gap-2 sm:grid-cols-3 sm:gap-3 lg:grid-cols-4">
           {entries.map((e) => (
             <EntryCard key={`${e.category}${e.number}`} entry={e} showCategory />
           ))}

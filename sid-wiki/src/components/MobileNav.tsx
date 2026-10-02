@@ -47,8 +47,8 @@ export default function MobileNav({ isAdmin }: { isAdmin: boolean }) {
       {/* Menu coulissant */}
       {open && (
         <div className="fixed inset-0 z-50" role="dialog" aria-modal="true" aria-label="Menu">
-          <button className="absolute inset-0 bg-ink/40 backdrop-blur-sm" aria-label="Fermer le menu" onClick={() => setOpen(false)} />
-          <div className="absolute inset-x-0 bottom-0 max-h-[85vh] overflow-y-auto rounded-t-3xl border border-white/80 bg-white/80 p-4 pb-[calc(1rem+env(safe-area-inset-bottom))] shadow-2xl backdrop-blur-xl">
+          <button className="absolute inset-0 bg-black/60 backdrop-blur-sm" aria-label="Fermer le menu" onClick={() => setOpen(false)} />
+          <div className="absolute inset-x-0 bottom-0 max-h-[85vh] overflow-y-auto rounded-t-3xl border border-white/15 bg-[#0a1428]/95 p-4 pb-[calc(1rem+env(safe-area-inset-bottom))] shadow-2xl backdrop-blur-xl">
             <div className="mx-auto mb-3 h-1.5 w-12 rounded-full bg-olive-800/30" />
 
             <form action="/recherche" className="mb-4">
@@ -61,8 +61,8 @@ export default function MobileNav({ isAdmin }: { isAdmin: boolean }) {
                 <Link
                   key={c}
                   href={`/${c}`}
-                  className={`flex items-center gap-2 rounded-2xl border border-white/80 px-3 py-3 font-typewriter font-bold ${
-                    pathname === `/${c}` || pathname.startsWith(`/${c}/`) ? 'bg-brass-400 text-ink' : 'bg-white/60 text-olive-800'
+                  className={`flex items-center gap-2 rounded-2xl border border-white/15 px-3 py-3 font-typewriter font-bold ${
+                    pathname === `/${c}` || pathname.startsWith(`/${c}/`) ? 'bg-brass-400 text-night' : 'bg-white/[0.1] text-olive-800'
                   }`}
                 >
                   <span className="text-xl">{CATEGORY_LABELS[c].icon}</span>
@@ -86,7 +86,7 @@ export default function MobileNav({ isAdmin }: { isAdmin: boolean }) {
 
       {/* Barre d'onglets */}
       <nav
-        className="fixed inset-x-0 bottom-0 z-40 border-t border-white/80 bg-white/60 pb-[env(safe-area-inset-bottom)] shadow-[0_-4px_24px_rgba(37,99,184,0.15)] backdrop-blur-xl"
+        className="fixed inset-x-0 bottom-0 z-40 border-t border-white/15 bg-[#050912]/80 pb-[env(safe-area-inset-bottom)] shadow-[0_-4px_24px_rgba(0,0,0,0.5)] backdrop-blur-xl"
         aria-label="Navigation principale"
       >
         <ul className="grid grid-cols-5">

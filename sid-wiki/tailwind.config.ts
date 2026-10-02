@@ -1,10 +1,9 @@
 import type { Config } from 'tailwindcss';
 import typography from '@tailwindcss/typography';
 
-// Les noms de tokens (kraft / olive / brass / stamp / ink) sont conservés,
-// mais la palette est maintenant bleu ciel :
-//   kraft = bleus très clairs (fonds, verre)   olive = bleus profonds (texte, boutons)
-//   brass = jaune soleil (accents)             stamp = corail (alertes, « ? »)
+// Thème sombre : les noms de tokens historiques sont conservés mais inversés.
+//   ink / olive-* = textes clairs (bleu glacier)   kraft = bleus d'accent
+//   brass = jaune soleil                           stamp = corail   night = texte foncé (sur jaune)
 const config: Config = {
   content: ['./src/**/*.{ts,tsx}'],
   theme: {
@@ -19,10 +18,10 @@ const config: Config = {
           500: '#4fa8e0',
         },
         olive: {
-          600: '#2f7fd1',
-          700: '#2563b8',
-          800: '#1c4a94',
-          900: '#14336b',
+          600: '#6fb8f2',
+          700: '#8cc9ff',
+          800: '#c5e3ff',
+          900: '#e3f3ff',
         },
         brass: {
           300: '#ffe08a',
@@ -30,8 +29,9 @@ const config: Config = {
           500: '#f5a623',
           600: '#d98614',
         },
-        ink: '#16305a',
-        stamp: '#ef5b4c',
+        ink: '#e8f3ff',
+        night: '#0b1a33',
+        stamp: '#ff6b5b',
       },
       fontFamily: {
         typewriter: ['"Baloo 2"', 'system-ui', 'sans-serif'],

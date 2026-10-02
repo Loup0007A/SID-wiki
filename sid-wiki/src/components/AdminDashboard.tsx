@@ -4,6 +4,7 @@ import Link from 'next/link';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { createClient } from '@/lib/supabase/client';
 import { CATEGORIES, CATEGORY_LABELS, pad, type Category } from '@/lib/wiki';
+import { removeStoredFile } from '@/lib/storage';
 
 type Row = {
   id: string;
@@ -135,9 +136,15 @@ export default function AdminDashboard() {
   async function removeMany(ids: string[]) {
     const label = ids.length === 1 ? rows.find((r) => r.id === ids[0])?.title ?? 'cette fiche' : `${ids.length} fiches`;
     if (!confirm(`Supprimer définitivement ${label} ? (commentaires, favoris et historique compris)`)) return;
+    // Fichiers liés (image, modèle 3D) : on les retire du stockage pour libérer la place
+    const { data: files } = await supabase.from('wiki_entries').select('image_url, model_url').in('id', ids);
     const { error } = await supabase.from('wiki_entries').delete().in('id', ids);
     if (error) return setError(error.message);
     setError(null);
+    for (const f of files ?? []) {
+      await removeStoredFile(supabase, 'wiki-images', f.image_url);
+      await removeStoredFile(supabase, 'wiki-models', f.model_url);
+    }
     setRows((rs) => rs.filter((r) => !ids.includes(r.id)));
     setSelected(new Set());
   }
@@ -178,7 +185,7 @@ export default function AdminDashboard() {
   return (
     <div>
       <div className="mb-4 flex flex-wrap items-center justify-between gap-3">
-        <h1 className="font-typewriter text-2xl font-bold text-olive-800 sm:text-3xl">🛠 Dashboard</h1>
+        <h1 className="title-grad font-typewriter text-2xl font-bold text-olive-800 sm:text-3xl">🛠 Dashboard</h1>
         <Link href={`/admin/edit/${category}/new`} className="btn">
           + Nouvelle fiche
         </Link>
@@ -230,7 +237,7 @@ export default function AdminDashboard() {
 
       <div className="card overflow-x-auto">
         <table className="w-full min-w-[22rem] text-left text-sm">
-          <thead className="border-b border-white/70 font-typewriter">
+          <thead className="border-b border-white/15 font-typewriter">
             <tr>
               <th className="p-2">
                 <input type="checkbox" checked={allShownSelected} onChange={toggleAll} aria-label="Tout sélectionner" />
@@ -254,7 +261,7 @@ export default function AdminDashboard() {
               </tr>
             )}
             {shown.map((r) => (
-              <tr key={r.id} className="border-b border-white/50">
+              <tr key={r.id} className="border-b border-white/15">
                 <td className="p-2">
                   <input type="checkbox" checked={selected.has(r.id)} onChange={() => toggle(r.id)} aria-label={`Sélectionner ${r.title}`} />
                 </td>

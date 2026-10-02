@@ -31,7 +31,7 @@ export default function LoginPage() {
     <div className="mx-auto mt-6 max-w-sm sm:mt-16">
       <div className="card p-6">
         <span className="stamp">Chasseurs uniquement !</span>
-        <h1 className="mb-1 mt-3 font-typewriter text-2xl font-bold text-olive-800">
+        <h1 className="title-grad mb-1 mt-3 font-typewriter text-2xl font-bold text-olive-800">
           Wiki du S.I.D.
         </h1>
         <p className="mb-5 text-sm text-olive-700">Connecte-toi avec ton compte de chasseur (celui du Dossier Central).</p>

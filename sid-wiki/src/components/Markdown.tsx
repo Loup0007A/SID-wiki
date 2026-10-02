@@ -45,9 +45,9 @@ export default function Markdown({ children, toc = false }: { children: string; 
   const H3 = heading('h3');
 
   return (
-    <div className="prose prose-stone max-w-none prose-a:text-olive-700">
+    <div className="prose prose-invert max-w-none prose-a:text-olive-700">
       {toc && headings.length >= 3 && (
-        <details open className="not-prose float-none mb-5 block w-full rounded-xl border border-white/80 bg-white/50 p-3 backdrop-blur sm:float-right sm:clear-right sm:ml-5 sm:inline-block sm:w-auto sm:min-w-[16rem]">
+        <details open className="not-prose float-none mb-5 block w-full rounded-xl border border-white/15 bg-white/[0.09] p-3 backdrop-blur sm:float-right sm:clear-right sm:ml-5 sm:inline-block sm:w-auto sm:min-w-[16rem]">
           <summary className="cursor-pointer select-none text-center font-typewriter font-bold text-olive-800">Sommaire</summary>
           <ol className="mt-2 space-y-0.5 text-sm">
             {headings.map((h) => (
@@ -66,8 +66,8 @@ export default function Markdown({ children, toc = false }: { children: string; 
         remarkPlugins={[remarkGfm]}
         components={{
           table: ({ children }) => (
-            <div className="not-prose my-4 overflow-x-auto rounded-xl border border-white/80 bg-white/40">
-              <table className="w-full min-w-[20rem] text-left text-sm [&_td]:border-t [&_td]:border-white/70 [&_td]:p-2 [&_th]:whitespace-nowrap [&_th]:bg-white/60 [&_th]:p-2 [&_th]:font-typewriter">{children}</table>
+            <div className="not-prose my-4 overflow-x-auto rounded-xl border border-white/15 bg-white/[0.07]">
+              <table className="w-full min-w-[20rem] text-left text-sm [&_td]:border-t [&_td]:border-white/15 [&_td]:p-2 [&_th]:whitespace-nowrap [&_th]:bg-white/[0.1] [&_th]:p-2 [&_th]:font-typewriter">{children}</table>
             </div>
           ),
           img: ({ src, alt }) => (

@@ -5,57 +5,114 @@
 @tailwind utilities;
 
 html {
-  background: #bfe3fb;
+  background: #04070f;
+  color-scheme: dark;
 }
 
 body {
   @apply font-body text-ink;
   min-height: 100vh;
-  background-color: #bfe3fb;
-  background-image:
-    radial-gradient(circle at 12% 8%, rgba(255, 255, 255, 0.85) 0, transparent 38%),
-    radial-gradient(circle at 88% 22%, rgba(255, 224, 138, 0.45) 0, transparent 30%),
-    radial-gradient(circle at 70% 92%, rgba(124, 195, 238, 0.7) 0, transparent 45%),
-    linear-gradient(160deg, #e6f6ff 0%, #bfe3fb 45%, #86c2f2 100%);
-  background-attachment: fixed;
+  background: transparent; /* le fond noir + vagues est dans <Waves /> */
   -webkit-tap-highlight-color: transparent;
   overflow-wrap: anywhere;
   overscroll-behavior-y: none;
 }
 
-@media (max-width: 767px) {
-  /* Le fond « fixed » saccade sur iOS/Android : on le fait défiler avec la page */
-  body {
-    background-attachment: scroll;
+::selection {
+  background: rgba(79, 168, 224, 0.45);
+}
+
+/* ---------- Animations ---------- */
+@keyframes wave-slide {
+  to { transform: translateX(-50%); }
+}
+@keyframes wave-slide-rev {
+  from { transform: translateX(-50%); }
+  to { transform: translateX(0); }
+}
+@keyframes bubble-rise {
+  0% { transform: translateY(0) scale(0.6); opacity: 0; }
+  12% { opacity: 0.6; }
+  100% { transform: translateY(-105vh) scale(1.1); opacity: 0; }
+}
+@keyframes fade-up {
+  from { opacity: 0; transform: translateY(14px); }
+  to { opacity: 1; transform: none; }
+}
+@keyframes shine {
+  to { background-position: 200% center; }
+}
+
+.reveal {
+  animation: fade-up 0.55s cubic-bezier(0.2, 0.7, 0.2, 1) both;
+}
+/* Cascade sur les grilles de cartes */
+.stagger > * {
+  animation: fade-up 0.5s cubic-bezier(0.2, 0.7, 0.2, 1) both;
+}
+.stagger > *:nth-child(1) { animation-delay: 0.02s; }
+.stagger > *:nth-child(2) { animation-delay: 0.06s; }
+.stagger > *:nth-child(3) { animation-delay: 0.1s; }
+.stagger > *:nth-child(4) { animation-delay: 0.14s; }
+.stagger > *:nth-child(5) { animation-delay: 0.18s; }
+.stagger > *:nth-child(6) { animation-delay: 0.22s; }
+.stagger > *:nth-child(7) { animation-delay: 0.26s; }
+.stagger > *:nth-child(8) { animation-delay: 0.3s; }
+.stagger > *:nth-child(n + 9) { animation-delay: 0.34s; }
+
+/* Titres dégradés */
+.title-grad {
+  background: linear-gradient(90deg, #ffffff 0%, #9fd4ff 40%, #ffe08a 70%, #ffffff 100%);
+  background-size: 200% auto;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: transparent;
+  animation: shine 8s linear infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .wave-layer,
+  .bubble,
+  .title-grad {
+    animation: none !important;
+  }
+  .reveal,
+  .stagger > * {
+    animation: none !important;
   }
 }
 
 @layer components {
-  /* Verre dépoli */
+  /* Verre dépoli sombre */
   .card {
-    @apply rounded-2xl border border-white/70 bg-white/40 shadow-[0_8px_32px_rgba(37,99,184,0.15)] backdrop-blur-xl;
+    @apply rounded-2xl border border-white/15 bg-white/[0.07] shadow-[0_8px_32px_rgba(0,0,0,0.45),inset_0_1px_0_rgba(255,255,255,0.08)] backdrop-blur-xl;
   }
   .btn {
-    @apply inline-flex min-h-[2.5rem] items-center justify-center rounded-full border border-white/60 bg-gradient-to-b from-kraft-500 to-olive-700 px-4 py-1.5 font-typewriter text-base font-bold text-white shadow-md transition hover:-translate-y-0.5 hover:from-kraft-400 hover:to-olive-600 disabled:opacity-50;
+    @apply inline-flex min-h-[2.5rem] items-center justify-center rounded-full border border-white/30 bg-gradient-to-b from-[#4aa3ec] to-[#1f5fc0] px-4 py-1.5 font-typewriter text-base font-bold text-white shadow-[0_4px_16px_rgba(40,120,220,0.35)] transition hover:-translate-y-0.5 hover:from-[#62b3f5] hover:to-[#2a70d6] disabled:opacity-50;
   }
   .btn-ghost {
-    @apply inline-flex min-h-[2.5rem] items-center justify-center rounded-full border border-white/70 bg-white/40 px-4 py-1.5 font-typewriter text-base font-bold text-olive-800 backdrop-blur transition hover:bg-white/70 disabled:opacity-50;
+    @apply inline-flex min-h-[2.5rem] items-center justify-center rounded-full border border-white/20 bg-white/[0.06] px-4 py-1.5 font-typewriter text-base font-bold text-olive-800 backdrop-blur transition hover:bg-white/[0.14] disabled:opacity-50;
   }
   .btn-danger {
-    @apply inline-flex min-h-[2.5rem] items-center justify-center rounded-full border border-stamp/60 bg-white/40 px-4 py-1.5 font-typewriter text-base font-bold text-stamp transition hover:bg-stamp hover:text-white disabled:opacity-50;
+    @apply inline-flex min-h-[2.5rem] items-center justify-center rounded-full border border-stamp/60 bg-white/[0.04] px-4 py-1.5 font-typewriter text-base font-bold text-stamp transition hover:bg-stamp hover:text-white disabled:opacity-50;
   }
   .input {
-    @apply w-full rounded-xl border border-white/80 bg-white/60 px-3 py-2 font-body text-base text-ink outline-none backdrop-blur transition placeholder:text-olive-600/50 focus:border-kraft-500 focus:ring-2 focus:ring-kraft-400/50;
+    @apply w-full rounded-xl border border-white/20 bg-white/[0.08] px-3 py-2 font-body text-base text-ink outline-none backdrop-blur transition placeholder:text-olive-600/60 focus:border-kraft-400 focus:ring-2 focus:ring-kraft-400/40;
   }
   .label {
     @apply mb-1 block font-typewriter text-sm font-bold text-olive-800;
   }
   .stamp {
-    @apply inline-block rotate-[-3deg] rounded-full bg-brass-400 px-3 py-0.5 font-typewriter text-xs font-extrabold text-ink shadow;
+    @apply inline-block rotate-[-3deg] rounded-full bg-brass-400 px-3 py-0.5 font-typewriter text-xs font-extrabold text-night shadow;
   }
 }
 
-/* Les classes existantes en majuscules espacées restent lisibles avec la nouvelle police */
 .font-typewriter {
   letter-spacing: 0.02em;
+}
+
+select option {
+  background: #0b1426;
+  color: #e8f3ff;
 }

@@ -25,7 +25,7 @@ export default async function HomePage() {
   return (
     <div>
       <div className="mb-1 flex flex-wrap items-center justify-between gap-3">
-        <h1 className="font-typewriter text-2xl font-bold text-olive-800 sm:text-3xl">Bienvenue, chasseur !</h1>
+        <h1 className="title-grad font-typewriter text-2xl font-bold text-olive-800 sm:text-3xl">Bienvenue, chasseur !</h1>
         <Link href="/hasard" className="btn">🎲 Fiche au hasard</Link>
       </div>
       <p className="mb-6 text-olive-700">Retrouve ici tout ce que la S.I.D. a déjà croisé en chasse. Le reste ? Il reste à découvrir !</p>
@@ -35,7 +35,7 @@ export default async function HomePage() {
         <button className="btn">Fouiner !</button>
       </form>
 
-      <div className="grid grid-cols-2 gap-3 sm:gap-4 lg:grid-cols-3">
+      <div className="stagger grid grid-cols-2 gap-3 sm:gap-4 lg:grid-cols-3">
         {CATEGORIES.map((c: Category) => {
           const s = stats.get(c) ?? { total: 0, found: 0 };
           const pct = s.total ? Math.round((s.found / s.total) * 100) : 0;
@@ -46,7 +46,7 @@ export default async function HomePage() {
               <p className="text-sm text-olive-700">
                 {s.found} / {s.total} découvert{s.found > 1 ? 's' : ''}
               </p>
-              <div className="mt-2 h-2 rounded-full bg-white/60">
+              <div className="mt-2 h-2 rounded-full bg-white/[0.1]">
                 <div className="h-2 rounded-full bg-gradient-to-r from-brass-400 to-brass-500" style={{ width: `${pct}%` }} />
               </div>
             </Link>
@@ -60,14 +60,14 @@ export default async function HomePage() {
           {recent.length === 0 ? (
             <p className="italic text-olive-700">Rien de découvert pour l’instant. À vos armes !</p>
           ) : (
-            <ul className="divide-y divide-white/70">
+            <ul className="divide-y divide-white/10">
               {recent.map((r) => (
                 <li key={`${r.category}${r.number}`} className="flex items-center gap-3 py-2">
                   {r.image_url ? (
                     // eslint-disable-next-line @next/next/no-img-element
-                    <img src={r.image_url} alt="" className="h-10 w-10 flex-none rounded-lg border border-white/70 object-cover" />
+                    <img src={r.image_url} alt="" className="h-10 w-10 flex-none rounded-lg border border-white/15 object-cover" />
                   ) : (
-                    <span className="flex h-10 w-10 flex-none items-center justify-center rounded-lg bg-white/60 text-xl">
+                    <span className="flex h-10 w-10 flex-none items-center justify-center rounded-lg bg-white/[0.1] text-xl">
                       {CATEGORY_LABELS[r.category].icon}
                     </span>
                   )}

@@ -9,14 +9,14 @@ export default function EntryCard({ entry, showCategory = false }: { entry: Entr
   return (
     <Link
       href={`/${entry.category}/${pad(entry.number)}`}
-      className={`card block p-2.5 transition sm:p-3 hover:-translate-y-0.5 hover:border-brass-500 ${hidden ? 'bg-white/25' : ''}`}
+      className={`card block p-2.5 transition sm:p-3 hover:-translate-y-0.5 hover:border-brass-500 ${hidden ? 'bg-white/[0.04]' : ''}`}
     >
       <div className="flex items-start justify-between gap-2">
         <span className="font-typewriter text-xs text-olive-700">
           {showCategory ? `${CATEGORY_LABELS[entry.category].icon} ` : ''}N° {pad(entry.number)}
         </span>
         {entry.has_model && (
-          <span className="rounded-full bg-kraft-300/70 px-2 text-[10px] font-bold text-olive-800" title="Modèle 3D animé">
+          <span className="rounded-full bg-kraft-500/30 px-2 text-[10px] font-bold text-olive-800" title="Modèle 3D animé">
             🎬 3D
           </span>
         )}
@@ -26,7 +26,7 @@ export default function EntryCard({ entry, showCategory = false }: { entry: Entr
         <>
           {entry.image_url && (
             // eslint-disable-next-line @next/next/no-img-element
-            <img src={entry.image_url} alt="" className="mt-2 h-24 w-full sm:h-28 rounded-lg border border-white/70 object-cover" />
+            <img src={entry.image_url} alt="" className="mt-2 h-24 w-full sm:h-28 rounded-lg border border-white/15 object-cover" />
           )}
           <h3 className="mt-2 font-bold">{entry.title}</h3>
           <Rarity value={entry.rarity} className="text-sm" />
@@ -34,7 +34,7 @@ export default function EntryCard({ entry, showCategory = false }: { entry: Entr
           {entry.tags && entry.tags.length > 0 && (
             <div className="mt-2 flex flex-wrap gap-1">
               {entry.tags.map((t) => (
-                <span key={t} className="rounded-full bg-brass-300/60 px-2 py-0.5 font-typewriter text-[10px]">
+                <span key={t} className="rounded-full bg-brass-400/20 text-brass-300 px-2 py-0.5 font-typewriter text-[10px]">
                   {t}
                 </span>
               ))}

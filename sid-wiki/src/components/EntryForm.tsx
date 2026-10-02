@@ -1,8 +1,10 @@
 'use client';
 
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { createClient } from '@/lib/supabase/client';
+import { compressImage } from '@/lib/image';
+import { removeStoredFile } from '@/lib/storage';
 import { CATEGORIES, CATEGORY_LABELS, pad, type Category, type InfoRow } from '@/lib/wiki';
 import Markdown from './Markdown';
 import ModelViewer from './ModelViewer';
@@ -58,6 +60,9 @@ export default function EntryForm({ initial }: { initial: FormEntry }) {
   const [modelAnimation, setModelAnimation] = useState<string>(initial.model_animation ?? '');
   const [animNames, setAnimNames] = useState<string[]>([]);
   const [uploadingModel, setUploadingModel] = useState(false);
+  const [pendingModel, setPendingModel] = useState<{ bytes: Uint8Array; previewUrl: string; size: number } | null>(null);
+  const [status, setStatus] = useState<string | null>(null);
+  const tempImages = useRef<string[]>([]);
   const [links, setLinks] = useState<LinkedEntry[]>(initial.links);
   const [revisions, setRevisions] = useState<Revision[]>([]);
   const [preview, setPreview] = useState(false);
@@ -94,23 +99,41 @@ export default function EntryForm({ initial }: { initial: FormEntry }) {
 
   async function uploadImage(file: File) {
     setError(null);
-    const ext = (file.name.split('.').pop() ?? 'png').toLowerCase().replace(/[^a-z0-9]/g, '');
+    const small = await compressImage(file); // WebP, 1600 px max
+    const ext = (small.name.split('.').pop() ?? 'png').toLowerCase().replace(/[^a-z0-9]/g, '');
     const path = `${category}/${crypto.randomUUID()}.${ext || 'png'}`;
-    const { error } = await supabase.storage.from('wiki-images').upload(path, file, { upsert: false });
+    const { error } = await supabase.storage.from('wiki-images').upload(path, small, { upsert: false });
     if (error) return setError(error.message);
-    setImageUrl(supabase.storage.from('wiki-images').getPublicUrl(path).data.publicUrl);
+    const url = supabase.storage.from('wiki-images').getPublicUrl(path).data.publicUrl;
+    tempImages.current.push(url);
+    setImageUrl(url);
   }
 
-  async function uploadModel(file: File) {
+  // Le modèle n'est PAS envoyé tout de suite : on le lit ici, on propose les animations,
+  // et c'est à l'enregistrement qu'il est allégé (une seule animation) puis envoyé.
+  async function pickModel(file: File) {
     setError(null);
     if (!file.name.toLowerCase().endsWith('.glb')) return setError('Utilise un fichier .glb (modèle 3D avec textures et animations intégrées).');
-    if (file.size > 50 * 1024 * 1024) return setError('Modèle trop lourd (50 Mo maximum).');
+    if (file.size > 50 * 1024 * 1024) return setError('Fichier trop lourd (50 Mo maximum avant allègement).');
     setUploadingModel(true);
-    const path = `${category}/${crypto.randomUUID()}.glb`;
-    const { error } = await supabase.storage.from('wiki-models').upload(path, file, { contentType: 'model/gltf-binary', upsert: false });
+    try {
+      const bytes = new Uint8Array(await file.arrayBuffer());
+      const { listAnimations } = await import('@/lib/glb');
+      const names = await listAnimations(bytes);
+      if (pendingModel) URL.revokeObjectURL(pendingModel.previewUrl);
+      setPendingModel({ bytes, previewUrl: URL.createObjectURL(file), size: file.size });
+      setAnimNames(names);
+      setModelAnimation(names[0] ?? '');
+    } catch {
+      setError('Impossible de lire ce .glb (fichier compressé Draco ou invalide ?). Réexporte-le depuis Blender en « glTF Binary » sans compression.');
+    }
     setUploadingModel(false);
-    if (error) return setError(error.message);
-    setModelUrl(supabase.storage.from('wiki-models').getPublicUrl(path).data.publicUrl);
+  }
+
+  function removeModel() {
+    if (pendingModel) URL.revokeObjectURL(pendingModel.previewUrl);
+    setPendingModel(null);
+    setModelUrl(null);
     setModelAnimation('');
     setAnimNames([]);
   }
@@ -131,6 +154,31 @@ export default function EntryForm({ initial }: { initial: FormEntry }) {
     if (!title.trim()) return setError('Le titre est obligatoire.');
 
     setSaving(true);
+
+    // 1) Modèle 3D : on ne garde que l'animation choisie, on purge le reste, puis on envoie.
+    let finalModelUrl = modelUrl;
+    const needsOptimize = !!pendingModel || (!!modelUrl && animNames.length > 1);
+    if (needsOptimize) {
+      try {
+        setStatus('Allègement du modèle 3D…');
+        const bytes = pendingModel ? pendingModel.bytes : new Uint8Array(await (await fetch(modelUrl!)).arrayBuffer());
+        const { optimizeGlb } = await import('@/lib/glb');
+        const out = await optimizeGlb(bytes, modelAnimation || null);
+        const path = `${category}/${crypto.randomUUID()}.glb`;
+        setStatus('Envoi du modèle allégé…');
+        const { error: upErr } = await supabase.storage
+          .from('wiki-models')
+          .upload(path, new Blob([out as BlobPart], { type: 'model/gltf-binary' }), { contentType: 'model/gltf-binary', upsert: false });
+        if (upErr) throw new Error(upErr.message);
+        finalModelUrl = supabase.storage.from('wiki-models').getPublicUrl(path).data.publicUrl;
+      } catch (err) {
+        setStatus(null);
+        setSaving(false);
+        return setError(`Modèle 3D : ${(err as Error).message}`);
+      }
+    }
+    setStatus('Enregistrement…');
+
     const payload = {
       category,
       number,
@@ -143,8 +191,8 @@ export default function EntryForm({ initial }: { initial: FormEntry }) {
       discovered_by: discoveredBy || null,
       rarity: rarity ? parseInt(rarity, 10) : null,
       infobox: infobox.map((r) => ({ label: r.label.trim(), value: r.value.trim() })).filter((r) => r.label),
-      model_url: modelUrl,
-      model_animation: modelUrl && modelAnimation ? modelAnimation : null,
+      model_url: finalModelUrl,
+      model_animation: finalModelUrl && modelAnimation ? modelAnimation : null,
     };
 
     let id = initial.id;
@@ -179,13 +227,19 @@ export default function EntryForm({ initial }: { initial: FormEntry }) {
       }
     }
 
+    // Ménage dans le Storage : on supprime ce qui n'est plus utilisé (ancien modèle, anciennes images, brouillons).
+    if (initial.model_url && initial.model_url !== finalModelUrl) await removeStoredFile(supabase, 'wiki-models', initial.model_url);
+    if (initial.image_url && initial.image_url !== imageUrl) await removeStoredFile(supabase, 'wiki-images', initial.image_url);
+    for (const u of tempImages.current) if (u !== imageUrl) await removeStoredFile(supabase, 'wiki-images', u);
+    if (pendingModel) URL.revokeObjectURL(pendingModel.previewUrl);
+
     router.push(`/${category}/${pad(number)}`);
     router.refresh();
   }
 
   return (
     <form onSubmit={save} className="mx-auto max-w-4xl space-y-5">
-      <h1 className="font-typewriter text-2xl font-bold text-olive-800 sm:text-3xl">
+      <h1 className="title-grad font-typewriter text-2xl font-bold text-olive-800 sm:text-3xl">
         {isNew ? 'Nouvelle fiche' : `Modifier ${category} ${pad(initial.number)}`}
       </h1>
 
@@ -276,7 +330,7 @@ export default function EntryForm({ initial }: { initial: FormEntry }) {
           </button>
         </div>
         {preview ? (
-          <div className="min-h-[16rem] rounded-xl border border-white/80 bg-white/40 p-3">
+          <div className="min-h-[16rem] rounded-xl border border-white/15 bg-white/[0.07] p-3">
             <Markdown toc>{content || '*Rien à afficher.*'}</Markdown>
           </div>
         ) : (
@@ -291,38 +345,40 @@ export default function EntryForm({ initial }: { initial: FormEntry }) {
       <div className="card p-5">
         <label className="label">Modèle 3D animé (.glb) — idéal pour les skills ✨</label>
         <div className="flex flex-wrap items-center gap-3">
-          <input type="file" accept=".glb,model/gltf-binary" onChange={(e) => e.target.files?.[0] && uploadModel(e.target.files[0])} disabled={uploadingModel} />
-          {uploadingModel && <span className="text-sm italic">Envoi en cours…</span>}
-          {modelUrl && (
-            <button
-              type="button"
-              className="btn-danger !px-3 !py-0.5"
-              onClick={() => {
-                setModelUrl(null);
-                setModelAnimation('');
-                setAnimNames([]);
-              }}
-            >
+          <input type="file" accept=".glb,model/gltf-binary" onChange={(e) => e.target.files?.[0] && pickModel(e.target.files[0])} disabled={uploadingModel || saving} />
+          {uploadingModel && <span className="text-sm italic">Lecture du fichier…</span>}
+          {(modelUrl || pendingModel) && (
+            <button type="button" className="btn-danger !px-3 !py-0.5" onClick={removeModel}>
               Retirer le modèle
             </button>
           )}
         </div>
         <p className="mt-2 text-xs text-olive-700">
-          Format GLB uniquement (textures et animations intégrées), 50 Mo max. Exporte-le depuis Blender (« glTF 2.0 → .glb ») ou récupère-le sur Mixamo / Sketchfab.
+          Format GLB (export Blender « glTF 2.0 → glTF Binary », ou Mixamo / Sketchfab), 50 Mo max. À l’enregistrement, le site{' '}
+          <strong>ne garde que l’animation choisie</strong>, supprime les autres ainsi que les caméras et tout objet inutilisé, puis supprime l’ancien fichier du stockage.
         </p>
 
-        {modelUrl && (
+        {(modelUrl || pendingModel) && (
           <div className="mt-4 space-y-3">
-            <ModelViewer src={modelUrl} animation={modelAnimation || null} onAnimations={setAnimNames} showAnimationPicker={false} />
+            <ModelViewer
+              src={pendingModel ? pendingModel.previewUrl : modelUrl!}
+              animation={modelAnimation || null}
+              onAnimations={(n) => setAnimNames((prev) => (prev.length ? prev : n))}
+              showAnimationPicker={false}
+            />
+            {pendingModel && <p className="text-xs text-olive-700">Fichier d’origine : {(pendingModel.size / 1024 / 1024).toFixed(1)} Mo (sera allégé à l’enregistrement).</p>}
             <div>
-              <label className="label">Animation lancée à l’ouverture de la fiche</label>
+              <label className="label">Animation conservée (les autres seront supprimées)</label>
               <select className="input" value={modelAnimation} onChange={(e) => setModelAnimation(e.target.value)}>
-                <option value="">Par défaut (première animation)</option>
+                <option value="">Aucune (modèle fixe — supprime toutes les animations)</option>
                 {animNames.map((a) => (
                   <option key={a} value={a}>🎬 {a}</option>
                 ))}
               </select>
-              {animNames.length === 0 && <p className="mt-1 text-xs text-olive-700">Aucune animation détectée dans ce modèle (le visiteur pourra juste le faire tourner).</p>}
+              {animNames.length === 0 && <p className="mt-1 text-xs text-olive-700">Aucune animation dans ce modèle : le visiteur pourra juste le faire tourner.</p>}
+              {!pendingModel && animNames.length > 1 && (
+                <p className="mt-1 text-xs text-brass-300">Ce modèle contient {animNames.length} animations : à l’enregistrement, seule « {modelAnimation || 'aucune'} » sera conservée.</p>
+              )}
             </div>
           </div>
         )}
@@ -333,7 +389,7 @@ export default function EntryForm({ initial }: { initial: FormEntry }) {
         <div className="flex flex-wrap items-center gap-3">
           {imageUrl && (
             // eslint-disable-next-line @next/next/no-img-element
-            <img src={imageUrl} alt="" className="h-20 w-20 rounded-lg border border-white/70 object-cover" />
+            <img src={imageUrl} alt="" className="h-20 w-20 rounded-lg border border-white/15 object-cover" />
           )}
           <input type="file" accept="image/*" onChange={(e) => e.target.files?.[0] && uploadImage(e.target.files[0])} />
           {imageUrl && (
@@ -349,7 +405,7 @@ export default function EntryForm({ initial }: { initial: FormEntry }) {
         <div className="mb-3 flex flex-wrap gap-2">
           {links.length === 0 && <span className="text-sm italic text-olive-700">Aucune.</span>}
           {links.map((l) => (
-            <span key={l.id} className="inline-flex items-center gap-1 rounded-full bg-brass-300/60 px-3 py-1 text-sm">
+            <span key={l.id} className="inline-flex items-center gap-1 rounded-full bg-brass-400/20 text-brass-300 px-3 py-1 text-sm">
               {l.category} {pad(l.number)} · {l.title}
               <button type="button" aria-label="Retirer" className="font-bold text-stamp" onClick={() => setLinks((ls) => ls.filter((x) => x.id !== l.id))}>
                 ×
@@ -359,12 +415,12 @@ export default function EntryForm({ initial }: { initial: FormEntry }) {
         </div>
         <input className="input" placeholder="Chercher une fiche par titre…" value={q} onChange={(e) => searchCandidates(e.target.value)} />
         {candidates.length > 0 && (
-          <ul className="mt-2 divide-y divide-white/70 overflow-hidden rounded-xl border border-white/80 bg-white/50">
+          <ul className="mt-2 divide-y divide-white/10 overflow-hidden rounded-xl border border-white/15 bg-white/[0.09]">
             {candidates.map((c) => (
               <li key={c.id}>
                 <button
                   type="button"
-                  className="w-full p-2 text-left text-sm hover:bg-white/70"
+                  className="w-full p-2 text-left text-sm hover:bg-white/[0.12]"
                   onClick={() => {
                     setLinks((ls) => [...ls, c]);
                     setCandidates([]);
@@ -385,7 +441,7 @@ export default function EntryForm({ initial }: { initial: FormEntry }) {
           {revisions.length === 0 ? (
             <p className="mt-3 text-sm italic text-olive-700">Aucune ancienne version : elles sont conservées automatiquement à chaque modification du titre, résumé, contenu, tags ou fiche technique.</p>
           ) : (
-            <ul className="mt-3 divide-y divide-white/70">
+            <ul className="mt-3 divide-y divide-white/10">
               {revisions.map((r) => (
                 <li key={r.id} className="flex items-center justify-between gap-3 py-2 text-sm">
                   <span>
@@ -405,7 +461,7 @@ export default function EntryForm({ initial }: { initial: FormEntry }) {
       {error && <p className="text-stamp">{error}</p>}
 
       <div className="card sticky bottom-[4.5rem] z-30 flex gap-3 p-3 md:static md:border-0 md:bg-transparent md:p-0 md:shadow-none md:backdrop-blur-none">
-        <button className="btn flex-1 md:flex-none" disabled={saving || uploadingModel}>{saving ? 'Enregistrement…' : 'Enregistrer'}</button>
+        <button className="btn flex-1 md:flex-none" disabled={saving || uploadingModel}>{saving ? (status ?? 'Enregistrement…') : 'Enregistrer'}</button>
         <button type="button" className="btn-ghost flex-1 md:flex-none" onClick={() => router.back()}>Annuler</button>
       </div>
     </form>

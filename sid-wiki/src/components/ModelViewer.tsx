@@ -65,11 +65,11 @@ export default function ModelViewer({ src, animation, onAnimations, showAnimatio
   }
 
   if (failed) {
-    return <p className="rounded-xl bg-white/50 p-4 text-sm text-stamp">Impossible de charger le modèle 3D.</p>;
+    return <p className="rounded-xl bg-white/[0.09] p-4 text-sm text-stamp">Impossible de charger le modèle 3D.</p>;
   }
 
   return (
-    <div className="overflow-hidden rounded-2xl border border-white/80 bg-gradient-to-b from-white/70 to-kraft-200/60 backdrop-blur">
+    <div className="overflow-hidden rounded-2xl border border-white/15 bg-gradient-to-b from-white/[0.1] to-sky-400/[0.08] backdrop-blur">
       {ready ? (
         <MV
           ref={ref}
@@ -87,7 +87,7 @@ export default function ModelViewer({ src, animation, onAnimations, showAnimatio
         <div className="flex h-64 items-center justify-center font-typewriter text-olive-700">Chargement du modèle 3D…</div>
       )}
 
-      <div className="flex flex-wrap items-center gap-2 border-t border-white/70 bg-white/40 p-2 text-sm">
+      <div className="flex flex-wrap items-center gap-2 border-t border-white/15 bg-white/[0.07] p-2 text-sm">
         <button type="button" className="btn-ghost !px-3 !py-0.5" onClick={togglePlay} disabled={!ready}>
           {playing ? '⏸ Pause' : '▶ Lecture'}
         </button>

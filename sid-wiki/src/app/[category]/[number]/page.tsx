@@ -74,7 +74,7 @@ export default async function EntryPage({ params }: { params: { category: string
                 <Link
                   key={t}
                   href={`/${entry.category}?tag=${encodeURIComponent(t)}`}
-                  className="rounded-full bg-brass-300/60 px-2 py-0.5 font-typewriter text-xs hover:bg-brass-300"
+                  className="rounded-full bg-brass-400/20 text-brass-300 px-2 py-0.5 font-typewriter text-xs hover:bg-brass-400/30"
                 >
                   #{t}
                 </Link>
@@ -92,13 +92,13 @@ export default async function EntryPage({ params }: { params: { category: string
 
           {entry.model_url && (
             <div className="mt-4">
-              <ModelViewer src={entry.model_url} animation={entry.model_animation} />
+              <ModelViewer src={entry.model_url} animation={entry.model_animation} showAnimationPicker={false} />
             </div>
           )}
 
           {entry.image_url && (
             // eslint-disable-next-line @next/next/no-img-element
-            <img src={entry.image_url} alt={entry.title ?? ''} className="mt-4 max-h-96 w-full rounded-2xl border border-white/70 object-cover" />
+            <img src={entry.image_url} alt={entry.title ?? ''} className="mt-4 max-h-96 w-full rounded-2xl border border-white/15 object-cover" />
           )}
 
           <div className="mt-4 flow-root">
@@ -107,7 +107,7 @@ export default async function EntryPage({ params }: { params: { category: string
           </div>
 
           {entry.related.length > 0 && (
-            <section className="mt-8 border-t border-white/70 pt-4">
+            <section className="mt-8 border-t border-white/15 pt-4">
               <h2 className="mb-2 font-typewriter text-lg font-bold text-olive-800">Voir aussi</h2>
               <ul className="flex flex-wrap gap-x-5 gap-y-2">
                 {entry.related.map((r) => (
