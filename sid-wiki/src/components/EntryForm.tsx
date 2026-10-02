@@ -113,19 +113,27 @@ export default function EntryForm({ initial }: { initial: FormEntry }) {
   // et c'est à l'enregistrement qu'il est allégé (une seule animation) puis envoyé.
   async function pickModel(file: File) {
     setError(null);
-    if (!file.name.toLowerCase().endsWith('.glb')) return setError('Utilise un fichier .glb (modèle 3D avec textures et animations intégrées).');
+    const lower = file.name.toLowerCase();
+    const isFbx = lower.endsWith('.fbx');
+    if (!isFbx && !lower.endsWith('.glb')) return setError('Utilise un fichier .glb ou .fbx (modèle 3D avec animations).');
     if (file.size > 50 * 1024 * 1024) return setError('Fichier trop lourd (50 Mo maximum avant allègement).');
     setUploadingModel(true);
     try {
-      const bytes = new Uint8Array(await file.arrayBuffer());
+      let bytes: Uint8Array = new Uint8Array(await file.arrayBuffer());
+      // Un .fbx est converti en .glb ici même, dans le navigateur ; la suite (choix de l'animation, allègement, envoi) est identique.
+      if (isFbx) bytes = await (await import('@/lib/fbx')).fbxToGlb(bytes);
       const { listAnimations } = await import('@/lib/glb');
       const names = await listAnimations(bytes);
       if (pendingModel) URL.revokeObjectURL(pendingModel.previewUrl);
-      setPendingModel({ bytes, previewUrl: URL.createObjectURL(file), size: file.size });
+      setPendingModel({ bytes, previewUrl: URL.createObjectURL(new Blob([bytes as BlobPart], { type: 'model/gltf-binary' })), size: bytes.byteLength });
       setAnimNames(names);
       setModelAnimation(names[0] ?? '');
     } catch {
-      setError('Impossible de lire ce .glb (fichier compressé Draco ou invalide ?). Réexporte-le depuis Blender en « glTF Binary » sans compression.');
+      setError(
+        isFbx
+          ? 'Impossible de convertir ce .fbx (fichier FBX ASCII très ancien ou invalide ?). Réexporte-le en FBX binaire depuis Blender, ou exporte directement en « glTF Binary ».'
+          : 'Impossible de lire ce .glb (fichier compressé Draco ou invalide ?). Réexporte-le depuis Blender en « glTF Binary » sans compression.'
+      );
     }
     setUploadingModel(false);
   }
@@ -347,9 +355,9 @@ export default function EntryForm({ initial }: { initial: FormEntry }) {
       </div>
 
       <div className="card p-5">
-        <label className="label">Modèle 3D animé (.glb) — idéal pour les skills ✨</label>
+        <label className="label">Modèle 3D animé (.glb ou .fbx) — idéal pour les skills ✨</label>
         <div className="flex flex-wrap items-center gap-3">
-          <input type="file" accept=".glb,model/gltf-binary" onChange={(e) => e.target.files?.[0] && pickModel(e.target.files[0])} disabled={uploadingModel || saving} />
+          <input type="file" accept=".glb,.fbx,model/gltf-binary" onChange={(e) => e.target.files?.[0] && pickModel(e.target.files[0])} disabled={uploadingModel || saving} />
           {uploadingModel && <span className="text-sm italic">Lecture du fichier…</span>}
           {(modelUrl || pendingModel) && (
             <button type="button" className="btn-danger !px-3 !py-0.5" onClick={removeModel}>
@@ -358,7 +366,7 @@ export default function EntryForm({ initial }: { initial: FormEntry }) {
           )}
         </div>
         <p className="mt-2 text-xs text-olive-700">
-          Format GLB (export Blender « glTF 2.0 → glTF Binary », ou Mixamo / Sketchfab), 50 Mo max. À l’enregistrement, le site{' '}
+          Formats GLB (export Blender « glTF 2.0 → glTF Binary », Sketchfab) ou FBX (Mixamo, Blender…, converti automatiquement en GLB), 50 Mo max. À l’enregistrement, le site{' '}
           <strong>ne garde que l’animation choisie</strong>, supprime les autres ainsi que les caméras et tout objet inutilisé, puis supprime l’ancien fichier du stockage.
         </p>
 
