@@ -54,7 +54,8 @@ Wiki RP (lieux, armes, mobs, objets, skills) branché sur le **même projet Supa
 
 - **Thème** : fond noir, vagues bleues transparentes animées + bulles (100 % CSS, désactivées si le système demande moins de mouvement ; 2 vagues et les bulles masquées sur téléphone), cartes en verre, titres dégradés, apparition en fondu des pages et des cartes.
 - **En-tête ordinateur** : logo, grande barre de recherche centrée (raccourci `/`), accès favoris / hasard / admin / déconnexion, et onglets des catégories avec l'onglet actif souligné.
-- **Modèles 3D allégés** : à l'enregistrement, le site ne garde que l'animation (« action » Blender) choisie, supprime les autres, les caméras et tout objet / matériau / texture inutilisé, puis envoie un seul fichier léger. Les visiteurs ne voient que cette animation. Un ancien modèle à plusieurs animations est allégé automatiquement au prochain enregistrement de sa fiche.
+- **Modèles 3D allégés** : à l'enregistrement, le site ne garde que l'animation (« action » Blender) choisie et supprime les autres et les caméras. Il **ne touche ni aux matériaux ni aux textures**. Si le fichier utilise une extension glTF que l'outil ne sait pas conserver, une confirmation est demandée (sinon l'envoi se fait avec le fichier d'origine intact).
+- **Matériaux Blender** : l'export glTF ne conserve que le *Principled BSDF* (couleur, métal, rugosité, émission, textures branchées dessus). Un shader personnalisé en nœuds apparaît blanc : « bake » le rendu en texture et branche-la sur Base Color / Emission avant d'exporter.
 - **Nettoyage du stockage** : ancien modèle, anciennes images et brouillons sont supprimés au remplacement ; supprimer une fiche (Dashboard) supprime aussi son image et son modèle.
 - **Images** : réduites automatiquement avant envoi (WebP, 1600 px max).
 - **Limites** (migration 0204) : modèles 10 Mo, images 3 Mo, 20 versions d'historique par fiche.

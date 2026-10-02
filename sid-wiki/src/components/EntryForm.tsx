@@ -163,7 +163,11 @@ export default function EntryForm({ initial }: { initial: FormEntry }) {
         setStatus('Allègement du modèle 3D…');
         const bytes = pendingModel ? pendingModel.bytes : new Uint8Array(await (await fetch(modelUrl!)).arrayBuffer());
         const { optimizeGlb } = await import('@/lib/glb');
-        const out = await optimizeGlb(bytes, modelAnimation || null);
+        const res = await optimizeGlb(bytes, modelAnimation || null);
+        if (res.lost.length && !confirm(`Ce modèle utilise des réglages de matériau (${res.lost.join(', ')}) que l’allègement ne peut pas conserver. Il sera envoyé tel quel, avec toutes ses animations. Continuer ?`)) {
+          throw new Error('envoi annulé.');
+        }
+        const out = res.bytes;
         const path = `${category}/${crypto.randomUUID()}.glb`;
         setStatus('Envoi du modèle allégé…');
         const { error: upErr } = await supabase.storage
