@@ -61,3 +61,8 @@ Wiki RP (lieux, armes, mobs, objets, skills) branché sur le **même projet Supa
 - **Images** : réduites automatiquement avant envoi (WebP, 1600 px max).
 - **Limites** (migration 0204) : modèles 10 Mo, images 3 Mo, 20 versions d'historique par fiche.
 
+
+## Compatibilité anciens iPhone (iOS 15)
+
+- Un correctif (`patches/`, appliqué automatiquement par `npm install` via `patch-package`) retire une syntaxe d'expression régulière de `mdast-util-gfm-autolink-literal` que Safari < 16.4 ne sait pas lire (elle faisait planter les pages avec du texte : « a client-side exception has occurred »).
+- De petits polyfills (`Object.hasOwn`, `.at()`, `findLast`, `structuredClone`) sont chargés dans `src/app/layout.tsx` pour iOS 15.0–15.3.

@@ -69,8 +69,8 @@ export default function EntryLink({
   }
 
   return (
-    <span className="relative inline-block" onMouseEnter={show} onMouseLeave={hide} onFocus={show} onBlur={hide}>
-      <Link href={`/${category}/${pad(number)}`} className="font-semibold text-olive-700 underline decoration-brass-500 decoration-dotted underline-offset-2 hover:text-stamp">
+    <span className="relative" onMouseEnter={show} onMouseLeave={hide} onFocus={show} onBlur={hide}>
+      <Link href={`/${category}/${pad(number)}`} className="wiki-link wiki-link-entry">
         {children}
       </Link>
 
@@ -79,7 +79,7 @@ export default function EntryLink({
           role="tooltip"
           ref={tip}
           style={{ transform: `translateX(${shift}px)` }}
-          className="absolute left-0 top-full z-50 mt-1 block w-72 max-w-[calc(100vw-1rem)] rounded border border-white/15 bg-white/[0.12] backdrop-blur-xl p-3 text-left text-sm font-normal text-ink shadow-lg"
+          className="absolute left-0 top-full z-50 mt-1 block w-72 max-w-[calc(100vw-1rem)] rounded-xl border border-white/25 bg-[#0b1730] p-3 text-left text-sm font-normal not-italic leading-snug text-ink no-underline shadow-2xl shadow-black/60 ring-1 ring-black/40"
         >
           {!preview && <span className="italic text-olive-700">Chargement…</span>}
           {preview && !preview.exists && <span className="italic">Fiche inexistante.</span>}

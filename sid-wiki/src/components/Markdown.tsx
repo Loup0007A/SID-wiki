@@ -28,7 +28,7 @@ export default function Markdown({ children, toc = false }: { children: string; 
       return (
         <Tag
           id={h.slug}
-          className={`group scroll-mt-24 font-typewriter text-olive-800 ${
+          className={`group flow-root scroll-mt-24 font-typewriter text-olive-800 ${
             tag === 'h2' ? 'border-b border-olive-800/30 pb-1' : ''
           }`}
         >
@@ -45,14 +45,14 @@ export default function Markdown({ children, toc = false }: { children: string; 
   const H3 = heading('h3');
 
   return (
-    <div className="prose prose-invert max-w-none prose-a:text-olive-700">
+    <div className="prose prose-invert max-w-none prose-a:font-semibold prose-a:text-olive-700 prose-a:no-underline">
       {toc && headings.length >= 3 && (
         <details open className="not-prose float-none mb-5 block w-full rounded-xl border border-white/15 bg-white/[0.09] p-3 backdrop-blur sm:float-right sm:clear-right sm:ml-5 sm:inline-block sm:w-auto sm:min-w-[16rem]">
           <summary className="cursor-pointer select-none text-center font-typewriter font-bold text-olive-800">Sommaire</summary>
           <ol className="mt-2 space-y-0.5 text-sm">
             {headings.map((h) => (
               <li key={h.slug} className={h.level === 2 ? 'ml-4' : ''}>
-                <a href={`#${h.slug}`} className="text-olive-700 hover:underline">
+                <a href={`#${h.slug}`} className="text-olive-700 no-underline hover:text-stamp">
                   <span className="mr-1.5 text-olive-600/70">{h.number}</span>
                   {h.text}
                 </a>
@@ -90,7 +90,7 @@ export default function Markdown({ children, toc = false }: { children: string; 
               );
             }
             return (
-              <a href={href} target="_blank" rel="noopener noreferrer nofollow">
+              <a href={href} target="_blank" rel="noopener noreferrer nofollow" className="wiki-link">
                 {children}
               </a>
             );
