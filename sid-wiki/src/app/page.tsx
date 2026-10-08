@@ -3,15 +3,18 @@ import { createClient } from '@/lib/supabase/server';
 import { CATEGORIES, CATEGORY_LABELS, pad, type Category, type RecentEntry } from '@/lib/wiki';
 import AccessDenied from '@/components/AccessDenied';
 import Mention from '@/components/Mention';
+import NewSince from '@/components/NewSince';
+import RecentlyViewed from '@/components/RecentlyViewed';
 
 export const dynamic = 'force-dynamic';
 
 export default async function HomePage() {
   const supabase = createClient();
-  const [{ data, error }, { data: recentData }, { data: topData }] = await Promise.all([
+  const [{ data, error }, { data: recentData }, { data: topData }, { data: announcement }] = await Promise.all([
     supabase.rpc('wiki_stats'),
     supabase.rpc('wiki_recent', { p_limit: 6 }),
     supabase.rpc('wiki_top_discoverers', { p_limit: 5 }),
+    supabase.rpc('wiki_announcement_get'),
   ]);
   if (error) return <AccessDenied />;
 
@@ -26,8 +29,18 @@ export default async function HomePage() {
     <div>
       <div className="mb-1 flex flex-wrap items-center justify-between gap-3">
         <h1 className="title-grad font-typewriter text-2xl font-bold text-olive-800 sm:text-3xl">Bienvenue, chasseur !</h1>
-        <Link href="/hasard" className="btn">🎲 Fiche au hasard</Link>
+        <span className="flex flex-wrap gap-2">
+          <Link href="/tags" className="btn-ghost">🏷 Tags</Link>
+          <Link href="/hasard" className="btn">🎲 Fiche au hasard</Link>
+        </span>
       </div>
+      {typeof announcement === 'string' && announcement.trim() && (
+        <div className="mb-4 mt-3 rounded-2xl border border-brass-400/40 bg-brass-400/15 px-4 py-3 text-brass-300">
+          <span className="mr-2">📣</span>
+          <span className="whitespace-pre-line font-semibold">{announcement}</span>
+        </div>
+      )}
+      <NewSince dates={recent.map((r) => r.discovered_at)} />
       <p className="mb-6 text-olive-700">Retrouve ici tout ce que la S.I.D. a déjà croisé en chasse. Le reste ? Il reste à découvrir !</p>
 
       <form action="/recherche" className="mb-8 flex gap-2">
@@ -54,7 +67,9 @@ export default async function HomePage() {
         })}
       </div>
 
-      <div className="mt-8 grid gap-4 lg:grid-cols-3">
+      <RecentlyViewed />
+
+      <div className="mt-4 grid gap-4 lg:grid-cols-3">
         <section className="card p-5 lg:col-span-2">
           <h2 className="mb-3 font-typewriter text-xl font-bold text-olive-800">🆕 Dernières découvertes</h2>
           {recent.length === 0 ? (

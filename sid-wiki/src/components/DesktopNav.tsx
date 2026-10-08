@@ -24,6 +24,14 @@ export default function DesktopNav() {
           </Link>
         );
       })}
+      <Link
+        href="/tags"
+        className={`rounded-full px-4 py-1.5 font-typewriter text-base font-bold transition ${
+          pathname.startsWith('/tags') ? 'bg-white/[0.14] text-white' : 'text-olive-800 hover:bg-white/[0.08] hover:text-white'
+        }`}
+      >
+        🏷 Tags
+      </Link>
     </nav>
   );
 }

@@ -5,6 +5,9 @@ import { useCallback, useEffect, useMemo, useState } from 'react';
 import { createClient } from '@/lib/supabase/client';
 import { CATEGORIES, CATEGORY_LABELS, pad, type Category } from '@/lib/wiki';
 import { removeStoredFile } from '@/lib/storage';
+import { useRouter } from 'next/navigation';
+import AdminReports, { type Report } from './AdminReports';
+import AdminSettings from './AdminSettings';
 
 type Row = {
   id: string;
@@ -16,6 +19,33 @@ type Row = {
   model_url: string | null;
   rarity: number | null;
 };
+
+type Overview = {
+  id: string;
+  has_summary: boolean;
+  has_content: boolean;
+  has_image: boolean;
+  has_discoverer: boolean;
+  has_infobox: boolean;
+  comments: number;
+  favorites: number;
+  open_reports: number;
+};
+
+type StatusFilter = 'all' | 'hidden' | 'found' | 'incomplete';
+
+/** Ce qui manque à une fiche découverte (vide = fiche complète). */
+function missing(r: Row, o: Overview | undefined): string[] {
+  if (!r.discovered || !o) return [];
+  const m: string[] = [];
+  if (!o.has_summary) m.push('résumé');
+  if (!o.has_content) m.push('texte');
+  if (!o.has_image) m.push('image');
+  if (r.tags.length === 0) m.push('tags');
+  if (!o.has_infobox) m.push('fiche technique');
+  if (!o.has_discoverer) m.push('découvreur');
+  return m;
+}
 
 type ImportRow = {
   category: Category;
@@ -83,6 +113,21 @@ export default function AdminDashboard() {
   const [error, setError] = useState<string | null>(null);
   const [info, setInfo] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
+  const router = useRouter();
+  const [tab, setTab] = useState<'entries' | 'reports' | 'settings'>('entries');
+  const [overview, setOverview] = useState<Map<string, Overview>>(new Map());
+  const [status, setStatus] = useState<StatusFilter>('all');
+  const [reports, setReports] = useState<Report[]>([]);
+  const [tagInput, setTagInput] = useState('');
+
+  const loadReports = useCallback(async () => {
+    const { data } = await supabase.rpc('wiki_reports_list');
+    setReports((data ?? []) as Report[]);
+  }, [supabase]);
+
+  useEffect(() => {
+    loadReports();
+  }, [loadReports]);
 
   const load = useCallback(async () => {
     setLoading(true);
@@ -96,6 +141,8 @@ export default function AdminDashboard() {
     else {
       setError(null);
       setRows((data ?? []) as Row[]);
+      const { data: ov } = await supabase.rpc('wiki_admin_overview', { p_category: category });
+      setOverview(new Map(((ov ?? []) as Overview[]).map((o) => [o.id, o])));
     }
     setLoading(false);
   }, [supabase, category]);
@@ -105,9 +152,16 @@ export default function AdminDashboard() {
   }, [load]);
 
   const f = filter.trim().toLowerCase();
+  const byStatus = rows.filter((r) =>
+    status === 'hidden' ? !r.discovered : status === 'found' ? r.discovered : status === 'incomplete' ? missing(r, overview.get(r.id)).length > 0 : true
+  );
   const shown = f
-    ? rows.filter((r) => r.title.toLowerCase().includes(f) || pad(r.number).includes(f) || r.tags.some((t) => t.toLowerCase().includes(f)))
-    : rows;
+    ? byStatus.filter((r) => r.title.toLowerCase().includes(f) || pad(r.number).includes(f) || r.tags.some((t) => t.toLowerCase().includes(f)))
+    : byStatus;
+  const incompleteCount = rows.filter((r) => missing(r, overview.get(r.id)).length > 0).length;
+  const openReports = reports.filter((r) => r.status === 'open').length;
+  const totalComments = Array.from(overview.values()).reduce((n, o) => n + o.comments, 0);
+  const totalFavorites = Array.from(overview.values()).reduce((n, o) => n + o.favorites, 0);
   const found = rows.filter((r) => r.discovered).length;
   const allShownSelected = shown.length > 0 && shown.every((r) => selected.has(r.id));
 
@@ -147,6 +201,32 @@ export default function AdminDashboard() {
     }
     setRows((rs) => rs.filter((r) => !ids.includes(r.id)));
     setSelected(new Set());
+  }
+
+  async function duplicate(id: string) {
+    setInfo(null);
+    const { data, error } = await supabase.rpc('wiki_entry_duplicate', { p_id: id });
+    if (error) return setError(error.message);
+    setError(null);
+    router.push(`/admin/edit/${category}/${pad(data as number)}`);
+  }
+
+  /** Ajoute (ou retire) un tag à toutes les fiches sélectionnées. */
+  async function bulkTag(mode: 'add' | 'remove') {
+    const tag = tagInput.trim().toLowerCase().replace(/^#/, '');
+    if (!tag) return setError('Écris d’abord un tag.');
+    let n = 0;
+    for (const r of rows.filter((x) => selected.has(x.id))) {
+      const has = r.tags.includes(tag);
+      if (mode === 'add' ? has : !has) continue;
+      const tags = mode === 'add' ? [...r.tags, tag] : r.tags.filter((t) => t !== tag);
+      const { error } = await supabase.from('wiki_entries').update({ tags }).eq('id', r.id);
+      if (error) return setError(error.message);
+      n++;
+    }
+    setError(null);
+    setInfo(`Tag #${tag} ${mode === 'add' ? 'ajouté à' : 'retiré de'} ${n} fiche${n > 1 ? 's' : ''}.`);
+    load();
   }
 
   async function exportJson() {
@@ -191,6 +271,34 @@ export default function AdminDashboard() {
         </Link>
       </div>
 
+      <div className="mb-4 flex flex-wrap gap-2 border-b border-white/15 pb-3">
+        <button onClick={() => setTab('entries')} className={tab === 'entries' ? 'btn' : 'btn-ghost'}>📚 Fiches</button>
+        <button onClick={() => setTab('reports')} className={tab === 'reports' ? 'btn' : 'btn-ghost'}>
+          🚩 Signalements{openReports > 0 && <span className="ml-2 rounded-full bg-stamp px-2 text-xs font-bold text-white">{openReports}</span>}
+        </button>
+        <button onClick={() => setTab('settings')} className={tab === 'settings' ? 'btn' : 'btn-ghost'}>⚙ Réglages</button>
+      </div>
+
+      {tab === 'reports' && <AdminReports reports={reports} onChange={() => { loadReports(); load(); }} />}
+      {tab === 'settings' && <AdminSettings />}
+
+      {tab === 'entries' && (
+      <>
+      <div className="mb-4 grid grid-cols-2 gap-2 sm:grid-cols-4">
+        {[
+          { label: 'Découvertes', value: `${found}/${rows.length}`, hint: rows.length ? `${Math.round((found / rows.length) * 100)} %` : '' },
+          { label: 'À compléter', value: String(incompleteCount), hint: 'fiches découvertes' },
+          { label: 'Commentaires', value: String(totalComments), hint: CATEGORY_LABELS[category].label },
+          { label: 'Favoris', value: String(totalFavorites), hint: CATEGORY_LABELS[category].label },
+        ].map((c) => (
+          <div key={c.label} className="card p-3">
+            <div className="text-xs text-olive-700">{c.label}</div>
+            <div className="font-typewriter text-2xl font-bold">{c.value}</div>
+            <div className="text-xs text-olive-700/80">{c.hint}</div>
+          </div>
+        ))}
+      </div>
+
       <div className="-mx-4 mb-4 flex gap-2 overflow-x-auto px-4 pb-1 [scrollbar-width:none] sm:mx-0 sm:flex-wrap sm:overflow-visible sm:px-0 [&>*]:shrink-0 [&>*]:whitespace-nowrap">
         {CATEGORIES.map((c) => (
           <button key={c} onClick={() => setCategory(c)} className={c === category ? 'btn' : 'btn-ghost'}>
@@ -201,9 +309,12 @@ export default function AdminDashboard() {
 
       <div className="mb-3 flex flex-wrap items-center gap-3">
         <input className="input max-w-xs" placeholder="Filtrer (titre, n°, tag)…" value={filter} onChange={(e) => setFilter(e.target.value)} />
-        <span className="text-sm text-olive-700">
-          {found} / {rows.length} découverts (max 1000 par catégorie)
-        </span>
+        <select className="input !w-auto" value={status} onChange={(e) => setStatus(e.target.value as StatusFilter)} aria-label="Filtrer par statut">
+          <option value="all">Toutes</option>
+          <option value="found">Découvertes</option>
+          <option value="hidden">Masquées (?)</option>
+          <option value="incomplete">À compléter ({incompleteCount})</option>
+        </select>
         <span className="ml-auto flex flex-wrap gap-2">
           <button className="btn-ghost !px-3 !py-0.5" onClick={exportJson}>⬇ Exporter JSON</button>
           <label className="btn-ghost !px-3 !py-0.5 cursor-pointer">
@@ -227,6 +338,11 @@ export default function AdminDashboard() {
           <strong className="font-typewriter">{selected.size} sélectionnée{selected.size > 1 ? 's' : ''}</strong>
           <button className="btn !px-3 !py-0.5" onClick={() => setDiscovered(selIds, true)}>Découvrir</button>
           <button className="btn-ghost !px-3 !py-0.5" onClick={() => setDiscovered(selIds, false)}>Masquer</button>
+          <span className="flex items-center gap-1">
+            <input className="input !w-32 !py-0.5" placeholder="#tag" value={tagInput} onChange={(e) => setTagInput(e.target.value)} />
+            <button className="btn-ghost !px-3 !py-0.5" onClick={() => bulkTag('add')}>+ Tag</button>
+            <button className="btn-ghost !px-3 !py-0.5" onClick={() => bulkTag('remove')}>− Tag</button>
+          </span>
           <button className="btn-danger !px-3 !py-0.5" onClick={() => removeMany(selIds)}>Supprimer</button>
           <button className="btn-ghost !px-3 !py-0.5" onClick={() => setSelected(new Set())}>Annuler</button>
         </div>
@@ -270,6 +386,29 @@ export default function AdminDashboard() {
                   {r.title}
                   {r.rarity ? <span className="ml-2 text-brass-500">{'★'.repeat(r.rarity)}</span> : null}
                   {r.model_url ? <span className="ml-2" title="Modèle 3D">🎬</span> : null}
+                  {(() => {
+                    const o = overview.get(r.id);
+                    const m = missing(r, o);
+                    return (
+                      <span className="ml-2 inline-flex flex-wrap gap-1 align-middle">
+                        {m.length > 0 && (
+                          <span className="rounded-full bg-brass-400/20 px-2 text-[11px] font-bold text-brass-300" title={`Manque : ${m.join(', ')}`}>
+                            ⚠ {m.length}
+                          </span>
+                        )}
+                        {o && o.open_reports > 0 && (
+                          <button type="button" className="rounded-full bg-stamp/80 px-2 text-[11px] font-bold text-white" title="Signalements ouverts" onClick={() => setTab('reports')}>
+                            🚩 {o.open_reports}
+                          </button>
+                        )}
+                        {o && (o.comments > 0 || o.favorites > 0) && (
+                          <span className="text-[11px] text-olive-700" title="Commentaires · favoris">
+                            💬 {o.comments} ⭐ {o.favorites}
+                          </span>
+                        )}
+                      </span>
+                    );
+                  })()}
                 </td>
                 <td className="hidden p-2 md:table-cell">{r.tags.map((t) => `#${t}`).join(' ')}</td>
                 <td className="p-2">
@@ -287,6 +426,9 @@ export default function AdminDashboard() {
                     <Link className="btn-ghost !px-3 !py-0.5" href={`/admin/edit/${r.category}/${pad(r.number)}`}>
                       Éditer
                     </Link>
+                    <button className="btn-ghost !px-3 !py-0.5" title="Créer une copie masquée" onClick={() => duplicate(r.id)}>
+                      Dupliquer
+                    </button>
                     <button className="btn-danger !px-3 !py-0.5" onClick={() => removeMany([r.id])}>
                       Suppr.
                     </button>
@@ -302,6 +444,8 @@ export default function AdminDashboard() {
         Import JSON : liste d’objets <code>{'{ "number": 12, "title": "…", "summary", "content", "tags": [], "infobox": [{"label","value"}], "rarity": 1-8, "discovered": true }'}</code>.
         La catégorie est celle de l’onglet si elle n’est pas précisée.
       </p>
+      </>
+      )}
     </div>
   );
 }

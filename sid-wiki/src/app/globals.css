@@ -133,3 +133,16 @@ select option {
 .wiki-link:hover { color: theme('colors.stamp'); background-size: 100% 2px; }
 .wiki-link-entry { background-image: linear-gradient(90deg, currentColor 50%, transparent 50%); background-size: 6px 1px; background-repeat: repeat-x; }
 .wiki-link-entry:hover { background-size: 6px 2px; }
+
+/* Taille du texte réglable (boutons A− / A+ sur les fiches) */
+.entry-body .prose { font-size: calc(1rem * var(--fs, 1)); }
+
+/* Impression d'une fiche : fond blanc, texte noir, sans décor ni boutons */
+@media print {
+  .no-print, header, nav, video, model-viewer { display: none !important; }
+  body, html { background: #fff !important; color: #000 !important; }
+  .card { background: #fff !important; border: none !important; box-shadow: none !important; backdrop-filter: none !important; }
+  .card *, .prose, .prose * { color: #000 !important; }
+  .prose a { text-decoration: underline !important; }
+  .fixed, .-z-10 { display: none !important; }
+}

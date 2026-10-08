@@ -71,6 +71,11 @@ export default function MobileNav({ isAdmin }: { isAdmin: boolean }) {
               ))}
             </div>
 
+            <Link href="/tags" className="mt-2 flex items-center gap-2 rounded-2xl border border-white/15 bg-white/[0.1] px-3 py-3 font-typewriter font-bold text-olive-800">
+              <span className="text-xl">🏷</span>
+              Tous les tags
+            </Link>
+
             {isAdmin && (
               <Link href="/admin" className="btn mt-4 w-full !min-h-[3rem]">
                 🛠 Dashboard admin

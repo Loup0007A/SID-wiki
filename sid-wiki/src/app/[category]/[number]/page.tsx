@@ -11,6 +11,10 @@ import Infobox from '@/components/Infobox';
 import Rarity from '@/components/Rarity';
 import ModelViewer from '@/components/ModelViewer';
 import FavoriteButton from '@/components/FavoriteButton';
+import EntryTools from '@/components/EntryTools';
+import ReportButton from '@/components/ReportButton';
+import PersonalNote from '@/components/PersonalNote';
+import ViewTracker from '@/components/ViewTracker';
 
 export const dynamic = 'force-dynamic';
 
@@ -31,7 +35,7 @@ export default async function EntryPage({ params }: { params: { category: string
 
   return (
     <article className="mx-auto max-w-3xl">
-      <nav className="mb-3 font-typewriter text-xs text-olive-700">
+      <nav className="no-print mb-3 font-typewriter text-xs text-olive-700">
         <Link href="/" className="hover:underline">Accueil</Link> /{' '}
         <Link href={`/${entry.category}`} className="hover:underline">{label.label}</Link> / N° {pad(entry.number)}
       </nav>
@@ -82,6 +86,10 @@ export default async function EntryPage({ params }: { params: { category: string
             </div>
           )}
 
+          <div className="mt-3">
+            <EntryTools title={entry.title ?? ''} />
+          </div>
+
           {entry.discoverer && (
             <p className="mt-3 text-sm text-olive-800">
               🏆 Découvert par <Mention nickname={entry.discoverer} />
@@ -101,7 +109,7 @@ export default async function EntryPage({ params }: { params: { category: string
             <img src={entry.image_url} alt={entry.title ?? ''} className="mt-4 max-h-96 w-full rounded-2xl border border-white/15 object-cover" />
           )}
 
-          <div className="mt-4 flow-root">
+          <div className="entry-body mt-4 flow-root">
             <Infobox rows={infoRows} />
             {entry.content && <Markdown toc>{entry.content}</Markdown>}
           </div>
@@ -121,11 +129,19 @@ export default async function EntryPage({ params }: { params: { category: string
             </section>
           )}
 
+          <div className="mt-6">
+            <ReportButton category={entry.category} number={entry.number} />
+          </div>
+
+          <PersonalNote category={entry.category} number={entry.number} />
+
+          <ViewTracker category={entry.category} number={entry.number} title={entry.title ?? ''} />
+
           <Comments category={entry.category} number={entry.number} />
         </div>
       )}
 
-      <div className="mt-4 flex justify-between gap-2 font-typewriter text-sm">
+      <div className="no-print mt-4 flex justify-between gap-2 font-typewriter text-sm">
         {entry.prev !== null ? (
           <Link href={`/${entry.category}/${pad(entry.prev)}`} className="btn-ghost">
             ← N° {pad(entry.prev)}

@@ -5,7 +5,7 @@ Wiki RP (lieux, armes, mobs, objets, skills) branché sur le **même projet Supa
 ## Installation
 
 1. `cp .env.example .env.local` et renseigne l'URL + la clé **anon** du projet Supabase existant.
-2. Exécute `supabase/migrations/0200_wiki.sql` puis `0201_wiki_hide_names_for_admins.sql` puis `0202_wiki_comments_discoverer.sql` puis `0203_wiki_skills_3d_extras.sql` puis `0204_wiki_save_space.sql` dans le SQL Editor.
+2. Exécute `supabase/migrations/0200_wiki.sql` puis `0201_wiki_hide_names_for_admins.sql` puis `0202_wiki_comments_discoverer.sql` puis `0203_wiki_skills_3d_extras.sql` puis `0204_wiki_save_space.sql` puis `0205_wiki_giga_update.sql` dans le SQL Editor.
 3. Donne la permission `manage_wiki` à un rôle (bloc commenté en fin de migration — adapte les noms de colonnes de `role_permissions`). Le Fondateur l'a d'office via `has_permission`.
 4. `npm install && npm run dev`
 
@@ -66,3 +66,19 @@ Wiki RP (lieux, armes, mobs, objets, skills) branché sur le **même projet Supa
 
 - Un correctif (`patches/`, appliqué automatiquement par `npm install` via `patch-package`) retire une syntaxe d'expression régulière de `mdast-util-gfm-autolink-literal` que Safari < 16.4 ne sait pas lire (elle faisait planter les pages avec du texte : « a client-side exception has occurred »).
 - De petits polyfills (`Object.hasOwn`, `.at()`, `findLast`, `structuredClone`) sont chargés dans `src/app/layout.tsx` pour iOS 15.0–15.3.
+
+## Grosse mise à jour (migration 0205)
+
+**Pour tout le monde**
+- 📝 **Notes personnelles** privées sous chaque fiche (5000 caractères), regroupées dans « Mes favoris et notes ».
+- 🕘 **Consultées récemment** (sur l'appareil) et 🆕 **« N nouvelles découvertes depuis ta dernière visite »** sur l'accueil.
+- ▦/☰ **Cartes ou liste**, **tri** (numéro, nom, rareté ★) et **filtre instantané** dans chaque catégorie (le choix est mémorisé). Les fiches masquées restent « ? ».
+- 🔗 **Partager** (menu de partage du téléphone ou lien copié), 🖨 **Imprimer** (mise en page propre, noir sur blanc), **A− / A+** pour la taille du texte.
+- 🚩 **Signaler** une erreur, une info manquante ou une idée directement aux admins (anti-spam : 5 par 10 min).
+- 🏷 **Page des tags** (`/tags`) : tous les tags avec leur nombre de fiches découvertes.
+- 📣 **Annonce d'accueil** écrite par les admins.
+
+**Pour les admins** (Dashboard, 3 onglets)
+- 📚 **Fiches** : cartes de stats, filtre **À compléter** (résumé, texte, image, tags, fiche technique, découvreur manquants, avec pastille ⚠), compteurs 💬 commentaires / ⭐ favoris / 🚩 signalements par fiche, **Dupliquer** (copie masquée au prochain numéro libre, sans image ni modèle), **ajout / retrait d'un tag en masse** sur la sélection.
+- 🚩 **Signalements** : boîte de réception (traiter, rouvrir, supprimer, éditer la fiche), pastille rouge du nombre à traiter.
+- ⚙ **Réglages** : publier / retirer l'annonce d'accueil.

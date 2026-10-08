@@ -2,7 +2,7 @@ import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { createClient } from '@/lib/supabase/server';
 import { CATEGORY_LABELS, isCategory, type EntrySummary } from '@/lib/wiki';
-import EntryCard from '@/components/EntryCard';
+import CategoryView from '@/components/CategoryView';
 import AccessDenied from '@/components/AccessDenied';
 
 export const dynamic = 'force-dynamic';
@@ -60,15 +60,7 @@ export default async function CategoryPage({
         ))}
       </div>
 
-      {entries.length === 0 ? (
-        <p className="italic text-olive-700">Rien ici pour l’instant !</p>
-      ) : (
-        <div className="stagger grid grid-cols-2 gap-2 sm:grid-cols-3 sm:gap-3 lg:grid-cols-4">
-          {entries.map((e) => (
-            <EntryCard key={e.number} entry={e} />
-          ))}
-        </div>
-      )}
+      <CategoryView entries={entries} />
     </div>
   );
 }
