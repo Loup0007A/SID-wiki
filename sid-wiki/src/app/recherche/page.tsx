@@ -3,6 +3,7 @@ import type { EntrySummary } from '@/lib/wiki';
 import { CATEGORIES, CATEGORY_LABELS } from '@/lib/wiki';
 import EntryCard from '@/components/EntryCard';
 import AccessDenied from '@/components/AccessDenied';
+import Icon from '@/components/Icon';
 
 export const dynamic = 'force-dynamic';
 
@@ -32,7 +33,7 @@ export default async function SearchPage({ searchParams }: { searchParams: { q?:
         return (
           <section key={c} className="mb-8">
             <h2 className="mb-2 font-typewriter text-lg">
-              {CATEGORY_LABELS[c].icon} {CATEGORY_LABELS[c].label} ({list.length})
+              <Icon name={c} /> {CATEGORY_LABELS[c].label} ({list.length})
             </h2>
             <div className="stagger grid grid-cols-2 gap-2 sm:grid-cols-3 sm:gap-3 lg:grid-cols-4">
               {list.map((e) => (

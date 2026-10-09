@@ -2,7 +2,8 @@
 
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
-import { CATEGORY_LABELS, isCategory, pad } from '@/lib/wiki';
+import { isCategory, pad, type Category } from '@/lib/wiki';
+import Icon from './Icon';
 import { RECENT_KEY, type Viewed } from './ViewTracker';
 
 /** « Repris où tu t'étais arrêté » : fiches récemment consultées sur cet appareil. */
@@ -37,7 +38,7 @@ export default function RecentlyViewed() {
         {items.map((v) => (
           <li key={`${v.category}${v.number}`}>
             <Link href={`/${v.category}/${pad(v.number)}`} className="btn-ghost !px-3 !py-1 text-sm">
-              {CATEGORY_LABELS[v.category as keyof typeof CATEGORY_LABELS].icon} {v.title}
+              <Icon name={v.category as Category} /> {v.title}
             </Link>
           </li>
         ))}

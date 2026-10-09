@@ -34,8 +34,8 @@ export default function ReportButton({ category, number }: { category: string; n
 
   return (
     <div className="no-print">
-      <button type="button" className="btn-ghost" onClick={() => setOpen((o) => !o)} aria-expanded={open}>
-        🚩 Signaler
+      <button type="button" className="text-sm text-olive-700 underline-offset-2 hover:underline" onClick={() => setOpen((o) => !o)} aria-expanded={open}>
+        🚩 Signaler un problème sur cette fiche
       </button>
       {open && (
         <div className="card mt-2 max-w-md p-3">

@@ -1,7 +1,8 @@
 import { createClient } from '@/lib/supabase/server';
 import Link from 'next/link';
-import { CATEGORY_LABELS, pad, type Category, type EntrySummary } from '@/lib/wiki';
+import { pad, type Category, type EntrySummary } from '@/lib/wiki';
 import EntryCard from '@/components/EntryCard';
+import Icon from '@/components/Icon';
 import AccessDenied from '@/components/AccessDenied';
 
 export const dynamic = 'force-dynamic';
@@ -15,7 +16,7 @@ export default async function FavoritesPage() {
 
   return (
     <div>
-      <h1 className="title-grad mb-4 font-typewriter text-3xl font-bold text-olive-800">⭐ Mes favoris et notes</h1>
+      <h1 className="title-grad mb-4 font-typewriter text-3xl font-bold text-olive-800"><Icon name="favoris" /> Mes favoris et notes</h1>
       {entries.length === 0 ? (
         <p className="italic text-olive-700">Pas encore de favori. Clique sur « ☆ Ajouter aux favoris » sur une fiche !</p>
       ) : (
@@ -33,7 +34,7 @@ export default async function FavoritesPage() {
             {notes.map((n) => (
               <li key={`${n.category}${n.number}`} className="card p-4">
                 <Link href={`/${n.category}/${pad(n.number)}`} className="font-bold text-olive-700 hover:underline">
-                  {CATEGORY_LABELS[n.category].icon} {n.title} <span className="font-typewriter text-xs">N° {pad(n.number)}</span>
+                  <Icon name={n.category} /> {n.title} <span className="font-typewriter text-xs">N° {pad(n.number)}</span>
                 </Link>
                 <p className="mt-1 line-clamp-4 whitespace-pre-line text-sm text-olive-800">{n.body}</p>
               </li>

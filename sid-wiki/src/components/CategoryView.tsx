@@ -2,9 +2,10 @@
 
 import Link from 'next/link';
 import { useEffect, useMemo, useState } from 'react';
-import { CATEGORY_LABELS, pad, type EntrySummary } from '@/lib/wiki';
+import { pad, type EntrySummary } from '@/lib/wiki';
 import EntryCard from './EntryCard';
 import Rarity from './Rarity';
+import Icon from './Icon';
 
 type Sort = 'number' | 'title' | 'rarity';
 const KEY = 'wiki-category-view';
@@ -103,7 +104,6 @@ export default function CategoryView({ entries }: { entries: EntrySummary[] }) {
                 ) : (
                   <span className="flex-1 text-xl font-extrabold text-olive-700/40">?</span>
                 )}
-                <span className="hidden text-xs text-olive-700 md:inline">{CATEGORY_LABELS[e.category].icon}</span>
               </Link>
             </li>
           ))}

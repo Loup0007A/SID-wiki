@@ -1,6 +1,7 @@
 import Link from 'next/link';
-import { CATEGORY_LABELS, pad, type EntrySummary } from '@/lib/wiki';
+import { pad, type EntrySummary } from '@/lib/wiki';
 import Rarity from './Rarity';
+import Icon from './Icon';
 
 export default function EntryCard({ entry, showCategory = false }: { entry: EntrySummary; showCategory?: boolean }) {
   const known = entry.title !== null;
@@ -13,7 +14,7 @@ export default function EntryCard({ entry, showCategory = false }: { entry: Entr
     >
       <div className="flex items-start justify-between gap-2">
         <span className="font-typewriter text-xs text-olive-700">
-          {showCategory ? `${CATEGORY_LABELS[entry.category].icon} ` : ''}N° {pad(entry.number)}
+          {showCategory && <Icon name={entry.category} className="mr-1" />}N° {pad(entry.number)}
         </span>
         {entry.has_model && (
           <span className="rounded-full bg-kraft-500/30 px-2 text-[10px] font-bold text-olive-800" title="Modèle 3D animé">

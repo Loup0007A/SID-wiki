@@ -82,3 +82,9 @@ Wiki RP (lieux, armes, mobs, objets, skills) branché sur le **même projet Supa
 - 📚 **Fiches** : cartes de stats, filtre **À compléter** (résumé, texte, image, tags, fiche technique, découvreur manquants, avec pastille ⚠), compteurs 💬 commentaires / ⭐ favoris / 🚩 signalements par fiche, **Dupliquer** (copie masquée au prochain numéro libre, sans image ni modèle), **ajout / retrait d'un tag en masse** sur la sélection.
 - 🚩 **Signalements** : boîte de réception (traiter, rouvrir, supprimer, éditer la fiche), pastille rouge du nombre à traiter.
 - ⚙ **Réglages** : publier / retirer l'annonce d'accueil.
+
+## Icônes, guide et interface simplifiée
+
+- **Icônes personnalisées** : dépose des PNG transparents (128×128) dans `public/icons/` avec les noms listés dans `public/icons/LISEZ-MOI.txt` (`logo`, `lieux`, `armes`, `mobs`, `objets`, `skills`, `accueil`, `chercher`, `favoris`, `hasard`, `tags`, `aide`, `admin`, `menu`). Un fichier absent = l'emoji par défaut. Les icônes de l'appli installée (`icon-192`, `icon-512`, `icon-maskable-512`, `apple-touch-icon`) se remplacent de la même façon.
+- **Mini-guide** : page `/aide` (menu → Aide), bandeau « Première visite ? » sur l'accueil ; une section « Pour les admins » n'apparaît qu'aux admins.
+- **Interface allégée** : ordinateur = logo, recherche, ⭐ et un seul menu (hasard, tags, aide, admin, déconnexion) ; téléphone = 3 onglets + Menu ; fiche = ⭐ Favori + un bouton ⋯ (partager, imprimer, taille du texte) et « Signaler » discret en bas ; catégorie = filtres secondaires repliés ; accueil sans doublon de recherche, top découvreurs repliable ; Dashboard = stats sur une ligne et actions rares (dupliquer, supprimer) dans un menu ⋯.

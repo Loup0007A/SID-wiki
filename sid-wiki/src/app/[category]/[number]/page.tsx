@@ -64,6 +64,7 @@ export default async function EntryPage({ params }: { params: { category: string
             </div>
             <div className="flex w-full flex-wrap items-center gap-2 sm:w-auto">
               <FavoriteButton category={entry.category} number={entry.number} initial={entry.favorited} />
+              <EntryTools title={entry.title ?? ''} />
               {isAdmin && (
                 <Link href={`/admin/edit/${entry.category}/${pad(entry.number)}`} className="btn-ghost">
                   Modifier
@@ -85,10 +86,6 @@ export default async function EntryPage({ params }: { params: { category: string
               ))}
             </div>
           )}
-
-          <div className="mt-3">
-            <EntryTools title={entry.title ?? ''} />
-          </div>
 
           {entry.discoverer && (
             <p className="mt-3 text-sm text-olive-800">

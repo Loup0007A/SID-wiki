@@ -16,7 +16,7 @@ export default function FavoriteButton({ category, number, initial }: { category
 
   return (
     <button type="button" onClick={toggle} disabled={busy} className="btn-ghost" aria-pressed={fav}>
-      {fav ? '⭐ Dans mes favoris' : '☆ Ajouter aux favoris'}
+      {fav ? '⭐ Favori' : '☆ Favori'}
     </button>
   );
 }

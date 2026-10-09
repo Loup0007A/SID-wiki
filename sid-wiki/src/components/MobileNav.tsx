@@ -5,6 +5,7 @@ import { usePathname, useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { createClient } from '@/lib/supabase/client';
 import { CATEGORIES, CATEGORY_LABELS } from '@/lib/wiki';
+import Icon, { type IconName } from './Icon';
 
 /** Barre d'onglets en bas + menu coulissant, affichés uniquement sur téléphone (< md). */
 export default function MobileNav({ isAdmin }: { isAdmin: boolean }) {
@@ -28,11 +29,10 @@ export default function MobileNav({ isAdmin }: { isAdmin: boolean }) {
     };
   }, [open]);
 
-  const tabs = [
-    { href: '/', icon: '🏠', label: 'Accueil', active: pathname === '/' },
-    { href: '/recherche', icon: '🔍', label: 'Chercher', active: pathname.startsWith('/recherche') },
-    { href: '/favoris', icon: '⭐', label: 'Favoris', active: pathname.startsWith('/favoris') },
-    { href: '/hasard', icon: '🎲', label: 'Hasard', active: false },
+  const tabs: { href: string; icon: IconName; label: string; active: boolean }[] = [
+    { href: '/', icon: 'accueil', label: 'Accueil', active: pathname === '/' },
+    { href: '/recherche', icon: 'chercher', label: 'Chercher', active: pathname.startsWith('/recherche') },
+    { href: '/favoris', icon: 'favoris', label: 'Favoris', active: pathname.startsWith('/favoris') },
   ];
 
   async function signOut() {
@@ -65,20 +65,28 @@ export default function MobileNav({ isAdmin }: { isAdmin: boolean }) {
                     pathname === `/${c}` || pathname.startsWith(`/${c}/`) ? 'bg-brass-400 text-night' : 'bg-white/[0.1] text-olive-800'
                   }`}
                 >
-                  <span className="text-xl">{CATEGORY_LABELS[c].icon}</span>
+                  <Icon name={c} className="text-xl" />
                   {CATEGORY_LABELS[c].label}
                 </Link>
               ))}
             </div>
 
-            <Link href="/tags" className="mt-2 flex items-center gap-2 rounded-2xl border border-white/15 bg-white/[0.1] px-3 py-3 font-typewriter font-bold text-olive-800">
-              <span className="text-xl">🏷</span>
-              Tous les tags
-            </Link>
+            <div className="mt-2 grid grid-cols-3 gap-2 text-center text-xs font-bold">
+              {([
+                ['/hasard', 'hasard', 'Hasard'],
+                ['/tags', 'tags', 'Tags'],
+                ['/aide', 'aide', 'Aide'],
+              ] as const).map(([href, icon, label]) => (
+                <Link key={href} href={href} className="flex flex-col items-center gap-1 rounded-2xl border border-white/15 bg-white/[0.1] px-2 py-3 text-olive-800">
+                  <Icon name={icon} className="text-xl" />
+                  {label}
+                </Link>
+              ))}
+            </div>
 
             {isAdmin && (
-              <Link href="/admin" className="btn mt-4 w-full !min-h-[3rem]">
-                🛠 Dashboard admin
+              <Link href="/admin" className="btn mt-3 w-full !min-h-[3rem]">
+                <Icon name="admin" /> Dashboard admin
               </Link>
             )}
 
@@ -94,7 +102,7 @@ export default function MobileNav({ isAdmin }: { isAdmin: boolean }) {
         className="fixed inset-x-0 bottom-0 z-40 border-t border-white/15 bg-[#050912]/80 pb-[env(safe-area-inset-bottom)] shadow-[0_-4px_24px_rgba(0,0,0,0.5)] backdrop-blur-xl"
         aria-label="Navigation principale"
       >
-        <ul className="grid grid-cols-5">
+        <ul className="grid grid-cols-4">
           {tabs.map((t) => (
             <li key={t.href}>
               <Link
@@ -103,7 +111,7 @@ export default function MobileNav({ isAdmin }: { isAdmin: boolean }) {
                   t.active ? 'text-olive-700' : 'text-olive-800/70'
                 }`}
               >
-                <span className={`text-xl leading-none ${t.active ? 'drop-shadow' : ''}`}>{t.icon}</span>
+                <Icon name={t.icon} className="text-xl leading-none" />
                 {t.label}
                 {t.active && <span className="mt-0.5 h-1 w-6 rounded-full bg-brass-500" />}
               </Link>
@@ -116,7 +124,7 @@ export default function MobileNav({ isAdmin }: { isAdmin: boolean }) {
               aria-expanded={open}
               className="flex min-h-[3.5rem] w-full flex-col items-center justify-center gap-0.5 text-[11px] font-bold text-olive-800/70"
             >
-              <span className="text-xl leading-none">☰</span>
+              <Icon name="menu" className="text-xl leading-none" />
               Menu
             </button>
           </li>

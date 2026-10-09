@@ -3,6 +3,7 @@ import { notFound } from 'next/navigation';
 import { createClient } from '@/lib/supabase/server';
 import { CATEGORY_LABELS, isCategory, type EntrySummary } from '@/lib/wiki';
 import CategoryView from '@/components/CategoryView';
+import Icon from '@/components/Icon';
 import AccessDenied from '@/components/AccessDenied';
 
 export const dynamic = 'force-dynamic';
@@ -42,10 +43,14 @@ export default async function CategoryPage({
   return (
     <div>
       <h1 className="title-grad mb-4 font-typewriter text-2xl font-bold text-olive-800 sm:text-3xl">
-        {CATEGORY_LABELS[category].icon} {CATEGORY_LABELS[category].label}
+        <Icon name={category} /> {CATEGORY_LABELS[category].label}
       </h1>
 
-      <div className="-mx-4 mb-5 flex items-center gap-2 overflow-x-auto px-4 pb-1 text-sm [scrollbar-width:none] sm:mx-0 sm:flex-wrap sm:overflow-visible sm:px-0 [&>*]:shrink-0 [&>*]:whitespace-nowrap">
+      <details className="mb-4 text-sm" open={!!searchParams.tag || onlyFound}>
+          <summary className="cursor-pointer select-none text-olive-700">
+            Plus de filtres{searchParams.tag ? ` : #${searchParams.tag}` : ''}{onlyFound ? ' · découverts seulement' : ''}
+          </summary>
+      <div className="mt-3 flex flex-wrap items-center gap-2 text-sm">
         <Link href={q({ show: onlyFound ? undefined : 'found' })} className="btn-ghost">
           {onlyFound ? 'Afficher tout' : 'Découverts seulement'}
         </Link>
@@ -59,6 +64,8 @@ export default async function CategoryPage({
           </Link>
         ))}
       </div>
+
+      </details>
 
       <CategoryView entries={entries} />
     </div>

@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import { createClient } from '@/lib/supabase/server';
-import SignOutButton from './SignOutButton';
+import UserMenu from './UserMenu';
+import Icon from './Icon';
 import MobileNav from './MobileNav';
 import SearchBox from './SearchBox';
 import DesktopNav from './DesktopNav';
@@ -10,10 +11,10 @@ export function HeaderView({ signedIn, isAdmin }: { signedIn: boolean; isAdmin: 
     <>
       <header className="sticky top-0 z-40 border-b border-white/15 bg-[#050912]/60 pt-[env(safe-area-inset-top)] shadow-[0_4px_24px_rgba(0,0,0,0.4)] backdrop-blur-xl">
         <div className="mx-auto max-w-6xl px-4">
-          {/* Ligne 1 : logo — recherche — actions */}
+          {/* Ligne 1 : logo — recherche — favoris + menu */}
           <div className="flex items-center gap-4 py-2.5 md:py-3">
-            <Link href="/" className="flex-none font-typewriter text-xl font-extrabold text-white md:text-2xl">
-              ⚔️ Wiki du <span className="rounded-lg bg-brass-400 px-2 text-night">S.I.D.</span>
+            <Link href="/" className="flex flex-none items-center gap-2 font-typewriter text-xl font-extrabold text-white md:text-2xl">
+              <Icon name="logo" /> <span>Wiki du <span className="rounded-lg bg-brass-400 px-2 text-night">S.I.D.</span></span>
             </Link>
 
             {signedIn && (
@@ -26,17 +27,9 @@ export function HeaderView({ signedIn, isAdmin }: { signedIn: boolean; isAdmin: 
 
                 <div className="ml-auto hidden flex-none items-center gap-2 md:flex">
                   <Link href="/favoris" className="btn-ghost !min-h-[2.5rem] !px-3" title="Mes favoris" aria-label="Mes favoris">
-                    ⭐
+                    <Icon name="favoris" />
                   </Link>
-                  <Link href="/hasard" className="btn-ghost !min-h-[2.5rem] !px-3" title="Fiche au hasard" aria-label="Fiche au hasard">
-                    🎲
-                  </Link>
-                  {isAdmin && (
-                    <Link href="/admin" className="btn !min-h-[2.5rem] !from-brass-300 !to-brass-500 !text-night">
-                      🛠 Admin
-                    </Link>
-                  )}
-                  <SignOutButton />
+                  <UserMenu isAdmin={isAdmin} />
                 </div>
               </>
             )}

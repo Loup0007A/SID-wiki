@@ -3,6 +3,7 @@
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { CATEGORIES, CATEGORY_LABELS } from '@/lib/wiki';
+import Icon from './Icon';
 
 /** Onglets des catégories (ordinateur) avec l'onglet actif mis en valeur. */
 export default function DesktopNav() {
@@ -19,19 +20,11 @@ export default function DesktopNav() {
               active ? 'bg-white/[0.14] text-white' : 'text-olive-800 hover:bg-white/[0.08] hover:text-white'
             }`}
           >
-            {CATEGORY_LABELS[c].icon} {CATEGORY_LABELS[c].label}
+            <Icon name={c} /> {CATEGORY_LABELS[c].label}
             {active && <span className="absolute inset-x-4 -bottom-0.5 h-0.5 rounded-full bg-brass-400" />}
           </Link>
         );
       })}
-      <Link
-        href="/tags"
-        className={`rounded-full px-4 py-1.5 font-typewriter text-base font-bold transition ${
-          pathname.startsWith('/tags') ? 'bg-white/[0.14] text-white' : 'text-olive-800 hover:bg-white/[0.08] hover:text-white'
-        }`}
-      >
-        🏷 Tags
-      </Link>
     </nav>
   );
 }

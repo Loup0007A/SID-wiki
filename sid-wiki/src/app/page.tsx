@@ -3,6 +3,8 @@ import { createClient } from '@/lib/supabase/server';
 import { CATEGORIES, CATEGORY_LABELS, pad, type Category, type RecentEntry } from '@/lib/wiki';
 import AccessDenied from '@/components/AccessDenied';
 import Mention from '@/components/Mention';
+import Icon from '@/components/Icon';
+import WelcomeTip from '@/components/WelcomeTip';
 import NewSince from '@/components/NewSince';
 import RecentlyViewed from '@/components/RecentlyViewed';
 
@@ -29,10 +31,6 @@ export default async function HomePage() {
     <div>
       <div className="mb-1 flex flex-wrap items-center justify-between gap-3">
         <h1 className="title-grad font-typewriter text-2xl font-bold text-olive-800 sm:text-3xl">Bienvenue, chasseur !</h1>
-        <span className="flex flex-wrap gap-2">
-          <Link href="/tags" className="btn-ghost">🏷 Tags</Link>
-          <Link href="/hasard" className="btn">🎲 Fiche au hasard</Link>
-        </span>
       </div>
       {typeof announcement === 'string' && announcement.trim() && (
         <div className="mb-4 mt-3 rounded-2xl border border-brass-400/40 bg-brass-400/15 px-4 py-3 text-brass-300">
@@ -40,13 +38,9 @@ export default async function HomePage() {
           <span className="whitespace-pre-line font-semibold">{announcement}</span>
         </div>
       )}
+      <WelcomeTip />
       <NewSince dates={recent.map((r) => r.discovered_at)} />
       <p className="mb-6 text-olive-700">Retrouve ici tout ce que la S.I.D. a déjà croisé en chasse. Le reste ? Il reste à découvrir !</p>
-
-      <form action="/recherche" className="mb-8 flex gap-2">
-        <input name="q" type="search" placeholder="Un monstre, une arme, un skill…" className="input" />
-        <button className="btn">Fouiner !</button>
-      </form>
 
       <div className="stagger grid grid-cols-2 gap-3 sm:gap-4 lg:grid-cols-3">
         {CATEGORIES.map((c: Category) => {
@@ -54,7 +48,7 @@ export default async function HomePage() {
           const pct = s.total ? Math.round((s.found / s.total) * 100) : 0;
           return (
             <Link key={c} href={`/${c}`} className="card p-4 transition hover:-translate-y-0.5 hover:border-brass-500 sm:p-5">
-              <div className="text-3xl">{CATEGORY_LABELS[c].icon}</div>
+              <div className="text-3xl"><Icon name={c} /></div>
               <h2 className="mt-2 font-typewriter text-xl font-bold">{CATEGORY_LABELS[c].label}</h2>
               <p className="text-sm text-olive-700">
                 {s.found} / {s.total} découvert{s.found > 1 ? 's' : ''}
@@ -69,7 +63,7 @@ export default async function HomePage() {
 
       <RecentlyViewed />
 
-      <div className="mt-4 grid gap-4 lg:grid-cols-3">
+      <div className="mt-4 grid gap-4 lg:grid-cols-3 lg:items-start">
         <section className="card p-5 lg:col-span-2">
           <h2 className="mb-3 font-typewriter text-xl font-bold text-olive-800">🆕 Dernières découvertes</h2>
           {recent.length === 0 ? (
@@ -83,7 +77,7 @@ export default async function HomePage() {
                     <img src={r.image_url} alt="" className="h-10 w-10 flex-none rounded-lg border border-white/15 object-cover" />
                   ) : (
                     <span className="flex h-10 w-10 flex-none items-center justify-center rounded-lg bg-white/[0.1] text-xl">
-                      {CATEGORY_LABELS[r.category].icon}
+                      <Icon name={r.category} />
                     </span>
                   )}
                   <div className="min-w-0 flex-1">
@@ -102,8 +96,9 @@ export default async function HomePage() {
           )}
         </section>
 
-        <section className="card p-5">
-          <h2 className="mb-3 font-typewriter text-xl font-bold text-olive-800">🏆 Top découvreurs</h2>
+        <details className="card p-5">
+          <summary className="cursor-pointer select-none font-typewriter text-xl font-bold text-olive-800">🏆 Top découvreurs</summary>
+          <div className="mt-3">
           {top.length === 0 ? (
             <p className="italic text-olive-700">Personne n’a encore été crédité.</p>
           ) : (
@@ -119,7 +114,8 @@ export default async function HomePage() {
               ))}
             </ol>
           )}
-        </section>
+        </div>
+        </details>
       </div>
     </div>
   );

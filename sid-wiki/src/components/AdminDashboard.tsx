@@ -8,6 +8,7 @@ import { removeStoredFile } from '@/lib/storage';
 import { useRouter } from 'next/navigation';
 import AdminReports, { type Report } from './AdminReports';
 import AdminSettings from './AdminSettings';
+import Icon from './Icon';
 
 type Row = {
   id: string;
@@ -284,25 +285,16 @@ export default function AdminDashboard() {
 
       {tab === 'entries' && (
       <>
-      <div className="mb-4 grid grid-cols-2 gap-2 sm:grid-cols-4">
-        {[
-          { label: 'Découvertes', value: `${found}/${rows.length}`, hint: rows.length ? `${Math.round((found / rows.length) * 100)} %` : '' },
-          { label: 'À compléter', value: String(incompleteCount), hint: 'fiches découvertes' },
-          { label: 'Commentaires', value: String(totalComments), hint: CATEGORY_LABELS[category].label },
-          { label: 'Favoris', value: String(totalFavorites), hint: CATEGORY_LABELS[category].label },
-        ].map((c) => (
-          <div key={c.label} className="card p-3">
-            <div className="text-xs text-olive-700">{c.label}</div>
-            <div className="font-typewriter text-2xl font-bold">{c.value}</div>
-            <div className="text-xs text-olive-700/80">{c.hint}</div>
-          </div>
-        ))}
-      </div>
+      <p className="mb-4 text-sm text-olive-700">
+        <strong className="text-olive-800">{found}/{rows.length}</strong> découvertes
+        {rows.length > 0 && ` (${Math.round((found / rows.length) * 100)} %)`} · <strong className="text-olive-800">{incompleteCount}</strong> à compléter ·{' '}
+        <strong className="text-olive-800">{totalComments}</strong> commentaires · <strong className="text-olive-800">{totalFavorites}</strong> favoris
+      </p>
 
       <div className="-mx-4 mb-4 flex gap-2 overflow-x-auto px-4 pb-1 [scrollbar-width:none] sm:mx-0 sm:flex-wrap sm:overflow-visible sm:px-0 [&>*]:shrink-0 [&>*]:whitespace-nowrap">
         {CATEGORIES.map((c) => (
           <button key={c} onClick={() => setCategory(c)} className={c === category ? 'btn' : 'btn-ghost'}>
-            {CATEGORY_LABELS[c].icon} {CATEGORY_LABELS[c].label}
+            <Icon name={c} /> {CATEGORY_LABELS[c].label}
           </button>
         ))}
       </div>
@@ -426,12 +418,17 @@ export default function AdminDashboard() {
                     <Link className="btn-ghost !px-3 !py-0.5" href={`/admin/edit/${r.category}/${pad(r.number)}`}>
                       Éditer
                     </Link>
-                    <button className="btn-ghost !px-3 !py-0.5" title="Créer une copie masquée" onClick={() => duplicate(r.id)}>
-                      Dupliquer
-                    </button>
-                    <button className="btn-danger !px-3 !py-0.5" onClick={() => removeMany([r.id])}>
-                      Suppr.
-                    </button>
+                    <details className="relative">
+                      <summary className="btn-ghost !px-3 !py-0.5 cursor-pointer list-none" aria-label="Plus d’actions">⋯</summary>
+                      <div className="absolute right-0 z-20 mt-1 flex w-40 flex-col gap-1 rounded-xl border border-white/20 bg-[#0b1730] p-2 shadow-2xl">
+                        <button className="btn-ghost !px-3 !py-0.5" title="Créer une copie masquée" onClick={() => duplicate(r.id)}>
+                          Dupliquer
+                        </button>
+                        <button className="btn-danger !px-3 !py-0.5" onClick={() => removeMany([r.id])}>
+                          Supprimer
+                        </button>
+                      </div>
+                    </details>
                   </div>
                 </td>
               </tr>

@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import { createClient } from '@/lib/supabase/server';
 import { CATEGORIES, CATEGORY_LABELS, type Category } from '@/lib/wiki';
+import Icon from '@/components/Icon';
 import AccessDenied from '@/components/AccessDenied';
 
 export const dynamic = 'force-dynamic';
@@ -12,7 +13,7 @@ export default async function TagsPage() {
 
   return (
     <div>
-      <h1 className="title-grad mb-1 font-typewriter text-2xl font-bold text-olive-800 sm:text-3xl">🏷 Tous les tags</h1>
+      <h1 className="title-grad mb-1 font-typewriter text-2xl font-bold text-olive-800 sm:text-3xl"><Icon name="tags" /> Tous les tags</h1>
       <p className="mb-6 text-olive-700">Clique sur un tag pour voir toutes les fiches découvertes qui le portent.</p>
 
       {rows.length === 0 ? (
@@ -25,7 +26,7 @@ export default async function TagsPage() {
             return (
               <section key={c} className="card p-4">
                 <h2 className="mb-3 font-typewriter text-lg font-bold text-olive-800">
-                  {CATEGORY_LABELS[c].icon} {CATEGORY_LABELS[c].label}
+                  <Icon name={c} /> {CATEGORY_LABELS[c].label}
                 </h2>
                 <div className="flex flex-wrap gap-1.5">
                   {list.map((r) => (

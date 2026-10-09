@@ -3,7 +3,8 @@
 import Link from 'next/link';
 import { useState } from 'react';
 import { createClient } from '@/lib/supabase/client';
-import { CATEGORY_LABELS, pad, type Category } from '@/lib/wiki';
+import { pad, type Category } from '@/lib/wiki';
+import Icon from './Icon';
 
 export type Report = {
   id: string;
@@ -66,7 +67,7 @@ export default function AdminReports({ reports, onChange }: { reports: Report[];
               <div className="flex flex-wrap items-center gap-2 text-sm">
                 <span className="rounded-full bg-white/10 px-2 py-0.5 font-bold">{KIND[r.kind]}</span>
                 <Link href={`/${r.category}/${pad(r.number)}`} className="font-bold text-olive-700 hover:underline">
-                  {CATEGORY_LABELS[r.category].icon} {r.title} · N° {pad(r.number)}
+                  <Icon name={r.category} /> {r.title} · N° {pad(r.number)}
                 </Link>
                 <span className="text-olive-700">
                   par @{r.author} · {new Date(r.created_at).toLocaleString('fr-FR', { dateStyle: 'short', timeStyle: 'short' })}
