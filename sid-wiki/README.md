@@ -5,7 +5,7 @@ Wiki RP (lieux, armes, mobs, objets, skills) branché sur le **même projet Supa
 ## Installation
 
 1. `cp .env.example .env.local` et renseigne l'URL + la clé **anon** du projet Supabase existant.
-2. Exécute `supabase/migrations/0200_wiki.sql` puis `0201_wiki_hide_names_for_admins.sql` puis `0202_wiki_comments_discoverer.sql` puis `0203_wiki_skills_3d_extras.sql` puis `0204_wiki_save_space.sql` puis `0205_wiki_giga_update.sql` puis `0206_wiki_profiles.sql` dans le SQL Editor (chacun une seule fois, dans cet ordre).
+2. Exécute `supabase/migrations/0200_wiki.sql` puis `0201_wiki_hide_names_for_admins.sql` puis `0202_wiki_comments_discoverer.sql` puis `0203_wiki_skills_3d_extras.sql` puis `0204_wiki_save_space.sql` puis `0205_wiki_giga_update.sql` puis `0206_wiki_profiles.sql` puis `0207_wiki_gear_appearance.sql` dans le SQL Editor (chacun une seule fois, dans cet ordre).
 3. Donne la permission `manage_wiki` à un rôle (bloc commenté en fin de migration — adapte les noms de colonnes de `role_permissions`). Le Fondateur l'a d'office via `has_permission`.
 4. `npm install && npm run dev`
 
@@ -97,3 +97,9 @@ Wiki RP (lieux, armes, mobs, objets, skills) branché sur le **même projet Supa
 - **Secret gardé** : si une fiche équipée est re-masquée, elle redevient « ? » sur les profils (ni titre ni image ne sortent de la base). Supprimer une fiche la retire des profils.
 - Les découvertes créditées au chasseur (« Découvert par ») sont rappelées sous son porte-armure.
 - Pour autoriser d'autres catégories ou d'autres emplacements : listes `GEAR_CATEGORIES` / `GEAR_SLOTS` dans `src/lib/wiki.ts` **et** contraintes correspondantes dans `0206_wiki_profiles.sql`.
+
+## Apparence des armes (migration 0207, admins)
+
+- Dans le formulaire d'édition d'une fiche **Armes** ou **Objets**, le bloc « Apparence sur le porte-armure » permet de choisir la **forme** (épée, dague, hache, lance, bâton, arc, bouclier) et la **couleur** de la pièce, avec un aperçu en direct.
+- « Automatique » garde le comportement d'origine : forme devinée d'après le titre, couleur de la rareté ★.
+- La forme sert quand la fiche est en main ou dans le dos ; la couleur s'applique à tous les emplacements. Le réglage vaut pour tous les profils qui portent cette fiche.

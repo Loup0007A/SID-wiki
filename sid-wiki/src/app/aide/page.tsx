@@ -137,7 +137,7 @@ export default async function HelpPage() {
               {
                 icon: 'profils',
                 title: 'Corriger un profil',
-                text: 'En tant qu’admin, tu peux modifier le porte-armure de n’importe quel chasseur depuis sa page de profil.',
+                text: 'Tu peux modifier le porte-armure de n’importe quel chasseur depuis sa page de profil. Dans l’édition d’une fiche Armes ou Objets, le bloc « Apparence » règle sa forme et sa couleur sur le mannequin.',
               },
             ]}
           />

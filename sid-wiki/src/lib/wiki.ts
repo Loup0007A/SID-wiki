@@ -218,6 +218,26 @@ export function isGearSlot(v: unknown): v is GearSlot {
   return typeof v === 'string' && (GEAR_SLOTS as readonly string[]).includes(v);
 }
 
+/** Formes dessinées en main / dans le dos. */
+export const GEAR_SHAPES = ['sword', 'dagger', 'axe', 'spear', 'staff', 'bow', 'shield'] as const;
+export type GearShape = (typeof GEAR_SHAPES)[number];
+
+export const GEAR_SHAPE_LABELS: Record<GearShape, string> = {
+  sword: 'Épée',
+  dagger: 'Dague',
+  axe: 'Hache',
+  spear: 'Lance',
+  staff: 'Bâton',
+  bow: 'Arc',
+  shield: 'Bouclier',
+};
+
+export function isGearShape(v: unknown): v is GearShape {
+  return typeof v === 'string' && (GEAR_SHAPES as readonly string[]).includes(v);
+}
+
+export const GEAR_COLOR_RE = /^#[0-9a-fA-F]{6}$/;
+
 export type GearItem = {
   slot: GearSlot;
   category: Category;
@@ -227,6 +247,9 @@ export type GearItem = {
   summary: string | null;
   image_url: string | null;
   rarity: number | null;
+  /** Apparence choisie par un admin (absente / null = automatique) */
+  shape?: string | null;
+  color?: string | null;
 };
 
 export type ProfileSummary = {

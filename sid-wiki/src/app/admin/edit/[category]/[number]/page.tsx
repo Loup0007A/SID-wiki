@@ -33,6 +33,8 @@ export default async function EditPage({ params }: { params: { category: string;
       infobox: [],
       model_url: null,
       model_animation: null,
+      gear_shape: null,
+      gear_color: null,
       links: [],
     };
     return <EntryForm initial={empty} />;
@@ -76,6 +78,8 @@ export default async function EditPage({ params }: { params: { category: string;
         infobox: Array.isArray(entry.infobox) ? entry.infobox : [],
         model_url: entry.model_url ?? null,
         model_animation: entry.model_animation ?? null,
+        gear_shape: entry.gear_shape ?? null,
+        gear_color: entry.gear_color ?? null,
         links,
       }}
     />

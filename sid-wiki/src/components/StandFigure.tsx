@@ -1,4 +1,4 @@
-import { GEAR_SLOT_LABELS, type GearItem, type GearSlot } from '@/lib/wiki';
+import { GEAR_COLOR_RE, GEAR_SLOT_LABELS, isGearShape, type GearItem, type GearShape, type GearSlot } from '@/lib/wiki';
 
 /**
  * Le porte-armure (« armor-stand ») dessiné en pixels : socle de pierre, montants en bois,
@@ -18,20 +18,25 @@ const MASKED = '#3b4759';
 
 function colorOf(item: GearItem): string {
   if (!item.discovered) return MASKED;
+  if (item.color && GEAR_COLOR_RE.test(item.color)) return item.color;
   return item.rarity ? RARITY_COLORS[Math.min(8, Math.max(1, item.rarity)) - 1] : STEEL;
 }
 
-type Held = 'sword' | 'bow' | 'shield' | 'staff';
+type Held = GearShape;
 
 const norm = (s: string) => s.normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase();
 
 /** Devine la forme à dessiner d'après le nom de la fiche ; sinon forme par défaut de l'emplacement. */
 function heldKind(item: GearItem): Held {
+  if (item.discovered && isGearShape(item.shape)) return item.shape; // choix d'un admin
   const t = norm(item.title ?? '');
   if (/\barcs?\b|arbalete|fronde/.test(t)) return 'bow';
   if (/bouclier|pavois|egide|targe/.test(t)) return 'shield';
-  if (/baton|sceptre|canne|baguette|lance|trident|hallebarde|faux/.test(t)) return 'staff';
-  if (/epee|lame|sabre|dague|katana|hache|couteau|glaive|rapiere|poignard|marteau|masse/.test(t)) return 'sword';
+  if (/hache|marteau|masse|faux/.test(t)) return 'axe';
+  if (/lance|trident|hallebarde|javelot|pique/.test(t)) return 'spear';
+  if (/baton|sceptre|canne|baguette/.test(t)) return 'staff';
+  if (/dague|couteau|poignard/.test(t)) return 'dagger';
+  if (/epee|lame|sabre|katana|glaive|rapiere/.test(t)) return 'sword';
   return item.slot === 'dos' ? 'bow' : item.slot === 'main_gauche' ? 'shield' : 'sword';
 }
 
@@ -65,6 +70,36 @@ function HeldGlyph({ kind, color }: { kind: Held; color: string }) {
           <rect x="12" y="8" width="2" height="56" fill={SHADE} />
           <rect x="6" y="0" width="12" height="12" fill={color} />
           <rect x="6" y="0" width="12" height="4" fill={LIGHT} />
+        </>
+      );
+    case 'dagger':
+      return (
+        <>
+          <rect x="10" y="22" width="4" height="4" fill={color} />
+          <rect x="9" y="26" width="6" height="18" fill={color} />
+          <rect x="9" y="26" width="2" height="18" fill={LIGHT} />
+          <rect x="4" y="44" width="16" height="4" fill="#ffcb45" />
+          <rect x="10" y="48" width="4" height="10" fill={WOOD_DARK} />
+          <rect x="9" y="58" width="6" height="4" fill="#ffcb45" />
+        </>
+      );
+    case 'axe':
+      return (
+        <>
+          <rect x="10" y="2" width="4" height="62" fill={WOOD} />
+          <rect x="12" y="2" width="2" height="62" fill={SHADE} />
+          <path d="M14 4 h6 v4 h4 v14 h-4 v4 h-6 z" fill={color} />
+          <path d="M10 8 h-6 v4 h-4 v6 h4 v4 h6 z" fill={color} />
+          <rect x="20" y="8" width="4" height="14" fill={LIGHT} />
+        </>
+      );
+    case 'spear':
+      return (
+        <>
+          <rect x="10" y="14" width="4" height="50" fill={WOOD} />
+          <rect x="12" y="14" width="2" height="50" fill={SHADE} />
+          <path d="M12 -6 L18 8 L14 16 H10 L6 8 Z" fill={color} />
+          <path d="M12 -6 L6 8 L10 16 H12 Z" fill={LIGHT} />
         </>
       );
     default:

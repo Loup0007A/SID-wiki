@@ -5,9 +5,10 @@ import { useRouter } from 'next/navigation';
 import { createClient } from '@/lib/supabase/client';
 import { compressImage } from '@/lib/image';
 import { removeStoredFile } from '@/lib/storage';
-import { CATEGORIES, CATEGORY_LABELS, pad, type Category, type InfoRow } from '@/lib/wiki';
+import { CATEGORIES, CATEGORY_LABELS, GEAR_CATEGORIES, GEAR_COLOR_RE, GEAR_SHAPES, GEAR_SHAPE_LABELS, pad, type Category, type GearItem, type InfoRow } from '@/lib/wiki';
 import Markdown from './Markdown';
 import ModelViewer from './ModelViewer';
+import StandFigure from './StandFigure';
 
 export type LinkedEntry = { id: string; category: Category; number: number; title: string };
 
@@ -26,6 +27,9 @@ export type FormEntry = {
   infobox: InfoRow[];
   model_url: string | null;
   model_animation: string | null;
+  /** Apparence sur le porte-armure (null = automatique) — colonnes de la migration 0207 */
+  gear_shape: string | null;
+  gear_color: string | null;
   links: LinkedEntry[];
 };
 
@@ -61,6 +65,8 @@ export default function EntryForm({ initial }: { initial: FormEntry }) {
   const [animNames, setAnimNames] = useState<string[]>([]);
   const [uploadingModel, setUploadingModel] = useState(false);
   const [pendingModel, setPendingModel] = useState<{ bytes: Uint8Array; previewUrl: string; size: number } | null>(null);
+  const [gearShape, setGearShape] = useState<string>(initial.gear_shape ?? '');
+  const [gearColor, setGearColor] = useState<string>(initial.gear_color ?? '');
   const [status, setStatus] = useState<string | null>(null);
   const tempImages = useRef<string[]>([]);
   const [links, setLinks] = useState<LinkedEntry[]>(initial.links);
@@ -208,7 +214,18 @@ export default function EntryForm({ initial }: { initial: FormEntry }) {
     }
     setStatus('Enregistrement…');
 
+    // Apparence : seulement pour les catégories équipables. Les colonnes n'existent qu'après la migration 0207 :
+    // on ne les envoie que si elles ont une valeur ou en avaient une (sinon rien ne change pour un site pas encore migré).
+    const equipable = (GEAR_CATEGORIES as readonly string[]).includes(category);
+    const nextShape = equipable && gearShape ? gearShape : null;
+    const nextColor = equipable && GEAR_COLOR_RE.test(gearColor) ? gearColor.toLowerCase() : null;
+    const appearance =
+      nextShape !== null || nextColor !== null || initial.gear_shape !== null || initial.gear_color !== null
+        ? { gear_shape: nextShape, gear_color: nextColor }
+        : {};
+
     const payload = {
+      ...appearance,
       category,
       number,
       title: title.trim(),
@@ -232,7 +249,11 @@ export default function EntryForm({ initial }: { initial: FormEntry }) {
       setError(message);
     };
     const dbMessage = (e: { code?: string; message: string }) =>
-      e.code === '23505' ? `Le numéro ${pad(number)} est déjà pris dans cette catégorie.` : e.message;
+      e.code === '23505'
+        ? `Le numéro ${pad(number)} est déjà pris dans cette catégorie.`
+        : (e.code === 'PGRST204' || e.code === '42703') && /gear_/.test(e.message)
+          ? 'L’apparence des armes a besoin de la migration supabase/migrations/0207_wiki_gear_appearance.sql (à exécuter dans le SQL Editor).'
+          : e.message;
 
     let id = initial.id;
     if (isNew) {
@@ -417,6 +438,65 @@ export default function EntryForm({ initial }: { initial: FormEntry }) {
           </div>
         )}
       </div>
+
+      {(GEAR_CATEGORIES as readonly string[]).includes(category) && (
+        <div className="card p-5">
+          <label className="label">Apparence sur le porte-armure (onglet Profils)</label>
+          <div className="flex flex-wrap items-start gap-5">
+            <div className="flex-none rounded-2xl border border-white/10 bg-gradient-to-b from-white/[0.08] to-sky-400/[0.06] px-3 py-2">
+              <StandFigure
+                className="h-44 w-auto"
+                gear={(['main_droite', 'dos'] as const).map(
+                  (slot): GearItem => ({
+                    slot,
+                    category,
+                    number,
+                    discovered: true,
+                    title: title || null,
+                    summary: null,
+                    image_url: null,
+                    rarity: rarity ? parseInt(rarity, 10) : null,
+                    shape: gearShape || null,
+                    color: gearColor || null,
+                  })
+                )}
+              />
+            </div>
+            <div className="min-w-[14rem] flex-1 space-y-4">
+              <div>
+                <label className="label" htmlFor="gear-shape">Forme (en main et dans le dos)</label>
+                <select id="gear-shape" className="input" value={gearShape} onChange={(e) => setGearShape(e.target.value)}>
+                  <option value="">Automatique (devinée d’après le titre)</option>
+                  {GEAR_SHAPES.map((s) => (
+                    <option key={s} value={s}>{GEAR_SHAPE_LABELS[s]}</option>
+                  ))}
+                </select>
+              </div>
+              <div>
+                <label className="label" htmlFor="gear-color">Couleur</label>
+                <div className="flex flex-wrap items-center gap-3">
+                  <input
+                    id="gear-color"
+                    type="color"
+                    className="h-10 w-14 cursor-pointer rounded-lg border border-white/20 bg-transparent"
+                    value={GEAR_COLOR_RE.test(gearColor) ? gearColor : '#9db3c9'}
+                    onChange={(e) => setGearColor(e.target.value)}
+                  />
+                  <span className="font-typewriter text-sm text-olive-800">{gearColor || 'Automatique (rareté ★)'}</span>
+                  {gearColor && (
+                    <button type="button" className="btn-ghost !px-3 !py-0.5" onClick={() => setGearColor('')}>
+                      Remettre en automatique
+                    </button>
+                  )}
+                </div>
+              </div>
+              <p className="text-xs text-olive-700">
+                L’aperçu montre la fiche tenue en main droite et portée dans le dos. La couleur s’applique aussi aux pièces d’armure ; la forme ne compte que pour les mains et le dos.
+              </p>
+            </div>
+          </div>
+        </div>
+      )}
 
       <div className="card p-5">
         <label className="label">Image</label>
