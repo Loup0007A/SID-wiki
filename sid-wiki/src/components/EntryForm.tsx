@@ -5,7 +5,7 @@ import { useRouter } from 'next/navigation';
 import { createClient } from '@/lib/supabase/client';
 import { compressImage } from '@/lib/image';
 import { removeStoredFile } from '@/lib/storage';
-import { CATEGORIES, CATEGORY_LABELS, GEAR_CATEGORIES, GEAR_COLOR_RE, GEAR_SHAPES, GEAR_SHAPE_LABELS, GEAR_SLOT_LABELS, GEAR_TRANSFORM_LIMITS, pad, type Category, type GearItem, type GearSlot, type InfoRow } from '@/lib/wiki';
+import { CATEGORIES, CATEGORY_LABELS, GEAR_CATEGORIES, GEAR_COLOR_RE, GEAR_SHAPES, GEAR_SHAPE_LABELS, GEAR_SLOT_LABELS, GEAR_TRANSFORM_LIMITS, HELD_SLOTS, pad, type Category, type GearItem, type GearPlacement, type HeldSlot, type InfoRow } from '@/lib/wiki';
 import Markdown from './Markdown';
 import ModelViewer from './ModelViewer';
 import StandFigure from './StandFigure';
@@ -35,6 +35,8 @@ export type FormEntry = {
   gear_dy: number;
   gear_scale: number;
   gear_rot: number;
+  /** Placement par emplacement (migration 0210) ; null = colonne absente ou jamais réglé */
+  gear_placement: Partial<Record<HeldSlot, Partial<GearPlacement>>> | null;
   links: LinkedEntry[];
 };
 
@@ -72,11 +74,31 @@ export default function EntryForm({ initial, standImage = null }: { initial: For
   const [pendingModel, setPendingModel] = useState<{ bytes: Uint8Array; previewUrl: string; size: number } | null>(null);
   const [gearShape, setGearShape] = useState<string>(initial.gear_shape ?? '');
   const [gearColor, setGearColor] = useState<string>(initial.gear_color ?? '');
-  const [gearDx, setGearDx] = useState(initial.gear_dx);
-  const [gearDy, setGearDy] = useState(initial.gear_dy);
-  const [gearScale, setGearScale] = useState(initial.gear_scale);
-  const [gearRot, setGearRot] = useState(initial.gear_rot);
-  const [previewSlot, setPreviewSlot] = useState<GearSlot>('main_droite');
+  // Un placement PAR emplacement (main droite, main gauche, dos) : régler l'un ne touche pas les autres.
+  // Valeurs de départ : celles de l'emplacement, sinon l'ancien placement commun (migration 0209).
+  const initialPlacement = useMemo(() => {
+    const num = (v: unknown, fallback: number) => (typeof v === 'number' && Number.isFinite(v) ? v : fallback);
+    const out = {} as Record<HeldSlot, GearPlacement>;
+    for (const sl of HELD_SLOTS) {
+      const p = initial.gear_placement?.[sl];
+      out[sl] = {
+        dx: num(p?.dx, initial.gear_dx),
+        dy: num(p?.dy, initial.gear_dy),
+        scale: num(p?.scale, initial.gear_scale),
+        rot: num(p?.rot, initial.gear_rot),
+      };
+    }
+    return out;
+  }, [initial]);
+  const [placement, setPlacement] = useState(initialPlacement);
+  const [previewSlot, setPreviewSlot] = useState<HeldSlot>('main_droite');
+  const { dx: gearDx, dy: gearDy, scale: gearScale, rot: gearRot } = placement[previewSlot];
+  const setField = (key: keyof GearPlacement) => (v: number) =>
+    setPlacement((all) => ({ ...all, [previewSlot]: { ...all[previewSlot], [key]: v } }));
+  const setGearDx = setField('dx');
+  const setGearDy = setField('dy');
+  const setGearScale = setField('scale');
+  const setGearRot = setField('rot');
   const [status, setStatus] = useState<string | null>(null);
   const tempImages = useRef<string[]>([]);
   const [links, setLinks] = useState<LinkedEntry[]>(initial.links);
@@ -234,15 +256,13 @@ export default function EntryForm({ initial, standImage = null }: { initial: For
         ? { gear_shape: nextShape, gear_color: nextColor }
         : {};
 
-    // Placement (migration 0209) : envoyé seulement s'il a été modifié.
-    const placement =
-      equipable && (gearDx !== initial.gear_dx || gearDy !== initial.gear_dy || gearScale !== initial.gear_scale || gearRot !== initial.gear_rot)
-        ? { gear_dx: gearDx, gear_dy: gearDy, gear_scale: gearScale, gear_rot: gearRot }
-        : {};
+    // Placement par emplacement (migration 0210) : envoyé seulement s'il a été modifié.
+    const placementPatch =
+      equipable && JSON.stringify(placement) !== JSON.stringify(initialPlacement) ? { gear_placement: placement } : {};
 
     const payload = {
       ...appearance,
-      ...placement,
+      ...placementPatch,
       category,
       number,
       title: title.trim(),
@@ -269,7 +289,7 @@ export default function EntryForm({ initial, standImage = null }: { initial: For
       e.code === '23505'
         ? `Le numéro ${pad(number)} est déjà pris dans cette catégorie.`
         : (e.code === 'PGRST204' || e.code === '42703') && /gear_/.test(e.message)
-          ? 'L’apparence des armes a besoin des migrations supabase/migrations/0207, 0208 et 0209 (à exécuter dans le SQL Editor, dans cet ordre).'
+          ? 'L’apparence des armes a besoin des migrations supabase/migrations/0207 à 0210 (à exécuter dans le SQL Editor, dans cet ordre).'
           : e.code === '23514' && /gear_shape/.test(e.message)
             ? 'Cette forme a besoin de la migration supabase/migrations/0208_wiki_gear_more_shapes.sql (à exécuter dans le SQL Editor).'
           : e.message;
@@ -515,7 +535,7 @@ export default function EntryForm({ initial, standImage = null }: { initial: For
                 </div>
               </div>
               <div>
-                <span className="label">Placement et taille</span>
+                <span className="label">Placement et taille — {GEAR_SLOT_LABELS[previewSlot].label}</span>
                 <div className="grid gap-x-4 gap-y-2 sm:grid-cols-2">
                   {(
                     [
@@ -534,8 +554,8 @@ export default function EntryForm({ initial, standImage = null }: { initial: For
                   ))}
                 </div>
                 <div className="mt-2 flex flex-wrap items-center gap-2 text-sm">
-                  <span className="text-olive-800">Aperçu :</span>
-                  {(['main_droite', 'main_gauche', 'dos'] as const).map((sl) => (
+                  <span className="text-olive-800">Emplacement réglé :</span>
+                  {HELD_SLOTS.map((sl) => (
                     <button key={sl} type="button" onClick={() => setPreviewSlot(sl)} aria-pressed={previewSlot === sl} className={previewSlot === sl ? 'btn !min-h-[2rem] !px-3 !py-0.5 text-sm' : 'btn-ghost !min-h-[2rem] !px-3 !py-0.5 text-sm'}>
                       {GEAR_SLOT_LABELS[sl].label}
                     </button>
@@ -544,20 +564,15 @@ export default function EntryForm({ initial, standImage = null }: { initial: For
                     <button
                       type="button"
                       className="btn-ghost !min-h-[2rem] !px-3 !py-0.5 text-sm"
-                      onClick={() => {
-                        setGearDx(0);
-                        setGearDy(0);
-                        setGearScale(1);
-                        setGearRot(0);
-                      }}
+                      onClick={() => setPlacement((all) => ({ ...all, [previewSlot]: { dx: 0, dy: 0, scale: 1, rot: 0 } }))}
                     >
-                      Réinitialiser le placement
+                      Réinitialiser cet emplacement
                     </button>
                   )}
                 </div>
               </div>
               <p className="text-xs text-olive-700">
-                Ces réglages valent pour tous les profils qui portent cette fiche. Le même placement s’applique aux deux mains et au dos : vérifie les trois aperçus. La couleur s’applique aussi aux pièces d’armure ; forme, placement et taille ne comptent que pour les mains et le dos.
+                Ces réglages valent pour tous les profils qui portent cette fiche. Chaque emplacement (main droite, main gauche, dos) a son propre placement : choisis-le ci-dessus puis règle les curseurs. La couleur s’applique aussi aux pièces d’armure ; forme, placement et taille ne comptent que pour les mains et le dos.
               </p>
             </div>
           </div>

@@ -42,6 +42,7 @@ export default async function EditPage({ params }: { params: { category: string;
       gear_dy: 0,
       gear_scale: 1,
       gear_rot: 0,
+      gear_placement: null,
       links: [],
     };
     return <EntryForm initial={empty} standImage={standImage} />;
@@ -91,6 +92,7 @@ export default async function EditPage({ params }: { params: { category: string;
         gear_dy: Number(entry.gear_dy ?? 0) || 0,
         gear_scale: Number(entry.gear_scale ?? 1) || 1,
         gear_rot: Number(entry.gear_rot ?? 0) || 0,
+        gear_placement: entry.gear_placement && typeof entry.gear_placement === 'object' && !Array.isArray(entry.gear_placement) ? entry.gear_placement : null,
         links,
       }}
       standImage={standImage}

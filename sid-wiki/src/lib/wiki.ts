@@ -274,7 +274,13 @@ export type GearItem = {
 };
 
 /** Bornes du placement (les mêmes que la contrainte de la migration 0209). */
-export const GEAR_TRANSFORM_LIMITS = { offset: 60, scaleMin: 0.3, scaleMax: 3, rot: 180 } as const;
+export const GEAR_TRANSFORM_LIMITS = { offset: 60, scaleMin: 0.3, scaleMax: 3, rot: 360 } as const;
+
+/** Emplacements où une arme est « tenue » : chacun a son propre placement (migration 0210). */
+export const HELD_SLOTS = ['main_droite', 'main_gauche', 'dos'] as const satisfies readonly GearSlot[];
+export type HeldSlot = (typeof HELD_SLOTS)[number];
+export type GearPlacement = { dx: number; dy: number; scale: number; rot: number };
+export const DEFAULT_PLACEMENT: GearPlacement = { dx: 0, dy: 0, scale: 1, rot: 0 };
 
 export type ProfileSummary = {
   id: string;
