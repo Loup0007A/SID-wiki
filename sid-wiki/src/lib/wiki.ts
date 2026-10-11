@@ -219,17 +219,33 @@ export function isGearSlot(v: unknown): v is GearSlot {
 }
 
 /** Formes dessinées en main / dans le dos. */
-export const GEAR_SHAPES = ['sword', 'dagger', 'axe', 'spear', 'staff', 'bow', 'shield'] as const;
+export const GEAR_SHAPES = [
+  'sword', 'dagger', 'dual_daggers', 'hidden_blades', 'axe', 'spear', 'staff', 'kunai', 'shuriken',
+  'bow', 'crossbow', 'pistol', 'smg', 'ak47', 'shotgun', 'grenade',
+  'shield', 'vial', 'computer',
+] as const;
 export type GearShape = (typeof GEAR_SHAPES)[number];
 
 export const GEAR_SHAPE_LABELS: Record<GearShape, string> = {
   sword: 'Épée',
   dagger: 'Dague',
+  dual_daggers: 'Dagues doubles',
+  hidden_blades: 'Lames secrètes',
   axe: 'Hache',
   spear: 'Lance',
   staff: 'Bâton',
+  kunai: 'Kunai',
+  shuriken: 'Shuriken',
   bow: 'Arc',
+  crossbow: 'Arbalète',
+  pistol: 'Pistolet à main',
+  smg: 'Mitraillette',
+  ak47: 'AK-47',
+  shotgun: 'Fusil à pompe',
+  grenade: 'Grenades',
   shield: 'Bouclier',
+  vial: 'Fiole',
+  computer: 'Ordinateur',
 };
 
 export function isGearShape(v: unknown): v is GearShape {

@@ -253,6 +253,8 @@ export default function EntryForm({ initial }: { initial: FormEntry }) {
         ? `Le numéro ${pad(number)} est déjà pris dans cette catégorie.`
         : (e.code === 'PGRST204' || e.code === '42703') && /gear_/.test(e.message)
           ? 'L’apparence des armes a besoin de la migration supabase/migrations/0207_wiki_gear_appearance.sql (à exécuter dans le SQL Editor).'
+          : e.code === '23514' && /gear_shape/.test(e.message)
+            ? 'Cette forme a besoin de la migration supabase/migrations/0208_wiki_gear_more_shapes.sql (à exécuter dans le SQL Editor).'
           : e.message;
 
     let id = initial.id;

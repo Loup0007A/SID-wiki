@@ -30,7 +30,19 @@ const norm = (s: string) => s.normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCa
 function heldKind(item: GearItem): Held {
   if (item.discovered && isGearShape(item.shape)) return item.shape; // choix d'un admin
   const t = norm(item.title ?? '');
-  if (/\barcs?\b|arbalete|fronde/.test(t)) return 'bow';
+  if (/arbalete/.test(t)) return 'crossbow';
+  if (/fusil a pompe|shotgun/.test(t)) return 'shotgun';
+  if (/\bak\b|ak-?47|kalach|fusil d.assaut/.test(t)) return 'ak47';
+  if (/mitraillette|\bsmg\b|\buzi\b/.test(t)) return 'smg';
+  if (/pistolet|revolver|flingue/.test(t)) return 'pistol';
+  if (/grenade/.test(t)) return 'grenade';
+  if (/shuriken/.test(t)) return 'shuriken';
+  if (/kunai/.test(t)) return 'kunai';
+  if (/dagues? doubles?|doubles? dagues?/.test(t)) return 'dual_daggers';
+  if (/lames? (secrete|cachee)s?/.test(t)) return 'hidden_blades';
+  if (/ordinateur|laptop|\bpc\b/.test(t)) return 'computer';
+  if (/fiole|potion|flacon|elixir/.test(t)) return 'vial';
+  if (/\barcs?\b|fronde/.test(t)) return 'bow';
   if (/bouclier|pavois|egide|targe/.test(t)) return 'shield';
   if (/hache|marteau|masse|faux/.test(t)) return 'axe';
   if (/lance|trident|hallebarde|javelot|pique/.test(t)) return 'spear';
@@ -43,9 +55,177 @@ function heldKind(item: GearItem): Held {
 const SHADE = 'rgba(0,0,0,0.22)';
 const LIGHT = 'rgba(255,255,255,0.28)';
 
+const METAL_DARK = '#27313f';
+const GLASS = 'rgba(207,232,255,0.55)';
+
+/** Une dague (lame vers le haut), réutilisée pour les dagues doubles. */
+function Dagger({ color }: { color: string }) {
+  return (
+    <>
+      <rect x="10" y="22" width="4" height="4" fill={color} />
+      <rect x="9" y="26" width="6" height="18" fill={color} />
+      <rect x="9" y="26" width="2" height="18" fill={LIGHT} />
+      <rect x="4" y="44" width="16" height="4" fill="#ffcb45" />
+      <rect x="10" y="48" width="4" height="10" fill={WOOD_DARK} />
+      <rect x="9" y="58" width="6" height="4" fill="#ffcb45" />
+    </>
+  );
+}
+
+/** Armes à feu : dessinées à l'horizontale (canon à droite, boîte 64 × 24) puis redressées canon vers le haut. */
+function Gun({ children }: { children: React.ReactNode }) {
+  return <g transform="translate(0 64) rotate(-90)">{children}</g>;
+}
+
 /** Objet tenu, dessiné dans une boîte de 24 × 64. */
 function HeldGlyph({ kind, color }: { kind: Held; color: string }) {
   switch (kind) {
+    case 'crossbow':
+      return (
+        <>
+          <rect x="10" y="10" width="4" height="50" fill={WOOD} />
+          <rect x="12" y="10" width="2" height="50" fill={SHADE} />
+          <path d="M-2 22 Q12 2 26 22" fill="none" stroke={color} strokeWidth="4" strokeLinecap="square" />
+          <path d="M-2 22 L26 22" stroke="#e8f3ff" strokeWidth="1.2" />
+          <rect x="11" y="0" width="2" height="22" fill="#e8f3ff" />
+          <rect x="8" y="44" width="8" height="4" fill={METAL_DARK} />
+        </>
+      );
+    case 'pistol':
+      return (
+        <Gun>
+          <rect x="18" y="5" width="28" height="8" fill={color} />
+          <rect x="18" y="5" width="28" height="2" fill={LIGHT} />
+          <rect x="18" y="11" width="28" height="2" fill={SHADE} />
+          <rect x="18" y="13" width="9" height="11" fill={METAL_DARK} />
+          <rect x="27" y="13" width="7" height="2" fill={METAL_DARK} />
+          <rect x="32" y="13" width="2" height="5" fill={METAL_DARK} />
+        </Gun>
+      );
+    case 'smg':
+      return (
+        <Gun>
+          <rect x="2" y="7" width="12" height="3" fill={METAL_DARK} />
+          <rect x="2" y="7" width="3" height="9" fill={METAL_DARK} />
+          <rect x="14" y="5" width="30" height="8" fill={color} />
+          <rect x="14" y="5" width="30" height="2" fill={LIGHT} />
+          <rect x="44" y="7" width="12" height="4" fill={color} />
+          <rect x="44" y="9" width="12" height="2" fill={SHADE} />
+          <rect x="17" y="13" width="6" height="8" fill={METAL_DARK} />
+          <rect x="30" y="13" width="5" height="11" fill={METAL_DARK} />
+        </Gun>
+      );
+    case 'ak47':
+      return (
+        <Gun>
+          <path d="M0 6 h14 v7 h-10 l-4 3 z" fill={WOOD} />
+          <rect x="14" y="5" width="20" height="8" fill={color} />
+          <rect x="14" y="5" width="20" height="2" fill={LIGHT} />
+          <rect x="34" y="6" width="13" height="6" fill={WOOD} />
+          <rect x="34" y="10" width="13" height="2" fill={SHADE} />
+          <rect x="47" y="8" width="17" height="2" fill={color} />
+          <rect x="59" y="4" width="2" height="4" fill={color} />
+          <rect x="16" y="13" width="5" height="8" fill={WOOD_DARK} />
+          <path d="M25 13 h7 l4 11 h-7 z" fill={METAL_DARK} />
+        </Gun>
+      );
+    case 'shotgun':
+      return (
+        <Gun>
+          <path d="M0 7 h14 v7 h-9 l-5 3 z" fill={WOOD} />
+          <rect x="14" y="6" width="14" height="8" fill={color} />
+          <rect x="28" y="6" width="36" height="4" fill={color} />
+          <rect x="14" y="6" width="50" height="2" fill={LIGHT} />
+          <rect x="28" y="11" width="28" height="3" fill={METAL_DARK} />
+          <rect x="36" y="10" width="13" height="6" fill={WOOD_DARK} />
+          <rect x="18" y="14" width="6" height="4" fill={METAL_DARK} />
+        </Gun>
+      );
+    case 'grenade':
+      return (
+        <>
+          <rect x="9" y="22" width="6" height="6" fill="#cfd8e2" />
+          <rect x="15" y="22" width="6" height="3" fill="#cfd8e2" />
+          <rect x="19" y="22" width="2" height="12" fill="#cfd8e2" />
+          <circle cx="5" cy="24" r="3" fill="none" stroke="#ffcb45" strokeWidth="1.5" />
+          <rect x="6" y="28" width="12" height="24" fill={color} />
+          <rect x="4" y="31" width="16" height="18" fill={color} />
+          <rect x="4" y="31" width="4" height="18" fill={LIGHT} />
+          <rect x="4" y="36" width="16" height="2" fill={SHADE} />
+          <rect x="4" y="43" width="16" height="2" fill={SHADE} />
+          <rect x="11" y="28" width="2" height="24" fill={SHADE} />
+        </>
+      );
+    case 'shuriken':
+      return (
+        <>
+          <path d="M12 18 L16 30 L28 34 L16 38 L12 50 L8 38 L-4 34 L8 30 Z" fill={color} />
+          <path d="M12 18 L8 30 L-4 34 L8 34 L12 34 Z" fill={LIGHT} />
+          <rect x="10" y="32" width="4" height="4" fill={METAL_DARK} />
+        </>
+      );
+    case 'kunai':
+      return (
+        <>
+          <path d="M12 8 L18 28 L12 40 L6 28 Z" fill={color} />
+          <path d="M12 8 L6 28 L12 40 Z" fill={LIGHT} />
+          <rect x="10" y="40" width="4" height="12" fill={METAL_DARK} />
+          <rect x="10" y="43" width="4" height="2" fill="#ff6b5b" />
+          <rect x="10" y="47" width="4" height="2" fill="#ff6b5b" />
+          <circle cx="12" cy="57" r="4" fill="none" stroke={color} strokeWidth="2.5" />
+        </>
+      );
+    case 'dual_daggers':
+      return (
+        <>
+          <g transform="rotate(-22 12 46)">
+            <Dagger color={color} />
+          </g>
+          <g transform="rotate(22 12 46)">
+            <Dagger color={color} />
+          </g>
+        </>
+      );
+    case 'hidden_blades':
+      return (
+        <>
+          <rect x="10" y="12" width="4" height="4" fill={color} />
+          <rect x="9" y="16" width="6" height="26" fill={color} />
+          <rect x="9" y="16" width="2" height="26" fill={LIGHT} />
+          <rect x="5" y="40" width="14" height="20" fill={WOOD_DARK} />
+          <rect x="5" y="40" width="14" height="3" fill="#ffcb45" />
+          <rect x="5" y="49" width="14" height="2" fill={SHADE} />
+          <rect x="5" y="57" width="14" height="3" fill="#ffcb45" />
+          <rect x="10" y="44" width="4" height="4" fill="#cfd8e2" />
+        </>
+      );
+    case 'computer':
+      return (
+        <>
+          <rect x="0" y="22" width="24" height="18" fill={color} />
+          <rect x="2" y="24" width="20" height="14" fill="#0b1a33" />
+          <rect x="4" y="27" width="10" height="2" fill="#7fe0a0" />
+          <rect x="4" y="31" width="14" height="2" fill="#5fd0e6" />
+          <rect x="4" y="35" width="7" height="2" fill="#7fe0a0" />
+          <rect x="-2" y="40" width="28" height="5" fill={color} />
+          <rect x="-2" y="40" width="28" height="2" fill={LIGHT} />
+          <rect x="8" y="42" width="8" height="2" fill={SHADE} />
+        </>
+      );
+    case 'vial':
+      return (
+        <>
+          <rect x="9" y="20" width="6" height="4" fill={WOOD} />
+          <rect x="10" y="24" width="4" height="8" fill={GLASS} />
+          <rect x="5" y="32" width="14" height="18" fill={GLASS} />
+          <rect x="7" y="50" width="10" height="2" fill={GLASS} />
+          <rect x="5" y="38" width="14" height="12" fill={color} />
+          <rect x="7" y="50" width="10" height="2" fill={color} />
+          <rect x="6" y="33" width="2" height="15" fill="rgba(255,255,255,0.45)" />
+          <rect x="13" y="41" width="2" height="2" fill={LIGHT} />
+          <rect x="10" y="45" width="2" height="2" fill={LIGHT} />
+        </>
+      );
     case 'bow':
       return (
         <>
@@ -73,16 +253,7 @@ function HeldGlyph({ kind, color }: { kind: Held; color: string }) {
         </>
       );
     case 'dagger':
-      return (
-        <>
-          <rect x="10" y="22" width="4" height="4" fill={color} />
-          <rect x="9" y="26" width="6" height="18" fill={color} />
-          <rect x="9" y="26" width="2" height="18" fill={LIGHT} />
-          <rect x="4" y="44" width="16" height="4" fill="#ffcb45" />
-          <rect x="10" y="48" width="4" height="10" fill={WOOD_DARK} />
-          <rect x="9" y="58" width="6" height="4" fill="#ffcb45" />
-        </>
-      );
+      return <Dagger color={color} />;
     case 'axe':
       return (
         <>
