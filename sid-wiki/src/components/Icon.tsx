@@ -10,6 +10,7 @@ export const ICON_FALLBACK = {
   mobs: '☠',
   objets: '🎒',
   skills: '✨',
+  profils: '🧍',
   accueil: '🏠',
   chercher: '🔍',
   favoris: '⭐',

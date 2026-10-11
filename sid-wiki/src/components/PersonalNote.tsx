@@ -64,7 +64,7 @@ export default function PersonalNote({ category, number }: { category: string; n
           </div>
         </div>
       )}
-      {!open && !loaded && <p className="mt-1 text-sm italic text-olive-700">Chargement…</p>}
+      {!loaded && <p className="mt-1 text-sm italic text-olive-700">Chargement…</p>}
     </section>
   );
 }

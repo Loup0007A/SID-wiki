@@ -11,6 +11,7 @@ Catégories
   mobs.png       Mobs
   objets.png     Objets
   skills.png     Skills
+  profils.png    Profils (onglet des chasseurs)
 
 Interface
   logo.png       Logo à gauche de « Wiki du S.I.D. » (carré, ou haut de 64 px max si large)

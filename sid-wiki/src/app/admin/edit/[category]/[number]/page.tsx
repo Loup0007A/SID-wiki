@@ -13,6 +13,9 @@ export default async function EditPage({ params }: { params: { category: string;
   const { data: isAdmin } = await supabase.rpc('wiki_is_admin');
   if (isAdmin !== true) redirect('/');
 
+  const { data: stand } = await supabase.rpc('wiki_stand_image_get');
+  const standImage = typeof stand === 'string' && stand ? stand : null;
+
   if (params.number === 'new') {
     const { data: next } = await supabase.rpc('wiki_next_number', { p_category: category });
     if (next === null || next === undefined) {
@@ -33,9 +36,15 @@ export default async function EditPage({ params }: { params: { category: string;
       infobox: [],
       model_url: null,
       model_animation: null,
+      gear_shape: null,
+      gear_color: null,
+      gear_dx: 0,
+      gear_dy: 0,
+      gear_scale: 1,
+      gear_rot: 0,
       links: [],
     };
-    return <EntryForm initial={empty} />;
+    return <EntryForm initial={empty} standImage={standImage} />;
   }
 
   const n = parseNumber(params.number);
@@ -76,8 +85,15 @@ export default async function EditPage({ params }: { params: { category: string;
         infobox: Array.isArray(entry.infobox) ? entry.infobox : [],
         model_url: entry.model_url ?? null,
         model_animation: entry.model_animation ?? null,
+        gear_shape: entry.gear_shape ?? null,
+        gear_color: entry.gear_color ?? null,
+        gear_dx: Number(entry.gear_dx ?? 0) || 0,
+        gear_dy: Number(entry.gear_dy ?? 0) || 0,
+        gear_scale: Number(entry.gear_scale ?? 1) || 1,
+        gear_rot: Number(entry.gear_rot ?? 0) || 0,
         links,
       }}
+      standImage={standImage}
     />
   );
 }

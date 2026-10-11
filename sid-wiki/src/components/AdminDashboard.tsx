@@ -48,7 +48,7 @@ function missing(r: Row, o: Overview | undefined): string[] {
   return m;
 }
 
-type ImportRow = {
+type ImportFields = {
   category: Category;
   number: number;
   title: string;
@@ -63,12 +63,29 @@ type ImportRow = {
   model_animation: string | null;
 };
 
+/** Une ligne importée ne contient que les champs réellement présents dans le fichier (hors catégorie, numéro, titre). */
+type ImportRow = Pick<ImportFields, 'category' | 'number' | 'title'> & Partial<ImportFields>;
+
+/** Valeurs d'une NOUVELLE fiche pour les champs absents du fichier. */
+const IMPORT_DEFAULTS: Omit<ImportFields, 'category' | 'number' | 'title'> = {
+  summary: '',
+  content: '',
+  tags: [],
+  infobox: [],
+  rarity: null,
+  discovered: false,
+  image_url: null,
+  model_url: null,
+  model_animation: null,
+};
+
 const EXPORT_COLUMNS =
   'category, number, title, summary, content, tags, infobox, rarity, discovered, image_url, model_url, model_animation';
 
 function parseImport(raw: unknown, defaultCategory: Category): { rows: ImportRow[]; errors: string[] } {
   const errors: string[] = [];
   const rows: ImportRow[] = [];
+  const seen = new Set<string>();
   if (!Array.isArray(raw)) return { rows, errors: ['Le fichier doit contenir une liste JSON ( [ … ] ).'] };
 
   raw.forEach((r, i) => {
@@ -83,24 +100,30 @@ function parseImport(raw: unknown, defaultCategory: Category): { rows: ImportRow
     const rarity = o.rarity == null ? null : Number(o.rarity);
     if (rarity !== null && (!Number.isInteger(rarity) || rarity < 1 || rarity > 8)) return errors.push(`${where} : rareté entre 1 et 8.`);
 
-    rows.push({
-      category: category as Category,
-      number,
-      title: o.title.trim(),
-      summary: typeof o.summary === 'string' ? o.summary : '',
-      content: typeof o.content === 'string' ? o.content : '',
-      tags: Array.isArray(o.tags) ? o.tags.filter((t): t is string => typeof t === 'string').map((t) => t.trim().toLowerCase()).filter(Boolean) : [],
-      infobox: Array.isArray(o.infobox)
-        ? o.infobox
-            .filter((x): x is { label: string; value: string } => typeof x?.label === 'string' && typeof x?.value === 'string')
-            .map((x) => ({ label: x.label, value: x.value }))
-        : [],
-      rarity,
-      discovered: o.discovered === true,
-      image_url: typeof o.image_url === 'string' ? o.image_url : null,
-      model_url: typeof o.model_url === 'string' ? o.model_url : null,
-      model_animation: typeof o.model_animation === 'string' ? o.model_animation : null,
-    });
+    // Deux lignes pour la même fiche : la base refuserait tout le fichier avec un message obscur.
+    const key = `${category}/${number}`;
+    if (seen.has(key)) return errors.push(`${where} : ${category} ${pad(number)} apparaît deux fois dans le fichier.`);
+    seen.add(key);
+
+    // Seuls les champs présents sont repris : un champ absent ne doit PAS écraser une fiche existante.
+    const row: ImportRow = { category: category as Category, number, title: o.title.trim() };
+    if (typeof o.summary === 'string') row.summary = o.summary;
+    if (typeof o.content === 'string') row.content = o.content;
+    if (Array.isArray(o.tags)) {
+      row.tags = Array.from(new Set(o.tags.filter((t): t is string => typeof t === 'string').map((t) => t.trim().toLowerCase()).filter(Boolean)));
+    }
+    if (Array.isArray(o.infobox)) {
+      row.infobox = o.infobox
+        .filter((x): x is { label: string; value: string } => typeof x?.label === 'string' && typeof x?.value === 'string')
+        .map((x) => ({ label: x.label, value: x.value }));
+    }
+    if ('rarity' in o) row.rarity = rarity;
+    if (typeof o.discovered === 'boolean') row.discovered = o.discovered;
+    for (const k of ['image_url', 'model_url', 'model_animation'] as const) {
+      if (typeof o[k] === 'string') row[k] = o[k] as string;
+      else if (o[k] === null) row[k] = null;
+    }
+    rows.push(row);
   });
   return { rows, errors };
 }
@@ -237,8 +260,11 @@ export default function AdminDashboard() {
     const a = document.createElement('a');
     a.href = URL.createObjectURL(blob);
     a.download = `wiki-${category}-${new Date().toISOString().slice(0, 10)}.json`;
+    document.body.appendChild(a);
     a.click();
-    URL.revokeObjectURL(a.href);
+    a.remove();
+    // Révoquer tout de suite annule le téléchargement sur certains navigateurs.
+    setTimeout(() => URL.revokeObjectURL(a.href), 1000);
   }
 
   async function importJson(file: File) {
@@ -254,7 +280,15 @@ export default function AdminDashboard() {
     if (parsed.length === 0) return setError('Rien à importer.');
     if (!confirm(`Importer ${parsed.length} fiche(s) ? Les fiches existantes avec le même numéro seront mises à jour.`)) return;
 
-    const { error } = await supabase.from('wiki_entries').upsert(parsed, { onConflict: 'category,number' });
+    // Fiches déjà en base : on complète chaque ligne avec leurs valeurs actuelles, sinon un fichier partiel
+    // (ex. seulement numéro + titre) re-masquait les fiches et effaçait texte, tags, image et modèle 3D.
+    const cats = Array.from(new Set(parsed.map((r) => r.category)));
+    const { data: current, error: readErr } = await supabase.from('wiki_entries').select(EXPORT_COLUMNS).in('category', cats);
+    if (readErr) return setError(readErr.message);
+    const existing = new Map(((current ?? []) as unknown as ImportFields[]).map((e) => [`${e.category}/${e.number}`, e]));
+    const full = parsed.map((r) => ({ ...IMPORT_DEFAULTS, ...(existing.get(`${r.category}/${r.number}`) ?? {}), ...r }));
+
+    const { error } = await supabase.from('wiki_entries').upsert(full, { onConflict: 'category,number' });
     if (error) return setError(error.message);
     setError(null);
     setInfo(`${parsed.length} fiche(s) importée(s).`);
@@ -439,7 +473,7 @@ export default function AdminDashboard() {
 
       <p className="mt-3 text-xs text-olive-700">
         Import JSON : liste d’objets <code>{'{ "number": 12, "title": "…", "summary", "content", "tags": [], "infobox": [{"label","value"}], "rarity": 1-8, "discovered": true }'}</code>.
-        La catégorie est celle de l’onglet si elle n’est pas précisée.
+        La catégorie est celle de l’onglet si elle n’est pas précisée. Sur une fiche existante, seuls les champs présents dans le fichier sont modifiés.
       </p>
       </>
       )}
