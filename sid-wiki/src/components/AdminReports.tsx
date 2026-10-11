@@ -1,7 +1,7 @@
 'use client';
 
 import Link from 'next/link';
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import { createClient } from '@/lib/supabase/client';
 import { pad, type Category } from '@/lib/wiki';
 import Icon from './Icon';
@@ -23,7 +23,7 @@ const KIND: Record<Report['kind'], string> = { erreur: '❌ Erreur', manque: '�
 
 /** Boîte de réception des signalements envoyés par les membres. */
 export default function AdminReports({ reports, onChange }: { reports: Report[]; onChange: () => void }) {
-  const supabase = createClient();
+  const supabase = useMemo(() => createClient(), []);
   const [showDone, setShowDone] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -41,6 +41,7 @@ export default function AdminReports({ reports, onChange }: { reports: Report[];
     if (!confirm('Supprimer ce signalement ?')) return;
     const { error } = await supabase.from('wiki_reports').delete().eq('id', r.id);
     if (error) return setError(error.message);
+    setError(null);
     onChange();
   }
 

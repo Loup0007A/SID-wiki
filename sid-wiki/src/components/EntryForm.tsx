@@ -146,6 +146,13 @@ export default function EntryForm({ initial }: { initial: FormEntry }) {
     setAnimNames([]);
   }
 
+  // Annuler : les images envoyées pendant cette session et jamais enregistrées ne doivent pas rester dans le stockage.
+  async function cancel() {
+    for (const u of tempImages.current) if (u !== initial.image_url) await removeStoredFile(supabase, 'wiki-images', u);
+    if (pendingModel) URL.revokeObjectURL(pendingModel.previewUrl);
+    router.back();
+  }
+
   function restore(r: Revision) {
     if (!confirm('Remplacer le titre, résumé, contenu, tags et fiche technique du formulaire par cette version ? (rien n’est enregistré tant que tu ne cliques pas sur Enregistrer)')) return;
     setTitle(r.title);
@@ -165,11 +172,20 @@ export default function EntryForm({ initial }: { initial: FormEntry }) {
 
     // 1) Modèle 3D : on ne garde que l'animation choisie, on purge le reste, puis on envoie.
     let finalModelUrl = modelUrl;
-    const needsOptimize = !!pendingModel || (!!modelUrl && animNames.length > 1);
+    let uploadedModelUrl: string | null = null;
+    // Modèle déjà en ligne : à retraiter s'il reste plusieurs animations, ou si on a choisi « Aucune »
+    // alors qu'il en contient encore une (sinon elle continuait de se jouer côté lecteur).
+    const needsOptimize = !!pendingModel || (!!modelUrl && (animNames.length > 1 || (animNames.length === 1 && !modelAnimation)));
     if (needsOptimize) {
       try {
         setStatus('Allègement du modèle 3D…');
-        const bytes = pendingModel ? pendingModel.bytes : new Uint8Array(await (await fetch(modelUrl!)).arrayBuffer());
+        let bytes: Uint8Array;
+        if (pendingModel) bytes = pendingModel.bytes;
+        else {
+          const resp = await fetch(modelUrl!);
+          if (!resp.ok) throw new Error(`fichier actuel introuvable (${resp.status}). Retire le modèle ou renvoie-le.`);
+          bytes = new Uint8Array(await resp.arrayBuffer());
+        }
         const { optimizeGlb } = await import('@/lib/glb');
         const res = await optimizeGlb(bytes, modelAnimation || null);
         if (res.lost.length && !confirm(`Ce modèle utilise des réglages de matériau (${res.lost.join(', ')}) que l’allègement ne peut pas conserver. Il sera envoyé tel quel, avec toutes ses animations. Continuer ?`)) {
@@ -183,6 +199,7 @@ export default function EntryForm({ initial }: { initial: FormEntry }) {
           .upload(path, new Blob([out as BlobPart], { type: 'model/gltf-binary' }), { contentType: 'model/gltf-binary', upsert: false });
         if (upErr) throw new Error(upErr.message);
         finalModelUrl = supabase.storage.from('wiki-models').getPublicUrl(path).data.publicUrl;
+        uploadedModelUrl = finalModelUrl;
       } catch (err) {
         setStatus(null);
         setSaving(false);
@@ -207,6 +224,16 @@ export default function EntryForm({ initial }: { initial: FormEntry }) {
       model_animation: finalModelUrl && modelAnimation ? modelAnimation : null,
     };
 
+    // Échec de l'enregistrement : le modèle qu'on vient d'envoyer ne sert à rien, on le retire du stockage.
+    const fail = async (message: string) => {
+      if (uploadedModelUrl) await removeStoredFile(supabase, 'wiki-models', uploadedModelUrl);
+      setStatus(null);
+      setSaving(false);
+      setError(message);
+    };
+    const dbMessage = (e: { code?: string; message: string }) =>
+      e.code === '23505' ? `Le numéro ${pad(number)} est déjà pris dans cette catégorie.` : e.message;
+
     let id = initial.id;
     if (isNew) {
       const { data: u } = await supabase.auth.getUser();
@@ -215,17 +242,11 @@ export default function EntryForm({ initial }: { initial: FormEntry }) {
         .insert({ ...payload, created_by: u.user?.id ?? null })
         .select('id')
         .single();
-      if (error) {
-        setSaving(false);
-        return setError(error.code === '23505' ? `Le numéro ${pad(number)} est déjà pris dans cette catégorie.` : error.message);
-      }
+      if (error) return fail(dbMessage(error));
       id = data.id;
     } else {
       const { error } = await supabase.from('wiki_entries').update(payload).eq('id', id!);
-      if (error) {
-        setSaving(false);
-        return setError(error.code === '23505' ? `Le numéro ${pad(number)} est déjà pris dans cette catégorie.` : error.message);
-      }
+      if (error) return fail(dbMessage(error));
     }
 
     // Liens : on repart de zéro pour cette fiche, puis on réinsère.
@@ -234,6 +255,7 @@ export default function EntryForm({ initial }: { initial: FormEntry }) {
     if (links.length) {
       const { error } = await supabase.from('wiki_entry_links').insert(links.map((l) => ({ from_id: id!, to_id: l.id })));
       if (error) {
+        setStatus(null);
         setSaving(false);
         return setError(`Fiche enregistrée, mais liens en erreur : ${error.message}`);
       }
@@ -252,7 +274,7 @@ export default function EntryForm({ initial }: { initial: FormEntry }) {
   return (
     <form onSubmit={save} className="mx-auto max-w-4xl space-y-5">
       <h1 className="title-grad font-typewriter text-2xl font-bold text-olive-800 sm:text-3xl">
-        {isNew ? 'Nouvelle fiche' : `Modifier ${category} ${pad(initial.number)}`}
+        {isNew ? 'Nouvelle fiche' : `Modifier ${initial.category} ${pad(initial.number)}`}
       </h1>
 
       <div className="card grid gap-4 p-4 sm:grid-cols-3 sm:p-5">
@@ -266,7 +288,7 @@ export default function EntryForm({ initial }: { initial: FormEntry }) {
         </div>
         <div>
           <label className="label">Numéro (0–999)</label>
-          <input className="input" type="number" min={0} max={999} value={number} onChange={(e) => setNumber(parseInt(e.target.value, 10))} />
+          <input className="input" type="number" min={0} max={999} value={Number.isNaN(number) ? '' : number} onChange={(e) => setNumber(parseInt(e.target.value, 10))} />
         </div>
         <label className="flex items-end gap-2 pb-2">
           <input type="checkbox" checked={discovered} onChange={(e) => setDiscovered(e.target.checked)} className="h-5 w-5" />
@@ -403,7 +425,15 @@ export default function EntryForm({ initial }: { initial: FormEntry }) {
             // eslint-disable-next-line @next/next/no-img-element
             <img src={imageUrl} alt="" className="h-20 w-20 rounded-lg border border-white/15 object-cover" />
           )}
-          <input type="file" accept="image/*" onChange={(e) => e.target.files?.[0] && uploadImage(e.target.files[0])} />
+          <input
+            type="file"
+            accept="image/*"
+            onChange={(e) => {
+              const file = e.target.files?.[0];
+              e.target.value = ''; // permet de renvoyer le même fichier après « Retirer »
+              if (file) uploadImage(file);
+            }}
+          />
           {imageUrl && (
             <button type="button" className="btn-ghost !px-3 !py-0.5" onClick={() => setImageUrl(null)}>
               Retirer
@@ -474,7 +504,7 @@ export default function EntryForm({ initial }: { initial: FormEntry }) {
 
       <div className="card sticky bottom-[4.5rem] z-30 flex gap-3 p-3 md:static md:border-0 md:bg-transparent md:p-0 md:shadow-none md:backdrop-blur-none">
         <button className="btn flex-1 md:flex-none" disabled={saving || uploadingModel}>{saving ? (status ?? 'Enregistrement…') : 'Enregistrer'}</button>
-        <button type="button" className="btn-ghost flex-1 md:flex-none" onClick={() => router.back()}>Annuler</button>
+        <button type="button" className="btn-ghost flex-1 md:flex-none" disabled={saving} onClick={cancel}>Annuler</button>
       </div>
     </form>
   );

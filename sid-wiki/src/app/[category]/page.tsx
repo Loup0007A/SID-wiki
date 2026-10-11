@@ -1,7 +1,7 @@
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { createClient } from '@/lib/supabase/server';
-import { CATEGORY_LABELS, isCategory, type EntrySummary } from '@/lib/wiki';
+import { CATEGORY_LABELS, firstParam, isCategory, type EntrySummary } from '@/lib/wiki';
 import CategoryView from '@/components/CategoryView';
 import Icon from '@/components/Icon';
 import AccessDenied from '@/components/AccessDenied';
@@ -13,7 +13,7 @@ export default async function CategoryPage({
   searchParams,
 }: {
   params: { category: string };
-  searchParams: { tag?: string; show?: string };
+  searchParams: { tag?: string | string[]; show?: string | string[] };
 }) {
   if (!isCategory(params.category)) notFound();
   const category = params.category;
@@ -26,15 +26,17 @@ export default async function CategoryPage({
   if (error) return <AccessDenied />;
 
   const tags = (tagData ?? []) as string[];
-  const onlyFound = searchParams.show === 'found';
+  const tag = firstParam(searchParams.tag);
+  const show = firstParam(searchParams.show);
+  const onlyFound = show === 'found';
   let entries = (data ?? []) as EntrySummary[];
-  if (searchParams.tag) entries = entries.filter((e) => e.tags?.includes(searchParams.tag!));
+  if (tag) entries = entries.filter((e) => e.tags?.includes(tag));
   if (onlyFound) entries = entries.filter((e) => e.discovered);
 
   const base = `/${category}`;
   const q = (extra: Record<string, string | undefined>) => {
     const p = new URLSearchParams();
-    const merged = { tag: searchParams.tag, show: searchParams.show, ...extra };
+    const merged = { tag, show, ...extra };
     for (const [k, v] of Object.entries(merged)) if (v) p.set(k, v);
     const s = p.toString();
     return s ? `${base}?${s}` : base;
@@ -46,9 +48,9 @@ export default async function CategoryPage({
         <Icon name={category} /> {CATEGORY_LABELS[category].label}
       </h1>
 
-      <details className="mb-4 text-sm" open={!!searchParams.tag || onlyFound}>
+      <details className="mb-4 text-sm" open={!!tag || onlyFound}>
           <summary className="cursor-pointer select-none text-olive-700">
-            Plus de filtres{searchParams.tag ? ` : #${searchParams.tag}` : ''}{onlyFound ? ' · découverts seulement' : ''}
+            Plus de filtres{tag ? ` : #${tag}` : ''}{onlyFound ? ' · découverts seulement' : ''}
           </summary>
       <div className="mt-3 flex flex-wrap items-center gap-2 text-sm">
         <Link href={q({ show: onlyFound ? undefined : 'found' })} className="btn-ghost">
@@ -57,8 +59,8 @@ export default async function CategoryPage({
         {tags.map((t) => (
           <Link
             key={t}
-            href={q({ tag: searchParams.tag === t ? undefined : t })}
-            className={searchParams.tag === t ? 'btn' : 'btn-ghost'}
+            href={q({ tag: tag === t ? undefined : t })}
+            className={tag === t ? 'btn' : 'btn-ghost'}
           >
             #{t}
           </Link>

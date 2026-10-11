@@ -1,11 +1,11 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { createClient } from '@/lib/supabase/client';
 
 /** Réglages : annonce affichée en haut de l'accueil pour tous les membres. */
 export default function AdminSettings() {
-  const supabase = createClient();
+  const supabase = useMemo(() => createClient(), []);
   const [text, setText] = useState('');
   const [saved, setSaved] = useState('');
   const [msg, setMsg] = useState<string | null>(null);

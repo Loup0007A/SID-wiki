@@ -5,7 +5,7 @@ import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import EntryLink from './EntryLink';
 import Mention from './Mention';
-import { ENTRY_HREF_RE, extractHeadings, isCategory, preprocessMentions, preprocessWikiLinks } from '@/lib/wiki';
+import { ENTRY_HREF_RE, extractHeadings, isCategory, preprocessMentions, preprocessWikiLinks, safeDecode } from '@/lib/wiki';
 
 /**
  * Rendu markdown sûr (pas de HTML brut).
@@ -79,7 +79,7 @@ export default function Markdown({ children, toc = false }: { children: string; 
           h3: H3,
           a({ href, children }) {
             const mention = href?.match(/^\/mention\/(.+)$/);
-            if (mention) return <Mention nickname={decodeURIComponent(mention[1])} />;
+            if (mention) return <Mention nickname={safeDecode(mention[1])} />;
 
             const m = href?.match(ENTRY_HREF_RE);
             if (m && isCategory(m[1])) {

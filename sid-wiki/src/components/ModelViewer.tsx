@@ -39,6 +39,13 @@ export default function ModelViewer({ src, animation, onAnimations, showAnimatio
 
   useEffect(() => setCurrent(animation ?? null), [animation]);
 
+  // Nouveau fichier : on repart de zéro (sinon « Impossible de charger » restait affiché après un remplacement).
+  useEffect(() => {
+    setFailed(false);
+    setAnims([]);
+    setPlaying(true);
+  }, [src]);
+
   useEffect(() => {
     const el = ref.current;
     if (!ready || !el) return;
@@ -54,7 +61,7 @@ export default function ModelViewer({ src, animation, onAnimations, showAnimatio
       el.removeEventListener('load', onLoad);
       el.removeEventListener('error', onError);
     };
-  }, [ready, src]);
+  }, [ready, src, failed]);
 
   function togglePlay() {
     const el = ref.current;

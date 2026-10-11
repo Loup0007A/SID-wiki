@@ -9,7 +9,7 @@ import Icon from './Icon';
 export default function DesktopNav() {
   const pathname = usePathname();
   return (
-    <nav className="hidden items-center gap-1 pb-2 md:flex" aria-label="Catégories">
+    <nav className="hidden items-center gap-1 pb-2 md:flex" aria-label="Catégories et profils">
       {CATEGORIES.map((c) => {
         const active = pathname === `/${c}` || pathname.startsWith(`/${c}/`);
         return (
@@ -25,6 +25,23 @@ export default function DesktopNav() {
           </Link>
         );
       })}
+
+      {/* Onglet à part : les profils des chasseurs (porte-armure) */}
+      <span aria-hidden className="mx-1 h-5 w-px bg-white/20" />
+      {(() => {
+        const active = pathname === '/profils' || pathname.startsWith('/profils/');
+        return (
+          <Link
+            href="/profils"
+            className={`relative rounded-full px-4 py-1.5 font-typewriter text-base font-bold transition ${
+              active ? 'bg-white/[0.14] text-white' : 'text-olive-800 hover:bg-white/[0.08] hover:text-white'
+            }`}
+          >
+            <Icon name="profils" /> Profils
+            {active && <span className="absolute inset-x-4 -bottom-0.5 h-0.5 rounded-full bg-brass-400" />}
+          </Link>
+        );
+      })()}
     </nav>
   );
 }
