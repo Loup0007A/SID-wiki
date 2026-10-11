@@ -55,7 +55,17 @@ function SlotFace({ slot, item, active }: { slot: GearSlot; item: GearItem | und
  * Le profil façon « armor-stand » : 4 cases d'armure à gauche, le mannequin au centre,
  * mains et dos à droite. Si `canEdit`, un clic sur une case (ou sur le mannequin) ouvre le choix de la fiche.
  */
-export default function ArmorStand({ profileId, canEdit, initialGear }: { profileId: string; canEdit: boolean; initialGear: GearItem[] }) {
+export default function ArmorStand({
+  profileId,
+  canEdit,
+  initialGear,
+  standImage = null,
+}: {
+  profileId: string;
+  canEdit: boolean;
+  initialGear: GearItem[];
+  standImage?: string | null;
+}) {
   const supabase = useMemo(() => createClient(), []);
   const [gear, setGear] = useState<GearItem[]>(initialGear);
   const [open, setOpen] = useState<GearSlot | null>(null);
@@ -165,7 +175,7 @@ export default function ArmorStand({ profileId, canEdit, initialGear }: { profil
       <div className="mx-auto grid max-w-md grid-cols-[auto_minmax(0,1fr)_auto] items-center gap-3 sm:gap-5">
         {column(LEFT)}
         <div className="flex justify-center rounded-2xl border border-white/10 bg-gradient-to-b from-white/[0.08] to-sky-400/[0.06] px-2 py-4">
-          <StandFigure gear={gear} active={hover ?? open} onSlot={canEdit ? pick : undefined} className="h-72 w-auto max-w-full sm:h-80" />
+          <StandFigure gear={gear} standImage={standImage} active={hover ?? open} onSlot={canEdit ? pick : undefined} className="h-72 w-auto max-w-full sm:h-80" />
         </div>
         {column(RIGHT)}
       </div>

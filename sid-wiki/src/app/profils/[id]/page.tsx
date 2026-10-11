@@ -14,7 +14,11 @@ const UUID_RE = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/
 export default async function ProfilePage({ params }: { params: { id: string } }) {
   if (!UUID_RE.test(params.id)) notFound();
 
-  const { data, error } = await createClient().rpc('wiki_profile_get', { p_id: params.id });
+  const supabase = createClient();
+  const [{ data, error }, { data: stand }] = await Promise.all([
+    supabase.rpc('wiki_profile_get', { p_id: params.id }),
+    supabase.rpc('wiki_stand_image_get'),
+  ]);
   if (isMissingFunction(error)) return <MigrationNeeded file="0206_wiki_profiles.sql" />;
   if (error) return <AccessDenied />;
   if (!data) notFound();
@@ -45,7 +49,7 @@ export default async function ProfilePage({ params }: { params: { id: string } }
         ) : null}
       </div>
 
-      <ArmorStand profileId={profile.id} canEdit={profile.can_edit} initialGear={gear} />
+      <ArmorStand profileId={profile.id} canEdit={profile.can_edit} initialGear={gear} standImage={typeof stand === 'string' && stand ? stand : null} />
 
       <section className="card mt-4 p-5">
         <h2 className="mb-3 font-typewriter text-xl font-bold text-olive-800">🏆 Ses découvertes</h2>

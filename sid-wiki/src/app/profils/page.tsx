@@ -8,7 +8,8 @@ import ProfilesView from '@/components/ProfilesView';
 export const dynamic = 'force-dynamic';
 
 export default async function ProfilesPage() {
-  const { data, error } = await createClient().rpc('wiki_profiles_list');
+  const supabase = createClient();
+  const [{ data, error }, { data: stand }] = await Promise.all([supabase.rpc('wiki_profiles_list'), supabase.rpc('wiki_stand_image_get')]);
   if (isMissingFunction(error)) return <MigrationNeeded file="0206_wiki_profiles.sql" />;
   if (error) return <AccessDenied />;
 
@@ -22,7 +23,7 @@ export default async function ProfilesPage() {
       <p className="mb-5 text-olive-700">
         Chaque chasseur a son porte-armure : casque, plastron, jambières, bottes, une arme dans chaque main et un arc dans le dos. Ouvre le tien pour l’équiper !
       </p>
-      <ProfilesView profiles={profiles} />
+      <ProfilesView profiles={profiles} standImage={typeof stand === 'string' && stand ? stand : null} />
     </div>
   );
 }

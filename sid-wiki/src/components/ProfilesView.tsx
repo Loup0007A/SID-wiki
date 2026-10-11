@@ -8,7 +8,7 @@ import StandFigure from './StandFigure';
 const norm = (s: string) => s.normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase();
 
 /** Tous les profils : filtre instantané par pseudo, mini porte-armure sur chaque carte. */
-export default function ProfilesView({ profiles }: { profiles: ProfileSummary[] }) {
+export default function ProfilesView({ profiles, standImage = null }: { profiles: ProfileSummary[]; standImage?: string | null }) {
   const [q, setQ] = useState('');
   const [onlyGeared, setOnlyGeared] = useState(false);
 
@@ -40,7 +40,7 @@ export default function ProfilesView({ profiles }: { profiles: ProfileSummary[] 
               href={`/profils/${p.id}`}
               className={`card flex flex-col items-center p-3 text-center transition hover:-translate-y-0.5 hover:border-brass-500 ${p.is_me ? 'border-brass-400/60' : ''}`}
             >
-              <StandFigure gear={p.gear} className="h-32 w-auto" />
+              <StandFigure gear={p.gear} standImage={standImage} className="h-32 w-auto" />
               <h2 className="mt-2 max-w-full truncate font-typewriter text-lg font-bold">@{p.nickname}</h2>
               {p.is_me && <span className="stamp mt-1 !rotate-0">C’est toi !</span>}
               <p className="mt-1 text-xs text-olive-700">

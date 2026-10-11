@@ -1,4 +1,4 @@
-import { GEAR_COLOR_RE, GEAR_SLOT_LABELS, isGearShape, type GearItem, type GearShape, type GearSlot } from '@/lib/wiki';
+import { GEAR_COLOR_RE, GEAR_SLOT_LABELS, GEAR_TRANSFORM_LIMITS, isGearShape, type GearItem, type GearShape, type GearSlot } from '@/lib/wiki';
 
 /**
  * Le porte-armure (« armor-stand ») dessiné en pixels : socle de pierre, montants en bois,
@@ -287,6 +287,32 @@ function HeldGlyph({ kind, color }: { kind: Held; color: string }) {
   }
 }
 
+const clamp = (v: unknown, min: number, max: number, fallback: number) => {
+  const n = typeof v === 'number' ? v : typeof v === 'string' ? parseFloat(v) : NaN;
+  return Number.isFinite(n) ? Math.min(max, Math.max(min, n)) : fallback;
+};
+
+/**
+ * Une arme posée à son emplacement, avec le placement choisi par un admin :
+ * le décalage se fait dans le repère de l'image (droite / bas), la taille et la rotation autour du centre de l'arme.
+ */
+function Held({ item, base }: { item: GearItem; base: string }) {
+  const L = GEAR_TRANSFORM_LIMITS;
+  const dx = clamp(item.dx, -L.offset, L.offset, 0);
+  const dy = clamp(item.dy, -L.offset, L.offset, 0);
+  const scale = clamp(item.scale, L.scaleMin, L.scaleMax, 1);
+  const rot = clamp(item.rot, -L.rot, L.rot, 0);
+  return (
+    <g transform={`translate(${dx} ${dy})`}>
+      <g transform={base}>
+        <g transform={`translate(12 32) rotate(${rot}) scale(${scale}) translate(-12 -32)`}>
+          <HeldGlyph kind={heldKind(item)} color={colorOf(item)} />
+        </g>
+      </g>
+    </g>
+  );
+}
+
 /** Zones cliquables du mannequin (comme dans Minecraft : on clique la partie du corps). */
 const HIT: Record<GearSlot, { x: number; y: number; w: number; h: number }> = {
   dos: { x: 66, y: 0, w: 30, h: 26 },
@@ -303,9 +329,12 @@ export default function StandFigure({
   className = '',
   active = null,
   onSlot,
+  standImage = null,
 }: {
   gear: GearItem[];
   className?: string;
+  /** Image (fond transparent, format 2:3) qui remplace le mannequin en bois */
+  standImage?: string | null;
   /** Emplacement mis en évidence (survol / sélection) */
   active?: GearSlot | null;
   /** Rend le mannequin cliquable (profil modifiable) */
@@ -327,26 +356,29 @@ export default function StandFigure({
   return (
     <svg viewBox="0 0 96 144" className={className} role="img" aria-label={label} shapeRendering="crispEdges">
       {/* Dos : dessiné en premier, il dépasse derrière l'épaule */}
-      {back && (
-        <g transform="translate(50 60) rotate(32) scale(1.25) translate(-12 -40)">
-          <HeldGlyph kind={heldKind(back)} color={colorOf(back)} />
-        </g>
+      {back && <Held item={back} base="translate(50 60) rotate(32) scale(1.25) translate(-12 -40)" />}
+
+      {/* Le mannequin : image transparente choisie par les admins, sinon le porte-armure en bois */}
+      {standImage ? (
+        <image href={standImage} x="0" y="0" width="96" height="144" preserveAspectRatio="xMidYMid meet" style={{ imageRendering: 'auto' }} />
+      ) : (
+        <>
+          {/* Socle */}
+          <rect x="14" y="132" width="68" height="10" fill={STONE} />
+          <rect x="14" y="132" width="68" height="3" fill="rgba(255,255,255,0.25)" />
+          <rect x="14" y="139" width="68" height="3" fill={STONE_DARK} />
+
+          {/* Montants en bois */}
+          <rect x="36" y="84" width="4" height="48" fill={WOOD} />
+          <rect x="56" y="84" width="4" height="48" fill={WOOD} />
+          <rect x="32" y="80" width="32" height="4" fill={WOOD_DARK} />
+          <rect x="46" y="20" width="4" height="60" fill={WOOD} />
+          <rect x="20" y="36" width="56" height="4" fill={WOOD_DARK} />
+          <rect x="20" y="40" width="4" height="38" fill={WOOD} />
+          <rect x="72" y="40" width="4" height="38" fill={WOOD} />
+          <rect x="44" y="14" width="8" height="8" fill={WOOD_DARK} />
+        </>
       )}
-
-      {/* Socle */}
-      <rect x="14" y="132" width="68" height="10" fill={STONE} />
-      <rect x="14" y="132" width="68" height="3" fill="rgba(255,255,255,0.25)" />
-      <rect x="14" y="139" width="68" height="3" fill={STONE_DARK} />
-
-      {/* Montants en bois */}
-      <rect x="36" y="84" width="4" height="48" fill={WOOD} />
-      <rect x="56" y="84" width="4" height="48" fill={WOOD} />
-      <rect x="32" y="80" width="32" height="4" fill={WOOD_DARK} />
-      <rect x="46" y="20" width="4" height="60" fill={WOOD} />
-      <rect x="20" y="36" width="56" height="4" fill={WOOD_DARK} />
-      <rect x="20" y="40" width="4" height="38" fill={WOOD} />
-      <rect x="72" y="40" width="4" height="38" fill={WOOD} />
-      <rect x="44" y="14" width="8" height="8" fill={WOOD_DARK} />
 
       {/* Jambes */}
       {legs && (
@@ -397,16 +429,8 @@ export default function StandFigure({
       )}
 
       {/* Mains (la main droite du mannequin est à gauche de l'image, comme face à toi) */}
-      {right && (
-        <g transform="translate(2 22)">
-          <HeldGlyph kind={heldKind(right)} color={colorOf(right)} />
-        </g>
-      )}
-      {left && (
-        <g transform="translate(70 22)">
-          <HeldGlyph kind={heldKind(left)} color={colorOf(left)} />
-        </g>
-      )}
+      {right && <Held item={right} base="translate(2 22)" />}
+      {left && <Held item={left} base="translate(70 22)" />}
 
       {/* Surbrillance + zones cliquables */}
       {active && (

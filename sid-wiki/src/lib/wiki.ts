@@ -266,7 +266,15 @@ export type GearItem = {
   /** Apparence choisie par un admin (absente / null = automatique) */
   shape?: string | null;
   color?: string | null;
+  /** Placement choisi par un admin : décalage (grille 96 × 144), taille (1 = normale), rotation en degrés */
+  dx?: number | null;
+  dy?: number | null;
+  scale?: number | null;
+  rot?: number | null;
 };
+
+/** Bornes du placement (les mêmes que la contrainte de la migration 0209). */
+export const GEAR_TRANSFORM_LIMITS = { offset: 60, scaleMin: 0.3, scaleMax: 3, rot: 180 } as const;
 
 export type ProfileSummary = {
   id: string;

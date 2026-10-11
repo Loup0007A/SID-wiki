@@ -5,7 +5,7 @@ Wiki RP (lieux, armes, mobs, objets, skills) branché sur le **même projet Supa
 ## Installation
 
 1. `cp .env.example .env.local` et renseigne l'URL + la clé **anon** du projet Supabase existant.
-2. Exécute `supabase/migrations/0200_wiki.sql` puis `0201_wiki_hide_names_for_admins.sql` puis `0202_wiki_comments_discoverer.sql` puis `0203_wiki_skills_3d_extras.sql` puis `0204_wiki_save_space.sql` puis `0205_wiki_giga_update.sql` puis `0206_wiki_profiles.sql` puis `0207_wiki_gear_appearance.sql` puis `0208_wiki_gear_more_shapes.sql` dans le SQL Editor (chacun une seule fois, dans cet ordre).
+2. Exécute `supabase/migrations/0200_wiki.sql` puis `0201_wiki_hide_names_for_admins.sql` puis `0202_wiki_comments_discoverer.sql` puis `0203_wiki_skills_3d_extras.sql` puis `0204_wiki_save_space.sql` puis `0205_wiki_giga_update.sql` puis `0206_wiki_profiles.sql` puis `0207_wiki_gear_appearance.sql` puis `0208_wiki_gear_more_shapes.sql` puis `0209_wiki_gear_transform_stand_image.sql` dans le SQL Editor (chacun une seule fois, dans cet ordre).
 3. Donne la permission `manage_wiki` à un rôle (bloc commenté en fin de migration — adapte les noms de colonnes de `role_permissions`). Le Fondateur l'a d'office via `has_permission`.
 4. `npm install && npm run dev`
 
@@ -103,3 +103,8 @@ Wiki RP (lieux, armes, mobs, objets, skills) branché sur le **même projet Supa
 - Dans le formulaire d'édition d'une fiche **Armes** ou **Objets**, le bloc « Apparence sur le porte-armure » permet de choisir la **forme** (épée, dague, dagues doubles, lames secrètes, hache, lance, bâton, kunai, shuriken, arc, arbalète, pistolet à main, mitraillette, AK-47, fusil à pompe, grenades, bouclier, fiole, ordinateur — les 12 dernières ajoutées par la migration 0208) et la **couleur** de la pièce, avec un aperçu en direct.
 - « Automatique » garde le comportement d'origine : forme devinée d'après le titre, couleur de la rareté ★.
 - La forme sert quand la fiche est en main ou dans le dos ; la couleur s'applique à tous les emplacements. Le réglage vaut pour tous les profils qui portent cette fiche.
+
+## Placement des armes et image du porte-armure (migration 0209, admins)
+
+- **Placement et taille** : dans le bloc « Apparence sur le porte-armure » d'une fiche Armes ou Objets, quatre curseurs — horizontal, vertical, taille, rotation — avec aperçu en main droite, main gauche ou dans le dos.
+- **Image du porte-armure** : Dashboard → ⚙ Réglages → « Image du porte-armure ». Envoie un PNG ou WebP à fond transparent au format 2:3 (ex. 384 × 576 px) : il remplace le mannequin en bois sur tous les profils. Les pièces d'armure et les armes restent dessinées par-dessus.

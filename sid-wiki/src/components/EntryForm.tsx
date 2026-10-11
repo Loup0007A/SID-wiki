@@ -5,7 +5,7 @@ import { useRouter } from 'next/navigation';
 import { createClient } from '@/lib/supabase/client';
 import { compressImage } from '@/lib/image';
 import { removeStoredFile } from '@/lib/storage';
-import { CATEGORIES, CATEGORY_LABELS, GEAR_CATEGORIES, GEAR_COLOR_RE, GEAR_SHAPES, GEAR_SHAPE_LABELS, pad, type Category, type GearItem, type InfoRow } from '@/lib/wiki';
+import { CATEGORIES, CATEGORY_LABELS, GEAR_CATEGORIES, GEAR_COLOR_RE, GEAR_SHAPES, GEAR_SHAPE_LABELS, GEAR_SLOT_LABELS, GEAR_TRANSFORM_LIMITS, pad, type Category, type GearItem, type GearSlot, type InfoRow } from '@/lib/wiki';
 import Markdown from './Markdown';
 import ModelViewer from './ModelViewer';
 import StandFigure from './StandFigure';
@@ -30,6 +30,11 @@ export type FormEntry = {
   /** Apparence sur le porte-armure (null = automatique) — colonnes de la migration 0207 */
   gear_shape: string | null;
   gear_color: string | null;
+  /** Placement sur le porte-armure — colonnes de la migration 0209 */
+  gear_dx: number;
+  gear_dy: number;
+  gear_scale: number;
+  gear_rot: number;
   links: LinkedEntry[];
 };
 
@@ -43,7 +48,7 @@ type Revision = {
   infobox: InfoRow[];
 };
 
-export default function EntryForm({ initial }: { initial: FormEntry }) {
+export default function EntryForm({ initial, standImage = null }: { initial: FormEntry; standImage?: string | null }) {
   const router = useRouter();
   const supabase = useMemo(() => createClient(), []);
   const isNew = initial.id === null;
@@ -67,6 +72,11 @@ export default function EntryForm({ initial }: { initial: FormEntry }) {
   const [pendingModel, setPendingModel] = useState<{ bytes: Uint8Array; previewUrl: string; size: number } | null>(null);
   const [gearShape, setGearShape] = useState<string>(initial.gear_shape ?? '');
   const [gearColor, setGearColor] = useState<string>(initial.gear_color ?? '');
+  const [gearDx, setGearDx] = useState(initial.gear_dx);
+  const [gearDy, setGearDy] = useState(initial.gear_dy);
+  const [gearScale, setGearScale] = useState(initial.gear_scale);
+  const [gearRot, setGearRot] = useState(initial.gear_rot);
+  const [previewSlot, setPreviewSlot] = useState<GearSlot>('main_droite');
   const [status, setStatus] = useState<string | null>(null);
   const tempImages = useRef<string[]>([]);
   const [links, setLinks] = useState<LinkedEntry[]>(initial.links);
@@ -224,8 +234,15 @@ export default function EntryForm({ initial }: { initial: FormEntry }) {
         ? { gear_shape: nextShape, gear_color: nextColor }
         : {};
 
+    // Placement (migration 0209) : envoyé seulement s'il a été modifié.
+    const placement =
+      equipable && (gearDx !== initial.gear_dx || gearDy !== initial.gear_dy || gearScale !== initial.gear_scale || gearRot !== initial.gear_rot)
+        ? { gear_dx: gearDx, gear_dy: gearDy, gear_scale: gearScale, gear_rot: gearRot }
+        : {};
+
     const payload = {
       ...appearance,
+      ...placement,
       category,
       number,
       title: title.trim(),
@@ -252,7 +269,7 @@ export default function EntryForm({ initial }: { initial: FormEntry }) {
       e.code === '23505'
         ? `Le numéro ${pad(number)} est déjà pris dans cette catégorie.`
         : (e.code === 'PGRST204' || e.code === '42703') && /gear_/.test(e.message)
-          ? 'L’apparence des armes a besoin de la migration supabase/migrations/0207_wiki_gear_appearance.sql (à exécuter dans le SQL Editor).'
+          ? 'L’apparence des armes a besoin des migrations supabase/migrations/0207, 0208 et 0209 (à exécuter dans le SQL Editor, dans cet ordre).'
           : e.code === '23514' && /gear_shape/.test(e.message)
             ? 'Cette forme a besoin de la migration supabase/migrations/0208_wiki_gear_more_shapes.sql (à exécuter dans le SQL Editor).'
           : e.message;
@@ -447,10 +464,11 @@ export default function EntryForm({ initial }: { initial: FormEntry }) {
           <div className="flex flex-wrap items-start gap-5">
             <div className="flex-none rounded-2xl border border-white/10 bg-gradient-to-b from-white/[0.08] to-sky-400/[0.06] px-3 py-2">
               <StandFigure
-                className="h-44 w-auto"
-                gear={(['main_droite', 'dos'] as const).map(
-                  (slot): GearItem => ({
-                    slot,
+                className="h-64 w-auto"
+                standImage={standImage}
+                gear={[
+                  {
+                    slot: previewSlot,
                     category,
                     number,
                     discovered: true,
@@ -460,8 +478,12 @@ export default function EntryForm({ initial }: { initial: FormEntry }) {
                     rarity: rarity ? parseInt(rarity, 10) : null,
                     shape: gearShape || null,
                     color: gearColor || null,
-                  })
-                )}
+                    dx: gearDx,
+                    dy: gearDy,
+                    scale: gearScale,
+                    rot: gearRot,
+                  } satisfies GearItem,
+                ]}
               />
             </div>
             <div className="min-w-[14rem] flex-1 space-y-4">
@@ -492,8 +514,50 @@ export default function EntryForm({ initial }: { initial: FormEntry }) {
                   )}
                 </div>
               </div>
+              <div>
+                <span className="label">Placement et taille</span>
+                <div className="grid gap-x-4 gap-y-2 sm:grid-cols-2">
+                  {(
+                    [
+                      ['Horizontal', gearDx, setGearDx, -GEAR_TRANSFORM_LIMITS.offset, GEAR_TRANSFORM_LIMITS.offset, 1, (v: number) => `${v > 0 ? '+' : ''}${v}`],
+                      ['Vertical', gearDy, setGearDy, -GEAR_TRANSFORM_LIMITS.offset, GEAR_TRANSFORM_LIMITS.offset, 1, (v: number) => `${v > 0 ? '+' : ''}${v}`],
+                      ['Taille', gearScale, setGearScale, GEAR_TRANSFORM_LIMITS.scaleMin, GEAR_TRANSFORM_LIMITS.scaleMax, 0.05, (v: number) => `× ${v.toFixed(2)}`],
+                      ['Rotation', gearRot, setGearRot, -GEAR_TRANSFORM_LIMITS.rot, GEAR_TRANSFORM_LIMITS.rot, 1, (v: number) => `${v}°`],
+                    ] as const
+                  ).map(([name, value, set, min, max, step, fmt]) => (
+                    <label key={name} className="block text-sm">
+                      <span className="flex justify-between font-bold text-olive-800">
+                        {name} <span className="font-typewriter font-normal">{fmt(value)}</span>
+                      </span>
+                      <input type="range" className="w-full" min={min} max={max} step={step} value={value} onChange={(e) => set(parseFloat(e.target.value))} />
+                    </label>
+                  ))}
+                </div>
+                <div className="mt-2 flex flex-wrap items-center gap-2 text-sm">
+                  <span className="text-olive-800">Aperçu :</span>
+                  {(['main_droite', 'main_gauche', 'dos'] as const).map((sl) => (
+                    <button key={sl} type="button" onClick={() => setPreviewSlot(sl)} aria-pressed={previewSlot === sl} className={previewSlot === sl ? 'btn !min-h-[2rem] !px-3 !py-0.5 text-sm' : 'btn-ghost !min-h-[2rem] !px-3 !py-0.5 text-sm'}>
+                      {GEAR_SLOT_LABELS[sl].label}
+                    </button>
+                  ))}
+                  {(gearDx !== 0 || gearDy !== 0 || gearScale !== 1 || gearRot !== 0) && (
+                    <button
+                      type="button"
+                      className="btn-ghost !min-h-[2rem] !px-3 !py-0.5 text-sm"
+                      onClick={() => {
+                        setGearDx(0);
+                        setGearDy(0);
+                        setGearScale(1);
+                        setGearRot(0);
+                      }}
+                    >
+                      Réinitialiser le placement
+                    </button>
+                  )}
+                </div>
+              </div>
               <p className="text-xs text-olive-700">
-                L’aperçu montre la fiche tenue en main droite et portée dans le dos. La couleur s’applique aussi aux pièces d’armure ; la forme ne compte que pour les mains et le dos.
+                Ces réglages valent pour tous les profils qui portent cette fiche. Le même placement s’applique aux deux mains et au dos : vérifie les trois aperçus. La couleur s’applique aussi aux pièces d’armure ; forme, placement et taille ne comptent que pour les mains et le dos.
               </p>
             </div>
           </div>
