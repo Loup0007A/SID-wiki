@@ -46,7 +46,7 @@ export default function Waves() {
   return (
     <div
       aria-hidden
-      className="pointer-events-none fixed inset-0 -z-10 overflow-hidden"
+      className="waves-root pointer-events-none fixed inset-0 -z-10 overflow-hidden"
       style={{
         background:
           'radial-gradient(ellipse 80% 50% at 50% -10%, rgba(30,90,180,0.35), transparent 60%), radial-gradient(ellipse 60% 40% at 95% 100%, rgba(20,70,160,0.30), transparent 60%), linear-gradient(180deg, #050912 0%, #04070f 55%, #030610 100%)',

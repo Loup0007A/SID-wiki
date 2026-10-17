@@ -155,3 +155,71 @@ select option {
 .legal a { text-decoration: underline; }
 .legal .legal-h2 { font-family: "Baloo 2", system-ui, sans-serif; font-weight: 700; font-size: 1.2rem; margin: 1.5rem 0 0.3rem; }
 .legal .legal-meta { font-size: 0.8rem; opacity: 0.7; }
+
+/* =====================================================================
+   Affichage événementiel : Halloween (réglé depuis Modération sur le
+   Dossier Central). Rien ne capte les clics.
+   ===================================================================== */
+.ev-front { position: fixed; inset: 0; z-index: 45; pointer-events: none; overflow: hidden; }
+.ev-web { position: absolute; top: 0; left: 0; width: clamp(70px, 8vw, 110px); height: auto; overflow: visible; }
+.ev-web line, .ev-web path { stroke: rgba(236, 228, 250, 0.28); stroke-width: 0.7; fill: none; }
+.ev-spider { animation: ev-spider 1.6s cubic-bezier(.3, .7, .4, 1) 0.6s both; }
+.ev-spider ellipse, .ev-spider circle { fill: #120c1a; stroke: rgba(255, 138, 42, 0.55); stroke-width: 0.4; }
+.ev-web .ev-legs { stroke: #120c1a; stroke-width: 1.1; }
+.ev-web .ev-thread { stroke: rgba(236, 228, 250, 0.35); }
+@keyframes ev-spider { from { transform: translateY(-46px); } to { transform: translateY(0); } }
+
+.ev-bat { position: absolute; top: 110px; right: 6vw; width: 54px; opacity: 0; fill: #2b1a3a; overflow: visible;
+  filter: drop-shadow(0 0 2px rgba(255, 138, 42, 0.6));
+  animation: ev-fly var(--t) cubic-bezier(.45, .05, .55, .95) var(--d) both; }
+.ev-eye { fill: #ff8a2a; }
+@keyframes ev-fly {
+  0% { opacity: 0; transform: translate(0, var(--y)) scale(calc(var(--s) * 0.3)); }
+  8% { opacity: 1; }
+  30% { transform: translate(-28vw, calc(var(--y) - 40px)) scale(var(--s)); }
+  55% { transform: translate(-56vw, calc(var(--y) + 30px)) scale(var(--s)); }
+  85% { opacity: 1; }
+  100% { opacity: 0; transform: translate(-112vw, calc(var(--y) - 60px)) scale(calc(var(--s) * 1.2)); }
+}
+.ev-wing { transform-box: fill-box; animation: ev-flap 0.22s ease-in-out infinite alternate; }
+.ev-wing-l { transform-origin: 100% 60%; }
+.ev-wing-r { transform-origin: 0% 60%; }
+@keyframes ev-flap { from { transform: scaleY(1); } to { transform: scaleY(0.35); } }
+
+.ev-pumpkin .ev-body { fill: #e8711f; }
+.ev-pumpkin .ev-rib { fill: none; stroke: #b4500f; stroke-width: 1; }
+.ev-pumpkin .ev-stem { fill: #4f7a3a; }
+.ev-pumpkin .ev-face { fill: #ffd36b; }
+
+@media (prefers-reduced-motion: reduce) {
+  .ev-spider, .ev-wing { animation: none !important; }
+  .ev-bat { display: none; }
+}
+/* Wiki : lune, citrouilles qui flottent sur les vagues, mer orangée et violette. */
+.ev-back { position: fixed; inset: 0; z-index: -5; pointer-events: none; overflow: hidden; }
+.ev-moon {
+  position: absolute; top: 96px; right: max(4vw, 16px); width: clamp(64px, 10vw, 140px); aspect-ratio: 1; border-radius: 50%; opacity: 0.78;
+  background:
+    radial-gradient(circle at 70% 30%, rgba(190, 172, 130, 0.35) 0 7%, transparent 8%),
+    radial-gradient(circle at 57% 70%, rgba(190, 172, 130, 0.3) 0 12%, transparent 13%),
+    radial-gradient(circle at 24% 52%, rgba(190, 172, 130, 0.25) 0 5%, transparent 6%),
+    radial-gradient(circle at 38% 34%, #fffaf0, #f3e9c8 52%, #d8c79c 100%);
+  box-shadow: 0 0 60px 14px rgba(243, 233, 200, 0.16), 0 0 160px 60px rgba(123, 75, 201, 0.14);
+}
+.ev-pumpkins .ev-pumpkin { position: absolute; bottom: 64px; width: 34px; animation: ev-bob 4.6s ease-in-out infinite; }
+.ev-pumpkins .ev-pumpkin.ev-small { width: 24px; bottom: 52px; }
+.ev-pumpkins .ev-face { filter: drop-shadow(0 0 3px #ffb02e); }
+@keyframes ev-bob { 0%, 100% { transform: translateY(0) rotate(-6deg); } 50% { transform: translateY(-9px) rotate(6deg); } }
+html.ev-halloween .waves-root {
+  background:
+    radial-gradient(ellipse 80% 50% at 50% -10%, rgba(110, 60, 190, 0.34), transparent 60%),
+    radial-gradient(ellipse 60% 40% at 95% 100%, rgba(200, 80, 20, 0.26), transparent 60%),
+    linear-gradient(180deg, #0b0714 0%, #07050e 55%, #05040b 100%) !important;
+}
+html.ev-halloween .wave-layer:nth-of-type(1) svg path:first-child { fill: rgba(123, 75, 201, 0.12); }
+html.ev-halloween .wave-layer:nth-of-type(2) svg path:first-child { fill: rgba(220, 100, 30, 0.12); }
+html.ev-halloween .wave-layer:nth-of-type(3) svg path:first-child { fill: rgba(140, 80, 210, 0.14); }
+html.ev-halloween .wave-layer:nth-of-type(4) svg path:first-child { fill: rgba(240, 120, 40, 0.15); }
+html.ev-halloween .wave-layer svg path:last-child { stroke: rgba(255, 180, 110, 0.32); }
+@media (prefers-reduced-motion: reduce) { .ev-pumpkins .ev-pumpkin { animation: none; } }
+@media (max-width: 640px) { .ev-moon { top: 64px; right: 10px; width: 52px; opacity: 0.55; } }

@@ -123,3 +123,11 @@ Wiki RP (lieux, armes, mobs, objets, skills) branché sur le **même projet Supa
 
 - **Placement et taille** : dans le bloc « Apparence sur le porte-armure » d'une fiche Armes ou Objets, quatre curseurs — horizontal, vertical, taille, rotation (−360° à +360°). Depuis la migration 0210, chaque emplacement (main droite, main gauche, dos) a son **propre** placement : on choisit l'emplacement puis on règle.
 - **Image du porte-armure** : Dashboard → ⚙ Réglages → « Image du porte-armure ». Envoie un PNG ou WebP à fond transparent au format 2:3 (ex. 384 × 576 px) : il remplace le mannequin en bois sur tous les profils. Les pièces d'armure et les armes restent dessinées par-dessus.
+
+## Affichage événementiel
+- Halloween : lune, chauves-souris, toile d'araignée, citrouilles qui
+  flottent sur les vagues, mer orangée et violette.
+- Réglé depuis le Dossier Central : **Modération → Affichage événementiel**
+  (automatique du 15 octobre au 2 novembre, toujours, ou désactivé) —
+  fonction `site_decor` (migration 0063 du site principal).
+- Composant `src/components/EventDecor.tsx` (identique dans la carte).

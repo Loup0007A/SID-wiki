@@ -13,6 +13,7 @@ import Script from 'next/script';
 import Header from '@/components/Header';
 import Waves from '@/components/Waves';
 import SearchShortcut from '@/components/SearchShortcut';
+import EventDecor from '@/components/EventDecor';
 
 // Anciens iPhone (iOS 15.0 à 15.3) : fonctions JavaScript récentes absentes, utilisées par les bibliothèques.
 const POLYFILLS = `(function(){
@@ -46,6 +47,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <body className="min-h-screen">
         <Script id="polyfills" strategy="beforeInteractive" dangerouslySetInnerHTML={{ __html: POLYFILLS }} />
         <Waves />
+        <EventDecor variant="wiki" />
         <Header />
         <SearchShortcut />
         <main className="mx-auto max-w-6xl overflow-x-hidden px-4 py-5 pb-28 md:overflow-x-visible md:py-6 md:pb-6">
