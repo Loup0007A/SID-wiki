@@ -88,3 +88,18 @@ Wiki RP (lieux, armes, mobs, objets, skills) branché sur le **même projet Supa
 - **Icônes personnalisées** : dépose des PNG transparents (128×128) dans `public/icons/` avec les noms listés dans `public/icons/LISEZ-MOI.txt` (`logo`, `lieux`, `armes`, `mobs`, `objets`, `skills`, `accueil`, `chercher`, `favoris`, `hasard`, `tags`, `aide`, `admin`, `menu`). Un fichier absent = l'emoji par défaut. Les icônes de l'appli installée (`icon-192`, `icon-512`, `icon-maskable-512`, `apple-touch-icon`) se remplacent de la même façon.
 - **Mini-guide** : page `/aide` (menu → Aide), bandeau « Première visite ? » sur l'accueil ; une section « Pour les admins » n'apparaît qu'aux admins.
 - **Interface allégée** : ordinateur = logo, recherche, ⭐ et un seul menu (hasard, tags, aide, admin, déconnexion) ; téléphone = 3 onglets + Menu ; fiche = ⭐ Favori + un bouton ⋯ (partager, imprimer, taille du texte) et « Signaler » discret en bas ; catégorie = filtres secondaires repliés ; accueil sans doublon de recherche, top découvreurs repliable ; Dashboard = stats sur une ligne et actions rares (dupliquer, supprimer) dans un menu ⋯.
+
+## CGU et confidentialité
+- Pages publiques `/cgu` et `/confidentialite` (pied de page, menu du
+  compte « 🔐 Confidentialité » et onglet « Données » sur mobile). Le texte
+  est partagé avec le Dossier Central et la Cartographie :
+  `src/components/legal/LegalContent.tsx` (copie identique dans les trois
+  dépôts).
+- Les membres qui n'ont pas accepté la version en cours voient une carte
+  « J'accepte » (colonne `profiles.terms_version`, migration 0060 du site
+  principal).
+- Export des données et demande de suppression : page **Mes données** du
+  Dossier Central (couvre aussi le wiki : commentaires, favoris, notes).
+- Polices auto-hébergées (`@fontsource`), plus d'appel à Google Fonts.
+- Facultatif : `NEXT_PUBLIC_CONTACT_EMAIL` pour afficher une adresse de
+  contact dans les textes.

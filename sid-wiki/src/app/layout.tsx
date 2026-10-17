@@ -1,5 +1,14 @@
 import type { Metadata, Viewport } from 'next';
+// Polices servies par le site lui-même (pas d'appel à Google Fonts).
+import '@fontsource/baloo-2/500.css';
+import '@fontsource/baloo-2/700.css';
+import '@fontsource/baloo-2/800.css';
+import '@fontsource/nunito/400.css';
+import '@fontsource/nunito/600.css';
+import '@fontsource/nunito/700.css';
 import './globals.css';
+import TermsBanner from '@/components/legal/TermsBanner';
+import LegalFooter from '@/components/legal/LegalFooter';
 import Script from 'next/script';
 import Header from '@/components/Header';
 import Waves from '@/components/Waves';
@@ -39,7 +48,11 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <Waves />
         <Header />
         <SearchShortcut />
-        <main className="mx-auto max-w-6xl overflow-x-hidden px-4 py-5 pb-28 md:overflow-x-visible md:py-6 md:pb-6">{children}</main>
+        <main className="mx-auto max-w-6xl overflow-x-hidden px-4 py-5 pb-28 md:overflow-x-visible md:py-6 md:pb-6">
+          <TermsBanner />
+          {children}
+          <LegalFooter />
+        </main>
       </body>
     </html>
   );

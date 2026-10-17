@@ -42,6 +42,9 @@ export default function UserMenu({ isAdmin }: { isAdmin: boolean }) {
           <Link href="/aide" className={item} role="menuitem">
             <Icon name="aide" /> Aide
           </Link>
+          <Link href="/confidentialite" className={item} role="menuitem">
+            🔐 Confidentialité
+          </Link>
           {isAdmin && (
             <Link href="/admin" className={`${item} text-brass-300`} role="menuitem">
               <Icon name="admin" /> Dashboard admin

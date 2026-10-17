@@ -71,11 +71,12 @@ export default function MobileNav({ isAdmin }: { isAdmin: boolean }) {
               ))}
             </div>
 
-            <div className="mt-2 grid grid-cols-3 gap-2 text-center text-xs font-bold">
+            <div className="mt-2 grid grid-cols-4 gap-2 text-center text-xs font-bold">
               {([
                 ['/hasard', 'hasard', 'Hasard'],
                 ['/tags', 'tags', 'Tags'],
                 ['/aide', 'aide', 'Aide'],
+                ['/confidentialite', 'aide', 'Données'],
               ] as const).map(([href, icon, label]) => (
                 <Link key={href} href={href} className="flex flex-col items-center gap-1 rounded-2xl border border-white/15 bg-white/[0.1] px-2 py-3 text-olive-800">
                   <Icon name={icon} className="text-xl" />
