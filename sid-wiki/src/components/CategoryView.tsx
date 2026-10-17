@@ -10,7 +10,7 @@ import Icon from './Icon';
 type Sort = 'number' | 'title' | 'rarity';
 const KEY = 'wiki-category-view';
 
-const norm = (s: string) => s.normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase();
+const norm = (s: string) => s.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase();
 
 /** Liste d'une catégorie : filtre instantané, tri (n° / nom / rareté) et vue grille ou liste. */
 export default function CategoryView({ entries }: { entries: EntrySummary[] }) {

@@ -6,7 +6,7 @@ import { useEffect, useRef, useState } from 'react';
 import { createClient } from '@/lib/supabase/client';
 import Icon from './Icon';
 
-/** Menu unique (ordinateur) : hasard, tags, aide, admin, déconnexion. */
+/** Menu unique (ordinateur) : profils, hasard, tags, aide, admin, déconnexion. */
 export default function UserMenu({ isAdmin }: { isAdmin: boolean }) {
   const [open, setOpen] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
@@ -33,6 +33,9 @@ export default function UserMenu({ isAdmin }: { isAdmin: boolean }) {
       </button>
       {open && (
         <div role="menu" onClick={() => setOpen(false)} className="absolute right-0 top-full z-50 mt-2 flex w-56 flex-col rounded-2xl border border-white/20 bg-[#0b1730] p-2 shadow-2xl shadow-black/60">
+          <Link href="/profils" className={item} role="menuitem">
+            <Icon name="profils" /> Profils
+          </Link>
           <Link href="/hasard" className={item} role="menuitem">
             <Icon name="hasard" /> Fiche au hasard
           </Link>

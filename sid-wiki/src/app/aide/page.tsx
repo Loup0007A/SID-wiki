@@ -66,6 +66,15 @@ export default async function HelpPage() {
             text: '☆ Favori pour retrouver une fiche, 📝 Mes notes pour tes astuces (privées), 💬 les commentaires pour échanger avec les autres chasseurs.',
           },
           {
+            icon: 'profils',
+            title: 'Équipe ton profil',
+            text: (
+              <>
+                Onglet <strong>Profils</strong> : chaque chasseur a un porte-armure. Ouvre le tien, clique une case (tête, torse, jambes, pieds, mains, dos) et choisis une arme ou un objet déjà découvert.
+              </>
+            ),
+          },
+          {
             icon: 'aide',
             title: 'Une erreur ? Une idée ?',
             text: 'En bas de chaque fiche, « 🚩 Signaler un problème » envoie un message aux admins.',
@@ -124,6 +133,11 @@ export default async function HelpPage() {
                 icon: 'accueil',
                 title: 'Parler à tout le monde',
                 text: 'Dashboard → Réglages : publie une annonce affichée en haut de l’accueil.',
+              },
+              {
+                icon: 'profils',
+                title: 'Corriger un profil',
+                text: 'Tu peux modifier le porte-armure de n’importe quel chasseur depuis sa page de profil. Dans l’édition d’une fiche Armes ou Objets, le bloc « Apparence » règle sa forme et sa couleur sur le mannequin.',
               },
             ]}
           />

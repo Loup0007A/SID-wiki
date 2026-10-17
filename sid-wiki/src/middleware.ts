@@ -29,18 +29,19 @@ export async function middleware(request: NextRequest) {
   // Pages légales : lisibles sans être connecté.
   const isPublic = ['/cgu', '/confidentialite'].some((p) => request.nextUrl.pathname.startsWith(p));
 
-  if (!user && !isLogin && !isPublic) {
+  // Une redirection est une NOUVELLE réponse : sans recopier les cookies, un jeton rafraîchi
+  // pendant getUser() serait perdu et le membre se retrouverait déconnecté au hasard.
+  const redirectTo = (pathname: string) => {
     const url = request.nextUrl.clone();
-    url.pathname = '/login';
+    url.pathname = pathname;
     url.search = '';
-    return NextResponse.redirect(url);
-  }
-  if (user && isLogin) {
-    const url = request.nextUrl.clone();
-    url.pathname = '/';
-    url.search = '';
-    return NextResponse.redirect(url);
-  }
+    const redirect = NextResponse.redirect(url);
+    response.cookies.getAll().forEach((c) => redirect.cookies.set(c));
+    return redirect;
+  };
+
+  if (!user && !isLogin && !isPublic) return redirectTo('/login');
+  if (user && isLogin) return redirectTo('/');
   return response;
 }
 

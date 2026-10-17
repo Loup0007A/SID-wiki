@@ -5,7 +5,7 @@ Wiki RP (lieux, armes, mobs, objets, skills) branché sur le **même projet Supa
 ## Installation
 
 1. `cp .env.example .env.local` et renseigne l'URL + la clé **anon** du projet Supabase existant.
-2. Exécute `supabase/migrations/0200_wiki.sql` puis `0201_wiki_hide_names_for_admins.sql` puis `0202_wiki_comments_discoverer.sql` puis `0203_wiki_skills_3d_extras.sql` puis `0204_wiki_save_space.sql` puis `0205_wiki_giga_update.sql` dans le SQL Editor.
+2. Exécute `supabase/migrations/0200_wiki.sql` puis `0201_wiki_hide_names_for_admins.sql` puis `0202_wiki_comments_discoverer.sql` puis `0203_wiki_skills_3d_extras.sql` puis `0204_wiki_save_space.sql` puis `0205_wiki_giga_update.sql` puis `0206_wiki_profiles.sql` puis `0207_wiki_gear_appearance.sql` puis `0208_wiki_gear_more_shapes.sql` puis `0209_wiki_gear_transform_stand_image.sql` puis `0210_wiki_gear_placement_per_slot.sql` dans le SQL Editor (chacun une seule fois, dans cet ordre).
 3. Donne la permission `manage_wiki` à un rôle (bloc commenté en fin de migration — adapte les noms de colonnes de `role_permissions`). Le Fondateur l'a d'office via `has_permission`.
 4. `npm install && npm run dev`
 
@@ -85,7 +85,7 @@ Wiki RP (lieux, armes, mobs, objets, skills) branché sur le **même projet Supa
 
 ## Icônes, guide et interface simplifiée
 
-- **Icônes personnalisées** : dépose des PNG transparents (128×128) dans `public/icons/` avec les noms listés dans `public/icons/LISEZ-MOI.txt` (`logo`, `lieux`, `armes`, `mobs`, `objets`, `skills`, `accueil`, `chercher`, `favoris`, `hasard`, `tags`, `aide`, `admin`, `menu`). Un fichier absent = l'emoji par défaut. Les icônes de l'appli installée (`icon-192`, `icon-512`, `icon-maskable-512`, `apple-touch-icon`) se remplacent de la même façon.
+- **Icônes personnalisées** : dépose des PNG transparents (128×128) dans `public/icons/` avec les noms listés dans `public/icons/LISEZ-MOI.txt` (`logo`, `lieux`, `armes`, `mobs`, `objets`, `skills`, `profils`, `accueil`, `chercher`, `favoris`, `hasard`, `tags`, `aide`, `admin`, `menu`). Un fichier absent = l'emoji par défaut. Les icônes de l'appli installée (`icon-192`, `icon-512`, `icon-maskable-512`, `apple-touch-icon`) se remplacent de la même façon.
 - **Mini-guide** : page `/aide` (menu → Aide), bandeau « Première visite ? » sur l'accueil ; une section « Pour les admins » n'apparaît qu'aux admins.
 - **Interface allégée** : ordinateur = logo, recherche, ⭐ et un seul menu (hasard, tags, aide, admin, déconnexion) ; téléphone = 3 onglets + Menu ; fiche = ⭐ Favori + un bouton ⋯ (partager, imprimer, taille du texte) et « Signaler » discret en bas ; catégorie = filtres secondaires repliés ; accueil sans doublon de recherche, top découvreurs repliable ; Dashboard = stats sur une ligne et actions rares (dupliquer, supprimer) dans un menu ⋯.
 
@@ -103,3 +103,23 @@ Wiki RP (lieux, armes, mobs, objets, skills) branché sur le **même projet Supa
 - Polices auto-hébergées (`@fontsource`), plus d'appel à Google Fonts.
 - Facultatif : `NEXT_PUBLIC_CONTACT_EMAIL` pour afficher une adresse de
   contact dans les textes.
+
+## Profils et porte-armure (migration 0206)
+
+- **Onglet Profils** (`/profils`) : tous les chasseurs actifs, le tien en premier, avec un mini porte-armure et un filtre par pseudo.
+- **Page d'un profil** (`/profils/<id>`) : un porte-armure façon *armor-stand* de Minecraft avec **7 emplacements** — tête, torse, jambes, pieds, main droite, main gauche, dos. On clique une case (ou la partie du mannequin) et on choisit une fiche **découverte** des catégories **Armes** ou **Objets**. La pièce apparaît sur le mannequin, colorée selon la rareté ★ ; dans les mains et le dos, la forme (épée, arc, bouclier, bâton) est devinée d'après le nom de la fiche.
+- **Qui modifie quoi** : chaque membre actif modifie **son** profil ; les admins (`manage_wiki`) peuvent modifier celui de n'importe qui.
+- **Secret gardé** : si une fiche équipée est re-masquée, elle redevient « ? » sur les profils (ni titre ni image ne sortent de la base). Supprimer une fiche la retire des profils.
+- Les découvertes créditées au chasseur (« Découvert par ») sont rappelées sous son porte-armure.
+- Pour autoriser d'autres catégories ou d'autres emplacements : listes `GEAR_CATEGORIES` / `GEAR_SLOTS` dans `src/lib/wiki.ts` **et** contraintes correspondantes dans `0206_wiki_profiles.sql`.
+
+## Apparence des armes (migration 0207, admins)
+
+- Dans le formulaire d'édition d'une fiche **Armes** ou **Objets**, le bloc « Apparence sur le porte-armure » permet de choisir la **forme** (épée, dague, dagues doubles, lames secrètes, hache, lance, bâton, kunai, shuriken, arc, arbalète, pistolet à main, mitraillette, AK-47, fusil à pompe, grenades, bouclier, fiole, ordinateur — les 12 dernières ajoutées par la migration 0208) et la **couleur** de la pièce, avec un aperçu en direct.
+- « Automatique » garde le comportement d'origine : forme devinée d'après le titre, couleur de la rareté ★.
+- La forme sert quand la fiche est en main ou dans le dos ; la couleur s'applique à tous les emplacements. Le réglage vaut pour tous les profils qui portent cette fiche.
+
+## Placement des armes et image du porte-armure (migration 0209, admins)
+
+- **Placement et taille** : dans le bloc « Apparence sur le porte-armure » d'une fiche Armes ou Objets, quatre curseurs — horizontal, vertical, taille, rotation (−360° à +360°). Depuis la migration 0210, chaque emplacement (main droite, main gauche, dos) a son **propre** placement : on choisit l'emplacement puis on règle.
+- **Image du porte-armure** : Dashboard → ⚙ Réglages → « Image du porte-armure ». Envoie un PNG ou WebP à fond transparent au format 2:3 (ex. 384 × 576 px) : il remplace le mannequin en bois sur tous les profils. Les pièces d'armure et les armes restent dessinées par-dessus.

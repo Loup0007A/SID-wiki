@@ -59,6 +59,11 @@ export default async function HomePage() {
             </Link>
           );
         })}
+        <Link href="/profils" className="card p-4 transition hover:-translate-y-0.5 hover:border-brass-500 sm:p-5">
+          <div className="text-3xl"><Icon name="profils" /></div>
+          <h2 className="mt-2 font-typewriter text-xl font-bold">Profils</h2>
+          <p className="text-sm text-olive-700">Équipe ton chasseur : armure, armes, arc…</p>
+        </Link>
       </div>
 
       <RecentlyViewed />

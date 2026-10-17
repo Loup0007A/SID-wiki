@@ -1,14 +1,14 @@
 import { createClient } from '@/lib/supabase/server';
 import type { EntrySummary } from '@/lib/wiki';
-import { CATEGORIES, CATEGORY_LABELS } from '@/lib/wiki';
+import { CATEGORIES, CATEGORY_LABELS, firstParam } from '@/lib/wiki';
 import EntryCard from '@/components/EntryCard';
 import AccessDenied from '@/components/AccessDenied';
 import Icon from '@/components/Icon';
 
 export const dynamic = 'force-dynamic';
 
-export default async function SearchPage({ searchParams }: { searchParams: { q?: string } }) {
-  const q = (searchParams.q ?? '').trim();
+export default async function SearchPage({ searchParams }: { searchParams: { q?: string | string[] } }) {
+  const q = (firstParam(searchParams.q) ?? '').trim();
   let results: EntrySummary[] = [];
 
   if (q) {
