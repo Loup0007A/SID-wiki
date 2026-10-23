@@ -325,3 +325,111 @@ html.ev-noel .wave-layer svg path:last-child { stroke: rgba(230, 244, 255, 0.4);
   .ev-gifts .ev-gift { bottom: calc(env(safe-area-inset-bottom) + 104px); }
   .ev-gifts .ev-gift.ev-small { bottom: calc(env(safe-area-inset-bottom) + 94px); }
 }
+
+/* =====================================================================
+   Affichage événementiel : fêtes de l'année (Saint-Valentin, poisson
+   d'avril, Pâques, 1er mai, fête de la musique, 14 juillet, 11 novembre).
+   Même réglage que le Dossier Central. Rien ne capte les clics.
+   ===================================================================== */
+.hy-wire { fill: none; stroke: #3a3140; stroke-width: 1.3; }
+.hy-garland-bunting .hy-wire, .hy-garland-bleuets .hy-wire { stroke: #c8ccd8; stroke-width: 1; }
+.hy-garland-muguet .hy-wire { stroke: #3f7a4a; }
+.hy-g-heart { filter: drop-shadow(0 0 3px rgba(255, 90, 150, 0.6)); }
+.hy-g-heart.hy-c0, .hy-float-heart { fill: #ff4d7a; } .hy-g-heart.hy-c1 { fill: #ffb3c8; } .hy-g-heart.hy-c2 { fill: #e2325f; }
+.hy-g-fish.hy-c0 { fill: #ff9a76; } .hy-g-fish.hy-c1 { fill: #7fd8ff; } .hy-g-fish.hy-c2 { fill: #ffd86b; } .hy-g-fish.hy-c3 { fill: #8ef0b8; }
+.hy-g-egg.hy-c0 { fill: #ffb3c7; } .hy-g-egg.hy-c1 { fill: #b8e0ff; } .hy-g-egg.hy-c2 { fill: #ffe08a; } .hy-g-egg.hy-c3 { fill: #c7f0b8; } .hy-g-egg.hy-c4 { fill: #d9c2ff; }
+.hy-g-bell { fill: #fbfff7; filter: drop-shadow(0 0 2px rgba(255, 255, 255, 0.6)); }
+.hy-g-note { font-size: 15px; } .hy-g-note.hy-c0, .hy-flying-note.hy-c0 { fill: #c9a6ff; } .hy-g-note.hy-c1, .hy-flying-note.hy-c1 { fill: #ff9c6e; } .hy-g-note.hy-c2, .hy-flying-note.hy-c2 { fill: #6ec8ff; }
+.hy-f0 { fill: #2f5bd8; } .hy-f1 { fill: #f2f2f2; } .hy-f2 { fill: #e23a3a; }
+.hy-bleuet { fill: #4a78e8; } .hy-bleuet-heart { fill: #25307a; }
+.hy-garland-bleuets .hy-bleuet { fill: #5d86ee; }
+
+/* Survol : une fois par visite. */
+.hy-fly { position: absolute; top: 120px; right: 0; width: clamp(140px, 16vw, 210px); opacity: 0; animation: ev-sleigh 14s cubic-bezier(.4, .05, .55, .95) both; }
+.hy-fly-art { width: 100%; height: auto; overflow: visible; display: block; }
+.hy-fly-armistice { animation-duration: 20s; }
+.hy-fly-poisson_avril { width: clamp(70px, 8vw, 100px); }
+.hy-fly-quatorze_juillet { width: clamp(220px, 28vw, 380px); top: 96px; animation-duration: 9s; }
+/* Ces dessins regardent vers la droite : on les retourne (le vol va vers la gauche). */
+.hy-fly-premier_mai .hy-fly-art, .hy-fly-armistice .hy-fly-art, .hy-fly-quatorze_juillet .hy-fly-art { transform: scaleX(-1); }
+.hy-winged .hy-wing { fill: #fff; opacity: 0.92; transform-box: fill-box; animation: ev-flap 0.3s ease-in-out infinite alternate; }
+.hy-winged .hy-wing-l { transform-origin: 100% 100%; } .hy-winged .hy-wing-r { transform-origin: 0 100%; }
+.hy-fly-heart { fill: #ff4d7a; filter: drop-shadow(0 0 5px rgba(255, 90, 150, 0.9)); }
+.hy-bell path:first-child { fill: #ffd257; }
+.hy-bell { filter: drop-shadow(0 0 4px rgba(255, 210, 87, 0.7)); }
+.hy-bell-clapper { fill: #b88a1c; }
+.hy-ribbon { fill: none; stroke: #ff7aa8; stroke-width: 2.4; stroke-linecap: round; }
+.hy-bird { fill: #e9edf4; filter: drop-shadow(0 0 3px rgba(255, 255, 255, 0.5)); }
+.hy-pigeon { fill: #9aa3b5; }
+.hy-bird .hy-wing { transform-box: fill-box; transform-origin: 50% 100%; animation: ev-flap 0.35s ease-in-out infinite alternate; }
+.hy-dove .hy-wing { animation-duration: 0.6s; }
+.hy-olive { fill: none; stroke: #7da35a; stroke-width: 1.6; stroke-linecap: round; }
+.hy-flying-note { font-size: 26px; filter: drop-shadow(0 0 4px rgba(201, 166, 255, 0.9)); }
+.hy-jet { fill: #d6dcea; }
+.hy-smoke { opacity: 0.7; filter: blur(1.5px); }
+@media (prefers-reduced-motion: reduce) {
+  .hy-fly { display: none; }
+}
+/* Wiki : objets sur les vagues, mer teintée selon la fête. */
+.hy-floats .hy-float { position: absolute; bottom: 62px; width: 30px; animation: ev-bob 4.8s ease-in-out infinite; }
+.hy-floats .hy-float.ev-small { width: 22px; bottom: 50px; }
+.hy-floats .hy-float-fish { width: 44px; } .hy-floats .hy-float-fish.ev-small { width: 32px; }
+.hy-floats .hy-float-muguet { width: 24px; } .hy-floats .hy-float-muguet.ev-small { width: 18px; }
+.hy-floats .hy-float-heart { filter: drop-shadow(0 0 6px rgba(255, 90, 150, 0.7)); }
+.hy-floats .hy-float-note .hy-g-note { font-size: 28px; filter: drop-shadow(0 0 4px currentColor); }
+.hy-glow { position: absolute; top: 70px; right: max(4vw, 16px); width: clamp(90px, 12vw, 160px); aspect-ratio: 1; border-radius: 50%; }
+.hy-glow-love { background: radial-gradient(circle, rgba(255, 140, 180, 0.45), rgba(255, 90, 150, 0.12) 45%, transparent 70%); }
+.hy-glow-sun { background: radial-gradient(circle, rgba(255, 236, 170, 0.6), rgba(255, 210, 110, 0.18) 45%, transparent 70%); }
+.hy-fireworks { position: absolute; inset: 0 0 50% 0; }
+.hy-fw { position: absolute; width: 0; height: 0; }
+.hy-fw i { position: absolute; left: -2.5px; top: -2.5px; width: 5px; height: 5px; border-radius: 50%; background: currentColor; box-shadow: 0 0 8px 2px currentColor; opacity: 0;
+  animation: hy-fw 8s cubic-bezier(.15, .7, .4, 1) infinite; }
+.hy-fw.hy-f0 { color: #6e9bff; } .hy-fw.hy-f1 { color: #f4f6ff; } .hy-fw.hy-f2 { color: #ff5a5a; }
+@keyframes hy-fw {
+  0% { transform: rotate(var(--a)) translateY(0) scale(1); opacity: 0; }
+  2% { opacity: 1; }
+  14% { transform: rotate(var(--a)) translateY(-46px) scale(0.9); opacity: 1; }
+  22%, 100% { transform: rotate(var(--a)) translateY(-54px) translateX(4px) scale(0.3); opacity: 0; }
+}
+html.ev-saint_valentin .wave-layer:nth-of-type(1) svg path:first-child { fill: rgba(255, 120, 170, 0.10); }
+html.ev-saint_valentin .wave-layer:nth-of-type(2) svg path:first-child { fill: rgba(226, 50, 95, 0.10); }
+html.ev-saint_valentin .wave-layer:nth-of-type(3) svg path:first-child { fill: rgba(255, 150, 190, 0.12); }
+html.ev-saint_valentin .wave-layer:nth-of-type(4) svg path:first-child { fill: rgba(255, 90, 140, 0.13); }
+html.ev-saint_valentin .wave-layer svg path:last-child { stroke: rgba(255, 190, 215, 0.38); }
+html.ev-poisson_avril .wave-layer:nth-of-type(1) svg path:first-child { fill: rgba(100, 200, 255, 0.10); }
+html.ev-poisson_avril .wave-layer:nth-of-type(2) svg path:first-child { fill: rgba(255, 170, 120, 0.09); }
+html.ev-poisson_avril .wave-layer:nth-of-type(3) svg path:first-child { fill: rgba(120, 220, 255, 0.12); }
+html.ev-poisson_avril .wave-layer:nth-of-type(4) svg path:first-child { fill: rgba(90, 180, 240, 0.14); }
+html.ev-poisson_avril .wave-layer svg path:last-child { stroke: rgba(190, 236, 255, 0.4); }
+html.ev-paques .wave-layer:nth-of-type(1) svg path:first-child { fill: rgba(255, 224, 138, 0.10); }
+html.ev-paques .wave-layer:nth-of-type(2) svg path:first-child { fill: rgba(199, 240, 184, 0.10); }
+html.ev-paques .wave-layer:nth-of-type(3) svg path:first-child { fill: rgba(255, 179, 199, 0.11); }
+html.ev-paques .wave-layer:nth-of-type(4) svg path:first-child { fill: rgba(184, 224, 255, 0.12); }
+html.ev-paques .wave-layer svg path:last-child { stroke: rgba(255, 240, 190, 0.4); }
+html.ev-premier_mai .wave-layer:nth-of-type(1) svg path:first-child { fill: rgba(140, 220, 160, 0.10); }
+html.ev-premier_mai .wave-layer:nth-of-type(2) svg path:first-child { fill: rgba(60, 150, 90, 0.11); }
+html.ev-premier_mai .wave-layer:nth-of-type(3) svg path:first-child { fill: rgba(200, 255, 210, 0.10); }
+html.ev-premier_mai .wave-layer:nth-of-type(4) svg path:first-child { fill: rgba(80, 180, 110, 0.13); }
+html.ev-premier_mai .wave-layer svg path:last-child { stroke: rgba(230, 255, 235, 0.4); }
+html.ev-fete_musique .wave-layer:nth-of-type(1) svg path:first-child { fill: rgba(170, 120, 255, 0.11); }
+html.ev-fete_musique .wave-layer:nth-of-type(2) svg path:first-child { fill: rgba(255, 140, 100, 0.10); }
+html.ev-fete_musique .wave-layer:nth-of-type(3) svg path:first-child { fill: rgba(110, 200, 255, 0.11); }
+html.ev-fete_musique .wave-layer:nth-of-type(4) svg path:first-child { fill: rgba(200, 160, 255, 0.13); }
+html.ev-fete_musique .wave-layer svg path:last-child { stroke: rgba(220, 200, 255, 0.4); }
+html.ev-quatorze_juillet .wave-layer:nth-of-type(1) svg path:first-child { fill: rgba(47, 91, 216, 0.12); }
+html.ev-quatorze_juillet .wave-layer:nth-of-type(2) svg path:first-child { fill: rgba(240, 240, 255, 0.07); }
+html.ev-quatorze_juillet .wave-layer:nth-of-type(3) svg path:first-child { fill: rgba(226, 58, 58, 0.11); }
+html.ev-quatorze_juillet .wave-layer:nth-of-type(4) svg path:first-child { fill: rgba(70, 110, 230, 0.13); }
+html.ev-quatorze_juillet .wave-layer svg path:last-child { stroke: rgba(230, 236, 255, 0.4); }
+html.ev-armistice .wave-layer:nth-of-type(1) svg path:first-child { fill: rgba(140, 160, 200, 0.09); }
+html.ev-armistice .wave-layer:nth-of-type(2) svg path:first-child { fill: rgba(90, 110, 160, 0.10); }
+html.ev-armistice .wave-layer:nth-of-type(3) svg path:first-child { fill: rgba(160, 180, 220, 0.10); }
+html.ev-armistice .wave-layer:nth-of-type(4) svg path:first-child { fill: rgba(110, 130, 190, 0.12); }
+html.ev-armistice .wave-layer svg path:last-child { stroke: rgba(200, 214, 242, 0.32); }
+@media (hover: none) { .hy-floats .hy-float { animation: none; } .hy-fireworks { display: none; } }
+@media (prefers-reduced-motion: reduce) { .hy-floats .hy-float, .hy-fw i { animation: none; } .hy-fireworks { display: none; } }
+@media (max-width: 640px) { .hy-glow { top: 60px; right: 6px; width: 70px; opacity: 0.7; } }
+@media (max-width: 767px) {
+  .hy-floats .hy-float { bottom: calc(env(safe-area-inset-bottom) + 104px); }
+  .hy-floats .hy-float.ev-small { bottom: calc(env(safe-area-inset-bottom) + 94px); }
+}
