@@ -542,3 +542,72 @@ html.ev-grande_chasse .wave-layer svg path:last-child { stroke: rgba(255, 190, 1
   filter: drop-shadow(0 0 4px rgba(255, 120, 40, 0.9));
   -webkit-mask: linear-gradient(to bottom, transparent, #000 25%, #000 75%, transparent); mask: linear-gradient(to bottom, transparent, #000 25%, #000 75%, transparent); }
 @media print { .proie { display: none; } }
+
+/* =====================================================================
+   Horizons des fêtes (EventHorizons.tsx) : un paysage posé sur la mer,
+   derrière le contenu. Seuls quelques reflets et lumières bougent.
+   ===================================================================== */
+.hz {
+  position: absolute; left: 0; bottom: clamp(70px, 13vh, 150px); width: 100%; height: clamp(120px, 24vh, 240px);
+  -webkit-mask: linear-gradient(to bottom, #000 72%, transparent); mask: linear-gradient(to bottom, #000 72%, transparent);
+}
+.hz-a { fill: #131b36; opacity: 0.9; }
+.hz-b { fill: #0e152b; }
+.hz-c { fill: #090e1e; }
+.hz-win rect { fill: #ffd28a; opacity: 0.8; filter: drop-shadow(0 0 3px rgba(255, 190, 100, 0.8)); }
+.hz-win rect.is-blink { animation: hz-blink 9s steps(1) infinite; }
+@keyframes hz-blink { 0%, 62% { opacity: 0.8; } 63%, 82% { opacity: 0.08; } 83%, 100% { opacity: 0.8; } }
+.hz-glow { fill: #ffb347; filter: drop-shadow(0 0 5px rgba(255, 150, 50, 0.9)); }
+.hz-glow.is-flicker { animation: hz-flicker 4.4s steps(1) infinite; }
+@keyframes hz-flicker { 0%, 100% { opacity: 1; } 31% { opacity: 0.35; } 33% { opacity: 0.9; } 58% { opacity: 0.5; } 60% { opacity: 1; } 84% { opacity: 0.2; } 87% { opacity: 1; } }
+.hz-tree { fill: none; stroke: #090e1e; stroke-width: 6; stroke-linecap: round; }
+.hz-rail { fill: none; stroke: #090e1e; stroke-width: 2; }
+.hz-snowcap { fill: #dfe9f7; opacity: 0.45; }
+.hz-snow { fill: #dfe9f7; opacity: 0.16; }
+.hz-stripe { fill: #c9343a; opacity: 0.9; }
+.hz-beam { fill: rgba(255, 240, 200, 0.07); transform-box: fill-box; transform-origin: 50% 51.6%; animation: hz-spin 14s linear infinite; }
+@keyframes hz-spin { to { transform: rotate(360deg); } }
+.hz-boat { animation: hz-bob 5s ease-in-out infinite alternate; }
+@keyframes hz-bob { from { transform: translate(1360px, 226px) rotate(-2deg); } to { transform: translate(1360px, 230px) rotate(2deg); } }
+.hz-green-a { fill: #18352a; opacity: 0.9; }
+.hz-green-b { fill: #10271e; }
+.hz-green-c path { fill: #0d2018; }
+.hz-trunk { fill: none; stroke: #2a211d; stroke-width: 4; stroke-linecap: round; }
+.hz-bloom { opacity: 0.85; } .hz-bloom-0 { fill: #f4a3c0; } .hz-bloom-1 { fill: #ffd6e4; }
+.hz-forest-far ellipse { fill: #14392b; opacity: 0.75; }
+.hz-forest path, .hz-forest ellipse { fill: #0d261c; }
+.hz-wire { fill: none; stroke: #2a2340; stroke-width: 1.2; }
+.hz-bulb { animation: hz-twinkle 3s ease-in-out infinite; }
+.hz-bulb-0 { fill: #ffd28a; } .hz-bulb-1 { fill: #ff9ec4; } .hz-bulb-2 { fill: #9fd8ff; } .hz-bulb-3 { fill: #c9a6ff; }
+.hz-bulb { filter: drop-shadow(0 0 4px currentColor); }
+@keyframes hz-twinkle { 0%, 100% { opacity: 1; } 50% { opacity: 0.45; } }
+.hz-poplars ellipse { fill: #0f1626; }
+.hz-f0 { fill: #2f5bd8; } .hz-f1 { fill: #e9ecf2; } .hz-f2 { fill: #d33a3a; }
+/* Teintes par fête */
+.hz-halloween .hz-a { fill: #1f1533; } .hz-halloween .hz-b, .hz-halloween .hz-c { fill: #120b1f; }
+.hz-noel .hz-a { fill: #182640; } .hz-noel .hz-b { fill: #101b33; } .hz-noel .hz-c { fill: #0a1326; }
+.hz-saint_valentin .hz-a { fill: #2b1530; } .hz-saint_valentin .hz-c { fill: #170a19; }
+.hz-saint_valentin .hz-win rect { fill: #ffc2a8; }
+.hz-poisson_avril .hz-a { fill: #0d2433; } .hz-poisson_avril .hz-c { fill: #071521; }
+.hz-fete_musique .hz-c { fill: #0f0c22; } .hz-fete_musique .hz-win rect { fill: #c9b6ff; opacity: 0.6; }
+.hz-armistice .hz-a { fill: #283244; } .hz-armistice .hz-b { fill: #1d2430; } .hz-armistice .hz-c { fill: #141a24; }
+.hz-armistice .hz-poplars ellipse { fill: #1d2534; }
+/* 14 juillet : de vrais bouquets */
+.hz-fireworks { position: absolute; inset: 0 0 40% 0; }
+.hz-burst { position: absolute; width: clamp(110px, 14vw, 200px); height: auto; aspect-ratio: 1; transform: translate(-50%, -50%) scale(0.1); opacity: 0; overflow: visible; animation: hz-burst 9s cubic-bezier(.15, .7, .3, 1) infinite; }
+.hz-burst line { stroke: var(--c); stroke-width: 2.6; stroke-linecap: round; filter: drop-shadow(0 0 4px var(--c)); }
+@keyframes hz-burst {
+  0%, 11% { transform: translate(-50%, -50%) scale(0.1); opacity: 0; }
+  12% { opacity: 1; }
+  24% { transform: translate(-50%, -50%) scale(1); opacity: 1; }
+  34% { transform: translate(-50%, calc(-50% + 6px)) scale(1.06); opacity: 0; }
+  100% { opacity: 0; }
+}
+@media (max-width: 767px) {
+  .hz { bottom: calc(env(safe-area-inset-bottom) + 92px); height: 130px; }
+}
+@media (hover: none) { .hz-bulb, .hz-beam, .hz-boat { animation: none; } }
+@media (prefers-reduced-motion: reduce) {
+  .hz-win rect, .hz-glow, .hz-beam, .hz-boat, .hz-bulb { animation: none !important; }
+  .hz-fireworks { display: none; }
+}
