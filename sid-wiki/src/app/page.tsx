@@ -7,18 +7,28 @@ import Icon from '@/components/Icon';
 import WelcomeTip from '@/components/WelcomeTip';
 import NewSince from '@/components/NewSince';
 import RecentlyViewed from '@/components/RecentlyViewed';
+import ProieDuJour, { preyOfTheDay, type Prey } from '@/components/ProieDuJour';
 
 export const dynamic = 'force-dynamic';
 
 export default async function HomePage() {
   const supabase = createClient();
-  const [{ data, error }, { data: recentData }, { data: topData }, { data: announcement }] = await Promise.all([
+  const [{ data, error }, { data: recentData }, { data: topData }, { data: announcement }, { data: decor }] = await Promise.all([
     supabase.rpc('wiki_stats'),
     supabase.rpc('wiki_recent', { p_limit: 6 }),
     supabase.rpc('wiki_top_discoverers', { p_limit: 5 }),
     supabase.rpc('wiki_announcement_get'),
+    supabase.rpc('site_decor'),
   ]);
   if (error) return <AccessDenied />;
+
+  // Grande Chasse (réglée sur le Dossier Central) : une proie du jour parmi les mobs découverts.
+  const hunt = !!(decor as { grande_chasse?: boolean } | null)?.grande_chasse;
+  let prey: Prey | null = null;
+  if (hunt) {
+    const { data: mobs } = await supabase.rpc('wiki_list', { p_category: 'mobs' });
+    prey = preyOfTheDay(((mobs ?? []) as (Prey & { discovered: boolean })[]).filter((m) => m.discovered && m.title));
+  }
 
   const stats = new Map<string, { total: number; found: number }>();
   for (const r of (data ?? []) as { category: string; total: number; discovered_count: number }[]) {
@@ -38,6 +48,7 @@ export default async function HomePage() {
           <span className="whitespace-pre-line font-semibold">{announcement}</span>
         </div>
       )}
+      {hunt && <ProieDuJour prey={prey} />}
       <WelcomeTip />
       <NewSince dates={recent.map((r) => r.discovered_at)} />
       <p className="mb-6 text-olive-700">Retrouve ici tout ce que la S.I.D. a déjà croisé en chasse. Le reste ? Il reste à découvrir !</p>
