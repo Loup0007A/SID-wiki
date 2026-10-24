@@ -296,10 +296,10 @@ export default function EntryForm({ initial, standImage = null }: { initial: For
 
     let id = initial.id;
     if (isNew) {
-      const { data: u } = await supabase.auth.getUser();
+      const { data: u } = await supabase.auth.getSession();
       const { data, error } = await supabase
         .from('wiki_entries')
-        .insert({ ...payload, created_by: u.user?.id ?? null })
+        .insert({ ...payload, created_by: u.session?.user.id ?? null })
         .select('id')
         .single();
       if (error) return fail(dbMessage(error));

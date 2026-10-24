@@ -2,8 +2,13 @@
 
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { createClient } from '@/lib/supabase/client';
+import dynamic from 'next/dynamic';
 import type { WikiComment } from '@/lib/wiki';
-import Markdown from './Markdown';
+
+// La mise en forme des commentaires n'est téléchargée que s'il y en a à afficher.
+const Markdown = dynamic(() => import('./Markdown'), {
+  loading: () => <p className="text-sm text-olive-700/70">…</p>,
+});
 
 function formatDate(iso: string) {
   return new Date(iso).toLocaleString('fr-FR', { dateStyle: 'medium', timeStyle: 'short' });

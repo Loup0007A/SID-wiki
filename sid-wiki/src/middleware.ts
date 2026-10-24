@@ -1,7 +1,27 @@
 import { createServerClient, type CookieOptions } from '@supabase/ssr';
 import { NextResponse, type NextRequest } from 'next/server';
+import { sessionExpiry, sessionStillFresh } from '@/lib/supabase/sessionCookie';
 
 export async function middleware(request: NextRequest) {
+  const isLogin = request.nextUrl.pathname.startsWith('/login');
+  // Pages légales : lisibles sans être connecté.
+  const isPublic = ['/cgu', '/confidentialite'].some((p) => request.nextUrl.pathname.startsWith(p));
+  const go = (pathname: string) => {
+    const url = request.nextUrl.clone();
+    url.pathname = pathname;
+    url.search = '';
+    return NextResponse.redirect(url);
+  };
+
+  // Chemin rapide, sans appel réseau (la grande majorité des pages) :
+  // pas de cookie de session du tout, ou jeton encore valable un moment.
+  // Avant, chaque page attendait ici un aller-retour vers Supabase.
+  const exp = sessionExpiry(request);
+  if (exp === null) return isLogin || isPublic ? NextResponse.next() : go('/login');
+  // (La page de connexion renvoie elle-même vers l'accueil si la session est bonne.)
+  if (sessionStillFresh(exp)) return NextResponse.next();
+
+  // Jeton expiré (ou presque) : Supabase le rafraîchit et pose les nouveaux cookies.
   let response = NextResponse.next({ request });
 
   const supabase = createServerClient(
@@ -24,10 +44,6 @@ export async function middleware(request: NextRequest) {
   const {
     data: { user },
   } = await supabase.auth.getUser();
-
-  const isLogin = request.nextUrl.pathname.startsWith('/login');
-  // Pages légales : lisibles sans être connecté.
-  const isPublic = ['/cgu', '/confidentialite'].some((p) => request.nextUrl.pathname.startsWith(p));
 
   // Une redirection est une NOUVELLE réponse : sans recopier les cookies, un jeton rafraîchi
   // pendant getUser() serait perdu et le membre se retrouverait déconnecté au hasard.

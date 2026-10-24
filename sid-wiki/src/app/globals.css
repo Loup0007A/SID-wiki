@@ -433,3 +433,15 @@ html.ev-armistice .wave-layer svg path:last-child { stroke: rgba(200, 214, 242, 
   .hy-floats .hy-float { bottom: calc(env(safe-area-inset-bottom) + 104px); }
   .hy-floats .hy-float.ev-small { bottom: calc(env(safe-area-inset-bottom) + 94px); }
 }
+
+/* Squelette de chargement (src/app/loading.tsx) : n'apparaît qu'après un
+   court instant, pour ne pas clignoter quand la page arrive vite. */
+.wiki-loading { animation: wiki-loading-in 0.2s ease-out 0.15s both; }
+@keyframes wiki-loading-in { from { opacity: 0; } to { opacity: 1; } }
+.skeleton {
+  background: linear-gradient(90deg, rgba(255, 255, 255, 0.06) 0%, rgba(255, 255, 255, 0.14) 50%, rgba(255, 255, 255, 0.06) 100%);
+  background-size: 200% 100%;
+  animation: skeleton-shine 1.3s ease-in-out infinite;
+}
+@keyframes skeleton-shine { from { background-position: 200% 0; } to { background-position: -200% 0; } }
+@media (prefers-reduced-motion: reduce) { .skeleton { animation: none; } }

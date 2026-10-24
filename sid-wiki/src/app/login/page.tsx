@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { createClient } from '@/lib/supabase/client';
 
@@ -10,6 +10,15 @@ export default function LoginPage() {
   const [password, setPassword] = useState('');
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
+
+  // Déjà connecté (session valable) : directement à l'accueil.
+  useEffect(() => {
+    createClient()
+      .auth.getSession()
+      .then(({ data }) => {
+        if (data.session) router.replace('/');
+      });
+  }, [router]);
 
   async function onSubmit(e: React.FormEvent) {
     e.preventDefault();

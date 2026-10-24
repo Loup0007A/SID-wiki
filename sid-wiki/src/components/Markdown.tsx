@@ -1,6 +1,3 @@
-'use client';
-
-import { useMemo } from 'react';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import EntryLink from './EntryLink';
@@ -14,8 +11,11 @@ import { ENTRY_HREF_RE, extractHeadings, isCategory, preprocessMentions, preproc
  * - Titres numérotés avec ancres ; `toc` affiche un sommaire à la Wikipédia (dès 3 titres)
  */
 export default function Markdown({ children, toc = false }: { children: string; toc?: boolean }) {
-  const headings = useMemo(() => extractHeadings(children), [children]);
-  const source = useMemo(() => preprocessMentions(preprocessWikiLinks(children)), [children]);
+  // Sans « use client » : sur une fiche, le texte est mis en forme sur le
+  // serveur et le navigateur ne télécharge pas l'outil de mise en forme.
+  // (Utilisable aussi depuis un composant navigateur : éditeur, commentaires.)
+  const headings = extractHeadings(children);
+  const source = preprocessMentions(preprocessWikiLinks(children));
 
   const byLine = new Map(headings.map((h) => [h.line, h]));
   const heading =

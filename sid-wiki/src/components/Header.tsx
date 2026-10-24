@@ -47,15 +47,18 @@ export function HeaderView({ signedIn, isAdmin }: { signedIn: boolean; isAdmin: 
 
 export default async function Header() {
   const supabase = createClient();
+  // Session lue dans le cookie (déjà rafraîchi par le middleware) : pas
+  // d'aller-retour vers le serveur d'authentification. La base vérifie le
+  // jeton à chaque requête (wiki_is_admin ci-dessous comprise).
   const {
-    data: { user },
-  } = await supabase.auth.getUser();
+    data: { session },
+  } = await supabase.auth.getSession();
 
   let isAdmin = false;
-  if (user) {
+  if (session) {
     const { data } = await supabase.rpc('wiki_is_admin');
     isAdmin = data === true;
   }
 
-  return <HeaderView signedIn={!!user} isAdmin={isAdmin} />;
+  return <HeaderView signedIn={!!session} isAdmin={isAdmin} />;
 }

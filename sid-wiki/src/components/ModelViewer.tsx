@@ -10,12 +10,15 @@ type Props = {
   onAnimations?: (names: string[]) => void;
   /** Affiche le sélecteur d'animation (lecteurs) ; l'éditeur gère le sien */
   showAnimationPicker?: boolean;
+  /** Image affichée à la place du modèle s'il ne peut pas être chargé. */
+  fallbackImage?: string | null;
+  fallbackAlt?: string;
 };
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
 const MV: any = 'model-viewer';
 
-export default function ModelViewer({ src, animation, onAnimations, showAnimationPicker = true }: Props) {
+export default function ModelViewer({ src, animation, onAnimations, showAnimationPicker = true, fallbackImage, fallbackAlt = '' }: Props) {
   const ref = useRef<any>(null);
   const cb = useRef(onAnimations);
   cb.current = onAnimations;
@@ -72,6 +75,11 @@ export default function ModelViewer({ src, animation, onAnimations, showAnimatio
   }
 
   if (failed) {
+    // Modèle illisible (fichier abîmé, appareil sans 3D…) : l'image de la fiche, s'il y en a une.
+    if (fallbackImage) {
+      // eslint-disable-next-line @next/next/no-img-element
+      return <img src={fallbackImage} alt={fallbackAlt} className="max-h-96 w-full rounded-2xl border border-white/15 object-cover" />;
+    }
     return <p className="rounded-xl bg-white/[0.09] p-4 text-sm text-stamp">Impossible de charger le modèle 3D.</p>;
   }
 

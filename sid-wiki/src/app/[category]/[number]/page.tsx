@@ -95,15 +95,27 @@ export default async function EntryPage({ params }: { params: { category: string
 
           {entry.summary && <p className="mt-4 text-lg italic text-olive-800">{entry.summary}</p>}
 
-          {entry.model_url && (
+          {/* Modèle 3D s'il y en a un, sinon l'image (l'image ne revient que si le
+              modèle ne peut pas être chargé). L'image reste utilisée dans l'aperçu
+              des liens et dans les listes (cartes du classement). */}
+          {entry.model_url ? (
             <div className="mt-4">
-              <ModelViewer src={entry.model_url} animation={entry.model_animation} showAnimationPicker={false} />
+              {/* Le fichier du modèle commence à se télécharger tout de suite, en
+                  même temps que la page (au lieu d'attendre la visionneuse 3D). */}
+              <link rel="preload" href={entry.model_url} as="fetch" crossOrigin="anonymous" />
+              <ModelViewer
+                src={entry.model_url}
+                animation={entry.model_animation}
+                showAnimationPicker={false}
+                fallbackImage={entry.image_url}
+                fallbackAlt={entry.title ?? ''}
+              />
             </div>
-          )}
-
-          {entry.image_url && (
-            // eslint-disable-next-line @next/next/no-img-element
-            <img src={entry.image_url} alt={entry.title ?? ''} className="mt-4 max-h-96 w-full rounded-2xl border border-white/15 object-cover" />
+          ) : (
+            entry.image_url && (
+              // eslint-disable-next-line @next/next/no-img-element
+              <img src={entry.image_url} alt={entry.title ?? ''} className="mt-4 max-h-96 w-full rounded-2xl border border-white/15 object-cover" />
+            )
           )}
 
           <div className="entry-body mt-4 flow-root">

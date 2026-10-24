@@ -10,6 +10,9 @@ import { TERMS_VERSION } from './LegalContent';
  * Demande d'accepter les CGU et la politique de confidentialité, communes
  * aux trois sites du S.I.D. (l'acceptation vaut partout).
  */
+// Membre dont on sait déjà que les conditions sont acceptées (pour cette visite).
+let termsOkFor: string | null = null;
+
 export default function TermsBanner() {
   const pathname = usePathname();
   const [show, setShow] = useState(false);
@@ -22,10 +25,14 @@ export default function TermsBanner() {
     }
     (async () => {
       const supabase = createClient();
-      const { data: { user } } = await supabase.auth.getUser();
-      if (!user) return;
-      const { data, error } = await supabase.from('profiles').select('terms_version').eq('id', user.id).maybeSingle();
+      // Session lue sur place ; et une fois les conditions vues à jour, on ne
+      // redemande plus à chaque changement de page.
+      const { data: { session } } = await supabase.auth.getSession();
+      const uid = session?.user.id;
+      if (!uid || termsOkFor === uid) return;
+      const { data, error } = await supabase.from('profiles').select('terms_version').eq('id', uid).maybeSingle();
       if (!error && data && data.terms_version !== TERMS_VERSION) setShow(true);
+      else if (!error && data) termsOkFor = uid;
     })();
   }, [pathname]);
 
@@ -35,7 +42,10 @@ export default function TermsBanner() {
     setBusy(true);
     const { error } = await createClient().rpc('accept_terms', { p_version: TERMS_VERSION });
     setBusy(false);
-    if (!error) setShow(false);
+    if (!error) {
+      setShow(false);
+      termsOkFor = (await createClient().auth.getSession()).data.session?.user.id ?? null;
+    }
   }
 
   return (

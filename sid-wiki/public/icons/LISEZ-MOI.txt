@@ -2,7 +2,8 @@ ICÔNES PERSONNALISÉES DU WIKI
 =============================
 
 Dépose tes images dans ce dossier (public/icons/) avec EXACTEMENT ces noms.
-Format : PNG à fond transparent, carré, 128 x 128 px (256 x 256 si tu veux de la netteté sur écran Retina).
+Format : PNG à fond transparent, carré, 96 x 96 px (affichées à la taille du texte : plus grand ne sert à rien et
+ralentit le chargement de chaque page ; vise moins de 10 ko par icône).
 Un fichier absent = l'emoji par défaut est utilisé. Tu peux donc en faire quelques-unes seulement.
 
 Catégories
