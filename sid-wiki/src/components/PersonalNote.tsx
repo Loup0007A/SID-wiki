@@ -2,6 +2,7 @@
 
 import { useEffect, useMemo, useState } from 'react';
 import { createClient } from '@/lib/supabase/client';
+import { SidIcon } from "@/components/icons/SidIcon";
 
 /** Bloc-notes privé par fiche : visible uniquement par son auteur. */
 export default function PersonalNote({ category, number }: { category: string; number: number }) {
@@ -43,7 +44,7 @@ export default function PersonalNote({ category, number }: { category: string; n
   return (
     <section className="no-print mt-8 border-t border-white/15 pt-4">
       <button type="button" className="flex w-full items-center justify-between text-left" onClick={() => setOpen((o) => !o)} aria-expanded={open}>
-        <h2 className="font-typewriter text-lg font-bold text-olive-800">📝 Mes notes {saved && <span className="text-sm font-normal text-olive-700">(enregistrées)</span>}</h2>
+        <h2 className="font-typewriter text-lg font-bold text-olive-800"><SidIcon name="memo" /> Mes notes {saved && <span className="text-sm font-normal text-olive-700">(enregistrées)</span>}</h2>
         <span className="text-olive-700">{open ? '▲' : '▼'}</span>
       </button>
       {open && loaded && (
@@ -59,7 +60,7 @@ export default function PersonalNote({ category, number }: { category: string; n
             <button type="button" className="btn" disabled={busy || !dirty} onClick={save}>
               {busy ? 'Enregistrement…' : 'Enregistrer la note'}
             </button>
-            <span className="text-xs text-olive-700">🔒 Privé · {text.length}/5000</span>
+            <span className="text-xs text-olive-700"><SidIcon name="padlock" /> Privé · {text.length}/5000</span>
             {error && <span className="text-sm text-stamp">{error}</span>}
           </div>
         </div>

@@ -6,6 +6,7 @@ import AccessDenied from '@/components/AccessDenied';
 import ArmorStand from '@/components/ArmorStand';
 import Icon from '@/components/Icon';
 import MigrationNeeded, { isMissingFunction } from '@/components/MigrationNeeded';
+import { SidIcon } from "@/components/icons/SidIcon";
 
 export const dynamic = 'force-dynamic';
 
@@ -38,7 +39,7 @@ export default async function ProfilePage({ params }: { params: { id: string } }
         <div>
           <h1 className="title-grad font-typewriter text-2xl font-bold text-olive-800 sm:text-3xl">@{profile.nickname}</h1>
           <p className="text-sm text-olive-700">
-            {gear.length}/{GEAR_SLOTS.length} emplacement{gear.length > 1 ? 's' : ''} équipé{gear.length > 1 ? 's' : ''} · 🏆 {profile.discoveries_total} découverte
+            {gear.length}/{GEAR_SLOTS.length} emplacement{gear.length > 1 ? 's' : ''} équipé{gear.length > 1 ? 's' : ''} · <SidIcon name="trophy" /> {profile.discoveries_total} découverte
             {profile.discoveries_total > 1 ? 's' : ''}
           </p>
         </div>
@@ -52,7 +53,7 @@ export default async function ProfilePage({ params }: { params: { id: string } }
       <ArmorStand profileId={profile.id} canEdit={profile.can_edit} initialGear={gear} standImage={typeof stand === 'string' && stand ? stand : null} />
 
       <section className="card mt-4 p-5">
-        <h2 className="mb-3 font-typewriter text-xl font-bold text-olive-800">🏆 Ses découvertes</h2>
+        <h2 className="mb-3 font-typewriter text-xl font-bold text-olive-800"><SidIcon name="trophy" /> Ses découvertes</h2>
         {discoveries.length === 0 ? (
           <p className="italic text-olive-700">Aucune découverte créditée pour l’instant.</p>
         ) : (

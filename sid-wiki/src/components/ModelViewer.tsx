@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useRef, useState } from 'react';
+import { SidIcon } from "@/components/icons/SidIcon";
 
 type Props = {
   src: string;
@@ -107,7 +108,7 @@ export default function ModelViewer({ src, animation, onAnimations, showAnimatio
           {playing ? '⏸ Pause' : '▶ Lecture'}
         </button>
         <button type="button" className="btn-ghost !px-3 !py-0.5" onClick={() => setRotate((r) => !r)} disabled={!ready}>
-          {rotate ? '⏹ Stop rotation' : '🔄 Rotation'}
+          {rotate ? '⏹ Stop rotation' : '↻ Rotation'}
         </button>
         <button type="button" className="btn-ghost !px-3 !py-0.5" onClick={() => ref.current?.requestFullscreen?.()} disabled={!ready}>
           ⛶ Plein écran
@@ -125,7 +126,7 @@ export default function ModelViewer({ src, animation, onAnimations, showAnimatio
           >
             {anims.map((a) => (
               <option key={a} value={a}>
-                🎬 {a}
+                <SidIcon name="film" /> {a}
               </option>
             ))}
           </select>

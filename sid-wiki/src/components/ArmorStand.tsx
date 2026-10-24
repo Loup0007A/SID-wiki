@@ -19,6 +19,7 @@ import EntryLink from './EntryLink';
 import Icon from './Icon';
 import Rarity from './Rarity';
 import StandFigure from './StandFigure';
+import { Glyph } from '@/components/icons/SidIcon';
 
 const LEFT: GearSlot[] = ['tete', 'torse', 'jambes', 'pieds'];
 const RIGHT: GearSlot[] = ['main_droite', 'main_gauche', 'dos'];
@@ -36,7 +37,7 @@ function SlotFace({ slot, item, active }: { slot: GearSlot; item: GearItem | und
         }`}
       >
         {!item ? (
-          <span aria-hidden className="text-2xl opacity-25 grayscale">{GEAR_SLOT_LABELS[slot].icon}</span>
+          <span aria-hidden className="text-2xl opacity-25 grayscale"><Glyph e={GEAR_SLOT_LABELS[slot].icon} /></span>
         ) : !item.discovered ? (
           <span className="text-3xl font-extrabold text-olive-700/50">?</span>
         ) : item.image_url ? (
@@ -192,7 +193,7 @@ export default function ArmorStand({
           return (
             <li key={s} className="flex items-center justify-between gap-3 py-2">
               <span className="flex-none font-typewriter font-bold text-olive-800">
-                <span aria-hidden className="mr-1.5">{GEAR_SLOT_LABELS[s].icon}</span>
+                <span aria-hidden className="mr-1.5"><Glyph e={GEAR_SLOT_LABELS[s].icon} /></span>
                 {GEAR_SLOT_LABELS[s].label}
               </span>
               {item ? (
@@ -225,7 +226,7 @@ export default function ArmorStand({
               <div className="mb-3 flex items-start justify-between gap-3">
                 <div>
                   <h2 className="font-typewriter text-xl font-bold text-white">
-                    <span aria-hidden className="mr-2">{GEAR_SLOT_LABELS[open].icon}</span>
+                    <span aria-hidden className="mr-2"><Glyph e={GEAR_SLOT_LABELS[open].icon} /></span>
                     {GEAR_SLOT_LABELS[open].label}
                   </h2>
                   <p className="text-sm text-olive-700">{GEAR_SLOT_LABELS[open].hint}</p>

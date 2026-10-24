@@ -359,12 +359,11 @@ html.ev-noel .wave-layer svg path:last-child { stroke: rgba(230, 244, 255, 0.4);
 .hy-bell { filter: drop-shadow(0 0 4px rgba(255, 210, 87, 0.7)); }
 .hy-bell-clapper { fill: #b88a1c; }
 .hy-ribbon { fill: none; stroke: #ff7aa8; stroke-width: 2.4; stroke-linecap: round; }
-.hy-bird { fill: #e9edf4; filter: drop-shadow(0 0 3px rgba(255, 255, 255, 0.5)); }
-.hy-pigeon { fill: #9aa3b5; }
+.hy-bird { filter: drop-shadow(0 0 3px rgba(255, 255, 255, 0.35)); }
 .hy-bird .hy-wing { transform-box: fill-box; transform-origin: 50% 100%; animation: ev-flap 0.35s ease-in-out infinite alternate; }
 .hy-dove .hy-wing { animation-duration: 0.6s; }
 .hy-olive { fill: none; stroke: #7da35a; stroke-width: 1.6; stroke-linecap: round; }
-.hy-flying-note { font-size: 26px; filter: drop-shadow(0 0 4px rgba(201, 166, 255, 0.9)); }
+.hy-flying-note { filter: drop-shadow(0 0 4px rgba(201, 166, 255, 0.9)); }
 .hy-jet { fill: #d6dcea; }
 .hy-smoke { opacity: 0.7; filter: blur(1.5px); }
 @media (prefers-reduced-motion: reduce) {

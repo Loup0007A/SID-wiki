@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { createClient } from '@/lib/supabase/client';
 import { TERMS_VERSION } from './LegalContent';
+import { SidIcon } from "@/components/icons/SidIcon";
 
 /**
  * Demande d'accepter les CGU et la politique de confidentialité, communes
@@ -51,7 +52,7 @@ export default function TermsBanner() {
   return (
     <div className="card mb-5 flex flex-wrap items-center gap-3 p-4">
       <p className="min-w-[14rem] flex-1 text-sm text-olive-800">
-        📜 Le S.I.D. a des conditions d&apos;utilisation et une politique de confidentialité, communes au Dossier Central, à la
+        <SidIcon name="scroll" /> Le S.I.D. a des conditions d&apos;utilisation et une politique de confidentialité, communes au Dossier Central, à la
         Cartographie et au Wiki. Lis <Link href="/cgu" className="underline">les conditions</Link> et{' '}
         <Link href="/confidentialite" className="underline">ce que nous faisons de tes données</Link>.
       </p>

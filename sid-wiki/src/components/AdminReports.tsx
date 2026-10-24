@@ -5,6 +5,7 @@ import { useMemo, useState } from 'react';
 import { createClient } from '@/lib/supabase/client';
 import { pad, type Category } from '@/lib/wiki';
 import Icon from './Icon';
+import { SidIcon, GlyphText } from '@/components/icons/SidIcon';
 
 export type Report = {
   id: string;
@@ -60,13 +61,13 @@ export default function AdminReports({ reports, onChange }: { reports: Report[];
       </div>
       {error && <p className="mb-3 text-stamp">{error}</p>}
       {list.length === 0 ? (
-        <p className="card p-5 italic text-olive-700">Boîte vide : bravo ! 🎉</p>
+        <p className="card p-5 italic text-olive-700">Boîte vide : bravo ! <SidIcon name="sparkle" /></p>
       ) : (
         <ul className="space-y-3">
           {list.map((r) => (
             <li key={r.id} className={`card p-4 ${r.status === 'done' ? 'opacity-60' : ''}`}>
               <div className="flex flex-wrap items-center gap-2 text-sm">
-                <span className="rounded-full bg-white/10 px-2 py-0.5 font-bold">{KIND[r.kind]}</span>
+                <span className="rounded-full bg-white/10 px-2 py-0.5 font-bold"><GlyphText text={KIND[r.kind]} /></span>
                 <Link href={`/${r.category}/${pad(r.number)}`} className="font-bold text-olive-700 hover:underline">
                   <Icon name={r.category} /> {r.title} · N° {pad(r.number)}
                 </Link>
@@ -81,7 +82,7 @@ export default function AdminReports({ reports, onChange }: { reports: Report[];
                 </Link>
                 {r.status === 'open' ? (
                   <button className="btn !px-3 !py-0.5" onClick={() => setStatus(r, 'done')}>
-                    ✅ Marquer traité
+                    <SidIcon name="check" /> Marquer traité
                   </button>
                 ) : (
                   <button className="btn-ghost !px-3 !py-0.5" onClick={() => setStatus(r, 'open')}>

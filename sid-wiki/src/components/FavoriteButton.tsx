@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { createClient } from '@/lib/supabase/client';
+import { SidIcon } from '@/components/icons/SidIcon';
 
 export default function FavoriteButton({ category, number, initial }: { category: string; number: number; initial: boolean }) {
   const [fav, setFav] = useState(initial);
@@ -16,7 +17,7 @@ export default function FavoriteButton({ category, number, initial }: { category
 
   return (
     <button type="button" onClick={toggle} disabled={busy} className="btn-ghost" aria-pressed={fav}>
-      {fav ? '⭐ Favori' : '☆ Favori'}
+      {fav ? <><SidIcon name="starGold" /> Favori</> : <><SidIcon name="starGold" className="opacity-40 grayscale" /> Favori</>}
     </button>
   );
 }

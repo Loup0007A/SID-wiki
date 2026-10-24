@@ -8,6 +8,7 @@ import WelcomeTip from '@/components/WelcomeTip';
 import NewSince from '@/components/NewSince';
 import RecentlyViewed from '@/components/RecentlyViewed';
 import ProieDuJour, { preyOfTheDay, type Prey } from '@/components/ProieDuJour';
+import { SidIcon } from '@/components/icons/SidIcon';
 
 export const dynamic = 'force-dynamic';
 
@@ -44,7 +45,7 @@ export default async function HomePage() {
       </div>
       {typeof announcement === 'string' && announcement.trim() && (
         <div className="mb-4 mt-3 rounded-2xl border border-brass-400/40 bg-brass-400/15 px-4 py-3 text-brass-300">
-          <span className="mr-2">📣</span>
+          <span className="mr-2"><SidIcon name="megaphone" /></span>
           <span className="whitespace-pre-line font-semibold">{announcement}</span>
         </div>
       )}
@@ -81,7 +82,7 @@ export default async function HomePage() {
 
       <div className="mt-4 grid gap-4 lg:grid-cols-3 lg:items-start">
         <section className="card p-5 lg:col-span-2">
-          <h2 className="mb-3 font-typewriter text-xl font-bold text-olive-800">🆕 Dernières découvertes</h2>
+          <h2 className="mb-3 font-typewriter text-xl font-bold text-olive-800"><SidIcon name="sparkle" /> Dernières découvertes</h2>
           {recent.length === 0 ? (
             <p className="italic text-olive-700">Rien de découvert pour l’instant. À vos armes !</p>
           ) : (
@@ -113,7 +114,7 @@ export default async function HomePage() {
         </section>
 
         <details className="card p-5">
-          <summary className="cursor-pointer select-none font-typewriter text-xl font-bold text-olive-800">🏆 Top découvreurs</summary>
+          <summary className="cursor-pointer select-none font-typewriter text-xl font-bold text-olive-800"><SidIcon name="trophy" /> Top découvreurs</summary>
           <div className="mt-3">
           {top.length === 0 ? (
             <p className="italic text-olive-700">Personne n’a encore été crédité.</p>
@@ -122,7 +123,7 @@ export default async function HomePage() {
               {top.map((t, i) => (
                 <li key={t.nickname} className="flex items-center justify-between gap-2">
                   <span>
-                    <span className="mr-2 font-typewriter font-bold text-olive-600/70">{['🥇', '🥈', '🥉'][i] ?? `${i + 1}.`}</span>
+                    <span className="mr-2 font-typewriter font-bold text-olive-600/70">{i < 3 ? <SidIcon name={(['podium1', 'podium2', 'podium3'] as const)[i]} /> : `${i + 1}.`}</span>
                     <Mention nickname={t.nickname} />
                   </span>
                   <span className="font-typewriter font-bold">{t.total}</span>

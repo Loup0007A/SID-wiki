@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { createClient } from '@/lib/supabase/client';
+import { SidIcon, GlyphText } from '@/components/icons/SidIcon';
 
 const KINDS = [
   { id: 'erreur', label: '❌ Une erreur' },
@@ -30,12 +31,12 @@ export default function ReportButton({ category, number }: { category: string; n
     setOpen(false);
   }
 
-  if (sent) return <span className="no-print text-sm font-bold text-olive-700">✅ Merci ! Les admins ont reçu ton message.</span>;
+  if (sent) return <span className="no-print text-sm font-bold text-olive-700"><SidIcon name="check" /> Merci ! Les admins ont reçu ton message.</span>;
 
   return (
     <div className="no-print">
       <button type="button" className="text-sm text-olive-700 underline-offset-2 hover:underline" onClick={() => setOpen((o) => !o)} aria-expanded={open}>
-        🚩 Signaler un problème sur cette fiche
+        <SidIcon name="flag" /> Signaler un problème sur cette fiche
       </button>
       {open && (
         <div className="card mt-2 max-w-md p-3">
@@ -43,7 +44,7 @@ export default function ReportButton({ category, number }: { category: string; n
           <div className="mb-2 flex flex-wrap gap-1.5">
             {KINDS.map((k) => (
               <button key={k.id} type="button" onClick={() => setKind(k.id)} className={kind === k.id ? 'btn !px-3 !py-0.5 text-sm' : 'btn-ghost !px-3 !py-0.5 text-sm'}>
-                {k.label}
+                <GlyphText text={k.label} />
               </button>
             ))}
           </div>

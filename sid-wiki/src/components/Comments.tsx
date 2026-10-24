@@ -4,6 +4,7 @@ import { useCallback, useEffect, useMemo, useState } from 'react';
 import { createClient } from '@/lib/supabase/client';
 import dynamic from 'next/dynamic';
 import type { WikiComment } from '@/lib/wiki';
+import { SidIcon } from "@/components/icons/SidIcon";
 
 // La mise en forme des commentaires n'est téléchargée que s'il y en a à afficher.
 const Markdown = dynamic(() => import('./Markdown'), {
@@ -53,7 +54,7 @@ export default function Comments({ category, number }: { category: string; numbe
   return (
     <section className="mt-8 border-t border-white/15 pt-5" id="commentaires">
       <h2 className="mb-3 font-typewriter text-xl font-bold text-olive-800">
-        💬 Commentaires {comments ? `(${comments.length})` : ''}
+        <SidIcon name="chat" /> Commentaires {comments ? `(${comments.length})` : ''}
       </h2>
 
       {comments === null && !error && <p className="italic text-olive-700">Chargement…</p>}

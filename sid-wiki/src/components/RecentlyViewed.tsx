@@ -5,6 +5,7 @@ import { useEffect, useState } from 'react';
 import { isCategory, pad, type Category } from '@/lib/wiki';
 import Icon from './Icon';
 import { RECENT_KEY, type Viewed } from './ViewTracker';
+import { SidIcon } from "@/components/icons/SidIcon";
 
 /** « Repris où tu t'étais arrêté » : fiches récemment consultées sur cet appareil. */
 export default function RecentlyViewed() {
@@ -29,7 +30,7 @@ export default function RecentlyViewed() {
   return (
     <section className="card mt-4 p-5">
       <div className="mb-3 flex items-center justify-between gap-2">
-        <h2 className="font-typewriter text-xl font-bold text-olive-800">🕘 Consultées récemment</h2>
+        <h2 className="font-typewriter text-xl font-bold text-olive-800"><SidIcon name="clock" /> Consultées récemment</h2>
         <button type="button" className="text-xs text-olive-700 hover:underline" onClick={clear}>
           Effacer
         </button>

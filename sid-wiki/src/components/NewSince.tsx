@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
+import { SidIcon } from '@/components/icons/SidIcon';
 
 const LAST = 'wiki-last-visit';
 const PREV = 'wiki-prev-visit';
@@ -26,7 +27,7 @@ export default function NewSince({ dates }: { dates: (string | null)[] }) {
   if (count === 0) return null;
   return (
     <p className="mb-4 rounded-2xl border border-brass-400/40 bg-brass-400/15 px-4 py-2 text-sm font-bold text-brass-300">
-      🆕 {count} nouvelle{count > 1 ? 's' : ''} découverte{count > 1 ? 's' : ''} depuis ta dernière visite !
+      <SidIcon name="sparkle" /> {count} nouvelle{count > 1 ? 's' : ''} découverte{count > 1 ? 's' : ''} depuis ta dernière visite !
     </p>
   );
 }

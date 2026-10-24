@@ -1,8 +1,9 @@
 'use client';
 
 import { useEffect, useRef, useState } from 'react';
+import { SidIcon, type IconName as SidIconName } from '@/components/icons/SidIcon';
 
-/** Emoji de secours quand l'image `public/icons/<nom>.png` n'existe pas. */
+/** Ancien émoji de chaque icône (gardé pour les textes) ; l'affichage utilise les icônes dessinées. */
 export const ICON_FALLBACK = {
   logo: '⚔️',
   lieux: '🗺',
@@ -23,6 +24,25 @@ export const ICON_FALLBACK = {
 
 export type IconName = keyof typeof ICON_FALLBACK;
 
+/** Icône dessinée du S.I.D. (Lot 49) affichée quand il n'y a pas d'image perso. */
+const SID_ICON: Record<IconName, SidIconName> = {
+  logo: 'swords',
+  lieux: 'map',
+  armes: 'dagger',
+  mobs: 'skull',
+  objets: 'backpack',
+  skills: 'sparkle',
+  profils: 'profile',
+  accueil: 'home',
+  chercher: 'magnifier',
+  favoris: 'starGold',
+  hasard: 'dice',
+  tags: 'tag',
+  aide: 'question',
+  admin: 'tools',
+  menu: 'menu',
+};
+
 // Fichiers présents dans public/icons au moment du build (voir next.config.js).
 const AVAILABLE = new Set((process.env.NEXT_PUBLIC_WIKI_ICONS ?? '').split(',').filter(Boolean));
 
@@ -40,7 +60,7 @@ export default function Icon({ name, className = '' }: { name: IconName; classNa
     if (el && el.complete && el.naturalWidth === 0) setFailed(true);
   }, []);
 
-  if (failed || (AVAILABLE.size > 0 && !AVAILABLE.has(name))) return <span aria-hidden className={className}>{ICON_FALLBACK[name]}</span>;
+  if (failed || (AVAILABLE.size > 0 && !AVAILABLE.has(name))) return <SidIcon name={SID_ICON[name]} size="1.25em" className={className} />;
   return (
     // eslint-disable-next-line @next/next/no-img-element
     <img

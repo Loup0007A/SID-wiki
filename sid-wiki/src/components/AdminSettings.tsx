@@ -4,6 +4,7 @@ import { useEffect, useMemo, useState } from 'react';
 import { createClient } from '@/lib/supabase/client';
 import { removeStoredFile } from '@/lib/storage';
 import StandFigure from './StandFigure';
+import { SidIcon } from "@/components/icons/SidIcon";
 
 /** Réglages : annonce affichée en haut de l'accueil pour tous les membres. */
 export default function AdminSettings() {
@@ -68,7 +69,7 @@ export default function AdminSettings() {
   return (
     <div className="space-y-5">
     <div className="card max-w-2xl p-5">
-      <h2 className="mb-1 font-typewriter text-xl font-bold text-olive-800">📣 Annonce d’accueil</h2>
+      <h2 className="mb-1 font-typewriter text-xl font-bold text-olive-800"><SidIcon name="megaphone" /> Annonce d’accueil</h2>
       <p className="mb-3 text-sm text-olive-700">Un message visible par tous en haut de la page d’accueil (événement, nouveauté, règle…). Laisse vide pour ne rien afficher.</p>
       <textarea className="input min-h-[6rem]" maxLength={500} value={text} onChange={(e) => setText(e.target.value)} placeholder="Ex. : Grande chasse ce samedi à 21 h ! 🐉" />
       <div className="mt-3 flex flex-wrap items-center gap-2">
@@ -87,7 +88,7 @@ export default function AdminSettings() {
     </div>
 
       <div className="card max-w-2xl p-5">
-        <h2 className="mb-1 font-typewriter text-xl font-bold text-olive-800">🧍 Image du porte-armure</h2>
+        <h2 className="mb-1 font-typewriter text-xl font-bold text-olive-800"><SidIcon name="walker" /> Image du porte-armure</h2>
         <p className="mb-3 text-sm text-olive-700">
           Remplace le mannequin en bois de l’onglet Profils par ton image : PNG ou WebP à <strong>fond transparent</strong>, format portrait <strong>2:3</strong> (par exemple 384 × 576 px), personnage centré de face. Les armures et les armes sont dessinées par-dessus.
         </p>

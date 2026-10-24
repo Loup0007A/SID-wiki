@@ -2,6 +2,7 @@ import Link from 'next/link';
 import { pad, type EntrySummary } from '@/lib/wiki';
 import Rarity from './Rarity';
 import Icon from './Icon';
+import { SidIcon } from "@/components/icons/SidIcon";
 
 export default function EntryCard({ entry, showCategory = false }: { entry: EntrySummary; showCategory?: boolean }) {
   const known = entry.title !== null;
@@ -18,7 +19,7 @@ export default function EntryCard({ entry, showCategory = false }: { entry: Entr
         </span>
         {entry.has_model && (
           <span className="rounded-full bg-kraft-500/30 px-2 text-[10px] font-bold text-olive-800" title="Modèle 3D animé">
-            🎬 3D
+            <SidIcon name="film" /> 3D
           </span>
         )}
       </div>

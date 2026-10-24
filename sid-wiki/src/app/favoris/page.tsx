@@ -4,6 +4,7 @@ import { pad, type Category, type EntrySummary } from '@/lib/wiki';
 import EntryCard from '@/components/EntryCard';
 import Icon from '@/components/Icon';
 import AccessDenied from '@/components/AccessDenied';
+import { SidIcon } from "@/components/icons/SidIcon";
 
 export const dynamic = 'force-dynamic';
 
@@ -29,7 +30,7 @@ export default async function FavoritesPage() {
 
       {notes.length > 0 && (
         <section className="mt-8">
-          <h2 className="mb-3 font-typewriter text-2xl font-bold text-olive-800">📝 Mes notes</h2>
+          <h2 className="mb-3 font-typewriter text-2xl font-bold text-olive-800"><SidIcon name="memo" /> Mes notes</h2>
           <ul className="grid gap-3 sm:grid-cols-2">
             {notes.map((n) => (
               <li key={`${n.category}${n.number}`} className="card p-4">

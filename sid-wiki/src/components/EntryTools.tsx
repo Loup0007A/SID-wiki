@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useRef, useState } from 'react';
+import { SidIcon } from '@/components/icons/SidIcon';
 
 const SIZES = [0.9, 1, 1.125, 1.25, 1.4];
 const KEY = 'wiki-text-size';
@@ -80,10 +81,10 @@ export default function EntryTools({ title }: { title: string }) {
       {open && (
         <div className="absolute left-0 top-full z-40 mt-2 w-60 rounded-2xl border border-white/20 bg-[#0b1730] p-2 shadow-2xl shadow-black/60 sm:left-auto sm:right-0">
           <button type="button" className={item} onClick={share}>
-            {copied ? '✅ Lien copié' : '🔗 Partager'}
+            {copied ? <><SidIcon name="check" /> Lien copié</> : <><SidIcon name="link" /> Partager</>}
           </button>
           <button type="button" className={`${item} hidden sm:flex`} onClick={() => window.print()}>
-            🖨 Imprimer
+            <SidIcon name="printer" /> Imprimer
           </button>
           <div className="flex items-center justify-between gap-2 px-3 py-2 text-sm font-bold">
             Taille du texte

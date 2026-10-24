@@ -9,6 +9,7 @@ import { useRouter } from 'next/navigation';
 import AdminReports, { type Report } from './AdminReports';
 import AdminSettings from './AdminSettings';
 import Icon from './Icon';
+import { SidIcon } from "@/components/icons/SidIcon";
 
 type Row = {
   id: string;
@@ -300,18 +301,18 @@ export default function AdminDashboard() {
   return (
     <div>
       <div className="mb-4 flex flex-wrap items-center justify-between gap-3">
-        <h1 className="title-grad font-typewriter text-2xl font-bold text-olive-800 sm:text-3xl">🛠 Dashboard</h1>
+        <h1 className="title-grad font-typewriter text-2xl font-bold text-olive-800 sm:text-3xl"><SidIcon name="tools" /> Dashboard</h1>
         <Link href={`/admin/edit/${category}/new`} className="btn">
           + Nouvelle fiche
         </Link>
       </div>
 
       <div className="mb-4 flex flex-wrap gap-2 border-b border-white/15 pb-3">
-        <button onClick={() => setTab('entries')} className={tab === 'entries' ? 'btn' : 'btn-ghost'}>📚 Fiches</button>
+        <button onClick={() => setTab('entries')} className={tab === 'entries' ? 'btn' : 'btn-ghost'}><SidIcon name="book" /> Fiches</button>
         <button onClick={() => setTab('reports')} className={tab === 'reports' ? 'btn' : 'btn-ghost'}>
-          🚩 Signalements{openReports > 0 && <span className="ml-2 rounded-full bg-stamp px-2 text-xs font-bold text-white">{openReports}</span>}
+          <SidIcon name="flag" /> Signalements{openReports > 0 && <span className="ml-2 rounded-full bg-stamp px-2 text-xs font-bold text-white">{openReports}</span>}
         </button>
-        <button onClick={() => setTab('settings')} className={tab === 'settings' ? 'btn' : 'btn-ghost'}>⚙ Réglages</button>
+        <button onClick={() => setTab('settings')} className={tab === 'settings' ? 'btn' : 'btn-ghost'}><SidIcon name="gear" /> Réglages</button>
       </div>
 
       {tab === 'reports' && <AdminReports reports={reports} onChange={() => { loadReports(); load(); }} />}
@@ -411,7 +412,7 @@ export default function AdminDashboard() {
                 <td className="p-2 font-semibold">
                   {r.title}
                   {r.rarity ? <span className="ml-2 text-brass-500">{'★'.repeat(r.rarity)}</span> : null}
-                  {r.model_url ? <span className="ml-2" title="Modèle 3D">🎬</span> : null}
+                  {r.model_url ? <span className="ml-2" title="Modèle 3D"><SidIcon name="film" /></span> : null}
                   {(() => {
                     const o = overview.get(r.id);
                     const m = missing(r, o);
@@ -419,17 +420,17 @@ export default function AdminDashboard() {
                       <span className="ml-2 inline-flex flex-wrap gap-1 align-middle">
                         {m.length > 0 && (
                           <span className="rounded-full bg-brass-400/20 px-2 text-[11px] font-bold text-brass-300" title={`Manque : ${m.join(', ')}`}>
-                            ⚠ {m.length}
+                            <SidIcon name="warning" /> {m.length}
                           </span>
                         )}
                         {o && o.open_reports > 0 && (
                           <button type="button" className="rounded-full bg-stamp/80 px-2 text-[11px] font-bold text-white" title="Signalements ouverts" onClick={() => setTab('reports')}>
-                            🚩 {o.open_reports}
+                            <SidIcon name="flag" /> {o.open_reports}
                           </button>
                         )}
                         {o && (o.comments > 0 || o.favorites > 0) && (
                           <span className="text-[11px] text-olive-700" title="Commentaires · favoris">
-                            💬 {o.comments} ⭐ {o.favorites}
+                            <SidIcon name="chat" /> {o.comments} <SidIcon name="starGold" /> {o.favorites}
                           </span>
                         )}
                       </span>

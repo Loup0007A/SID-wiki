@@ -52,7 +52,7 @@ export default function MobileNav({ isAdmin }: { isAdmin: boolean }) {
             <div className="mx-auto mb-3 h-1.5 w-12 rounded-full bg-olive-800/30" />
 
             <form action="/recherche" className="mb-4">
-              <input name="q" type="search" placeholder="🔍 Rechercher un monstre, un skill…" className="input !rounded-full" />
+              <input name="q" type="search" placeholder="Rechercher un monstre, un skill…" className="input !rounded-full" />
             </form>
 
             <h2 className="mb-2 font-typewriter text-sm font-bold text-olive-700">Le wiki</h2>

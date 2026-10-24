@@ -1,5 +1,6 @@
 import Link from 'next/link';
 import { pad } from '@/lib/wiki';
+import { SidIcon } from '@/components/icons/SidIcon';
 
 /**
  * Bandeau « Proie du jour » de l'accueil pendant la Grande Chasse (réglée sur
@@ -30,13 +31,13 @@ export default function ProieDuJour({ prey }: { prey: Prey | null }) {
               // eslint-disable-next-line @next/next/no-img-element
               <img src={prey.image_url} alt="" className="h-16 w-16 rounded-xl object-cover sm:h-28 sm:w-28" />
             ) : (
-              <span className="flex h-16 w-16 items-center justify-center rounded-xl text-3xl sm:h-28 sm:w-28 sm:text-4xl">☠</span>
+              <span className="flex h-16 w-16 items-center justify-center rounded-xl text-3xl sm:h-28 sm:w-28 sm:text-4xl"><SidIcon name="skull" size="1em" /></span>
             )}
             <span className="proie-claws" aria-hidden />
           </Link>
         )}
         <div className="min-w-0 flex-1">
-          <p className="proie-kicker font-typewriter text-xs uppercase tracking-[0.18em]">🏹 La Grande Chasse est ouverte</p>
+          <p className="proie-kicker font-typewriter text-xs uppercase tracking-[0.18em]"><SidIcon name="bow" /> La Grande Chasse est ouverte</p>
           {prey ? (
             <>
               <h2 className="mt-1 font-typewriter text-xl font-bold sm:text-2xl">

@@ -9,6 +9,7 @@ import { CATEGORIES, CATEGORY_LABELS, GEAR_CATEGORIES, GEAR_COLOR_RE, GEAR_SHAPE
 import Markdown from './Markdown';
 import ModelViewer from './ModelViewer';
 import StandFigure from './StandFigure';
+import { SidIcon } from "@/components/icons/SidIcon";
 
 export type LinkedEntry = { id: string; category: Category; number: number; title: string };
 
@@ -342,7 +343,7 @@ export default function EntryForm({ initial, standImage = null }: { initial: For
           <label className="label">Catégorie</label>
           <select className="input" value={category} onChange={(e) => setCategory(e.target.value as Category)}>
             {CATEGORIES.map((c) => (
-              <option key={c} value={c}>{CATEGORY_LABELS[c].icon} {CATEGORY_LABELS[c].label}</option>
+              <option key={c} value={c}>{CATEGORY_LABELS[c].label}</option>
             ))}
           </select>
         </div>
@@ -437,7 +438,7 @@ export default function EntryForm({ initial, standImage = null }: { initial: For
       </div>
 
       <div className="card p-5">
-        <label className="label">Modèle 3D animé (.glb ou .fbx) — idéal pour les skills ✨</label>
+        <label className="label">Modèle 3D animé (.glb ou .fbx) — idéal pour les skills <SidIcon name="sparkle" /></label>
         <div className="flex flex-wrap items-center gap-3">
           <input type="file" accept=".glb,.fbx,model/gltf-binary" onChange={(e) => e.target.files?.[0] && pickModel(e.target.files[0])} disabled={uploadingModel || saving} />
           {uploadingModel && <span className="text-sm italic">Lecture du fichier…</span>}
@@ -466,7 +467,7 @@ export default function EntryForm({ initial, standImage = null }: { initial: For
               <select className="input" value={modelAnimation} onChange={(e) => setModelAnimation(e.target.value)}>
                 <option value="">Aucune (modèle fixe — supprime toutes les animations)</option>
                 {animNames.map((a) => (
-                  <option key={a} value={a}>🎬 {a}</option>
+                  <option key={a} value={a}><SidIcon name="film" /> {a}</option>
                 ))}
               </select>
               {animNames.length === 0 && <p className="mt-1 text-xs text-olive-700">Aucune animation dans ce modèle : le visiteur pourra juste le faire tourner.</p>}
@@ -640,7 +641,7 @@ export default function EntryForm({ initial, standImage = null }: { initial: For
 
       {!isNew && (
         <details className="card p-5">
-          <summary className="cursor-pointer font-typewriter font-bold text-olive-800">🕘 Historique des versions ({revisions.length})</summary>
+          <summary className="cursor-pointer font-typewriter font-bold text-olive-800"><SidIcon name="clock" /> Historique des versions ({revisions.length})</summary>
           {revisions.length === 0 ? (
             <p className="mt-3 text-sm italic text-olive-700">Aucune ancienne version : elles sont conservées automatiquement à chaque modification du titre, résumé, contenu, tags ou fiche technique.</p>
           ) : (

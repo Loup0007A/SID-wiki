@@ -15,6 +15,7 @@ import EntryTools from '@/components/EntryTools';
 import ReportButton from '@/components/ReportButton';
 import PersonalNote from '@/components/PersonalNote';
 import ViewTracker from '@/components/ViewTracker';
+import { SidIcon } from "@/components/icons/SidIcon";
 
 export const dynamic = 'force-dynamic';
 
@@ -89,7 +90,7 @@ export default async function EntryPage({ params }: { params: { category: string
 
           {entry.discoverer && (
             <p className="mt-3 text-sm text-olive-800">
-              🏆 Découvert par <Mention nickname={entry.discoverer} />
+              <SidIcon name="trophy" /> Découvert par <Mention nickname={entry.discoverer} />
             </p>
           )}
 

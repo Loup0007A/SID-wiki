@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import { createClient } from '@/lib/supabase/server';
 import Icon, { type IconName } from '@/components/Icon';
+import { SidIcon } from '@/components/icons/SidIcon';
 
 export const dynamic = 'force-dynamic';
 
@@ -63,7 +64,11 @@ export default async function HelpPage() {
           {
             icon: 'favoris',
             title: 'Fais-en ton wiki',
-            text: '☆ Favori pour retrouver une fiche, 📝 Mes notes pour tes astuces (privées), 💬 les commentaires pour échanger avec les autres chasseurs.',
+            text: (
+              <>
+                <SidIcon name="starGold" /> Favori pour retrouver une fiche, <SidIcon name="memo" /> Mes notes pour tes astuces (privées), <SidIcon name="chat" /> les commentaires pour échanger avec les autres chasseurs.
+              </>
+            ),
           },
           {
             icon: 'profils',
@@ -77,7 +82,11 @@ export default async function HelpPage() {
           {
             icon: 'aide',
             title: 'Une erreur ? Une idée ?',
-            text: 'En bas de chaque fiche, « 🚩 Signaler un problème » envoie un message aux admins.',
+            text: (
+              <>
+                En bas de chaque fiche, « <SidIcon name="flag" /> Signaler un problème » envoie un message aux admins.
+              </>
+            ),
           },
           {
             icon: 'menu',

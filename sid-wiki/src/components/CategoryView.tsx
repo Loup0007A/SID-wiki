@@ -6,6 +6,7 @@ import { pad, type EntrySummary } from '@/lib/wiki';
 import EntryCard from './EntryCard';
 import Rarity from './Rarity';
 import Icon from './Icon';
+import { SidIcon } from "@/components/icons/SidIcon";
 
 type Sort = 'number' | 'title' | 'rarity';
 const KEY = 'wiki-category-view';
@@ -99,7 +100,7 @@ export default function CategoryView({ entries }: { entries: EntrySummary[] }) {
                   <>
                     <span className="min-w-0 flex-1 truncate font-bold">{e.title}</span>
                     <Rarity value={e.rarity} className="hidden text-sm sm:inline" />
-                    {e.has_model && <span className="rounded-full bg-kraft-500/30 px-2 text-[10px] font-bold">🎬 3D</span>}
+                    {e.has_model && <span className="rounded-full bg-kraft-500/30 px-2 text-[10px] font-bold"><SidIcon name="film" /> 3D</span>}
                   </>
                 ) : (
                   <span className="flex-1 text-xl font-extrabold text-olive-700/40">?</span>

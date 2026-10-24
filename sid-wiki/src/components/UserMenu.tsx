@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation';
 import { useEffect, useRef, useState } from 'react';
 import { createClient } from '@/lib/supabase/client';
 import Icon from './Icon';
+import { SidIcon } from "@/components/icons/SidIcon";
 
 /** Menu unique (ordinateur) : profils, hasard, tags, aide, admin, déconnexion. */
 export default function UserMenu({ isAdmin }: { isAdmin: boolean }) {
@@ -46,7 +47,7 @@ export default function UserMenu({ isAdmin }: { isAdmin: boolean }) {
             <Icon name="aide" /> Aide
           </Link>
           <Link href="/confidentialite" className={item} role="menuitem">
-            🔐 Confidentialité
+            <SidIcon name="padlock" /> Confidentialité
           </Link>
           {isAdmin && (
             <Link href="/admin" className={`${item} text-brass-300`} role="menuitem">
@@ -63,7 +64,7 @@ export default function UserMenu({ isAdmin }: { isAdmin: boolean }) {
               router.refresh();
             }}
           >
-            ⏻ Déconnexion
+            <SidIcon name="power" /> Déconnexion
           </button>
         </div>
       )}

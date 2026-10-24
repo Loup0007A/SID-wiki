@@ -4,6 +4,7 @@ import Link from 'next/link';
 import { useMemo, useState } from 'react';
 import { GEAR_SLOTS, type ProfileSummary } from '@/lib/wiki';
 import StandFigure from './StandFigure';
+import { SidIcon } from '@/components/icons/SidIcon';
 
 const norm = (s: string) => s.normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase();
 
@@ -45,7 +46,7 @@ export default function ProfilesView({ profiles, standImage = null }: { profiles
               {p.is_me && <span className="stamp mt-1 !rotate-0">C’est toi !</span>}
               <p className="mt-1 text-xs text-olive-700">
                 {p.gear.length}/{GEAR_SLOTS.length} équipé{p.gear.length > 1 ? 's' : ''}
-                {p.discoveries > 0 && ` · 🏆 ${p.discoveries}`}
+                {p.discoveries > 0 && <> · <SidIcon name="trophy" /> {p.discoveries}</>}
               </p>
             </Link>
           ))}
