@@ -47,7 +47,7 @@ export default function CategoryView({ entries }: { entries: EntrySummary[] }) {
   return (
     <div>
       <div className="mb-4 flex flex-wrap items-center gap-2">
-        <input type="search" className="input max-w-xs" placeholder="Filtrer par nom, numéro, tag…" value={q} onChange={(e) => setQ(e.target.value)} aria-label="Filtrer cette liste" />
+        <input type="search" className="input w-full sm:max-w-xs" placeholder="Filtrer par nom, numéro, tag…" value={q} onChange={(e) => setQ(e.target.value)} aria-label="Filtrer cette liste" />
         <select
           className="input !w-auto"
           value={sort}

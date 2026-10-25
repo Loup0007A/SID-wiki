@@ -19,7 +19,7 @@ const config: Config = {
           500: '#5fb3a1',
         },
         olive: {
-          600: '#93a493',
+          600: '#a3b3a2',
           700: '#b5c0b2',
           800: '#dcd5c4',
           900: '#f2ebdc',
@@ -33,8 +33,8 @@ const config: Config = {
         ink: '#ece4d2',
         night: '#1b140a',
         stamp: '#d8664d',
-        felt: '#1a2e29',
-        sapin: '#132420',
+        felt: '#1b302b',
+        sapin: '#0e1b18',
       },
       fontFamily: {
         typewriter: ['"Young Serif"', 'Georgia', 'serif'],

@@ -13,11 +13,11 @@
 
 :root {
   color-scheme: dark;
-  --bg: #132420;
-  --felt: #1a2e29;
-  --felt-2: #213731;
-  --rule: #2c463e;
-  --rule-2: #3a5a50;
+  --bg: #0e1b18;
+  --felt: #1b302b;
+  --felt-2: #243f38;
+  --rule: #2f4c43;
+  --rule-2: #46685d;
   --bone: #ece4d2;
   --lichen: #a9b8a8;
   --brass: #d6aa4c;
@@ -583,8 +583,10 @@ html.ev-grande_chasse .wave-layer svg path:last-child { stroke: rgba(255, 190, 1
    derrière le contenu. Seuls quelques reflets et lumières bougent.
    ===================================================================== */
 .hz {
-  position: absolute; left: 0; bottom: clamp(70px, 13vh, 150px); width: 100%; height: clamp(120px, 24vh, 240px);
-  -webkit-mask: linear-gradient(to bottom, #000 72%, transparent); mask: linear-gradient(to bottom, #000 72%, transparent);
+  /* Hauteur au prorata de la largeur : le dessin n'est jamais rogné par le haut
+     (seulement sur les côtés quand l'écran est étroit). Posé au ras du bas. */
+  position: absolute; left: 0; bottom: 0; width: 100%; height: auto; min-height: 150px; max-height: 45vh;
+  -webkit-mask: linear-gradient(to bottom, #000 80%, rgba(0, 0, 0, 0.55)); mask: linear-gradient(to bottom, #000 80%, rgba(0, 0, 0, 0.55));
 }
 .hz-a { fill: #131b36; opacity: 0.9; }
 .hz-b { fill: #0e152b; }
@@ -639,7 +641,7 @@ html.ev-grande_chasse .wave-layer svg path:last-child { stroke: rgba(255, 190, 1
   100% { opacity: 0; }
 }
 @media (max-width: 767px) {
-  .hz { bottom: calc(env(safe-area-inset-bottom) + 92px); height: 130px; }
+  .hz { bottom: calc(env(safe-area-inset-bottom) + 56px); min-height: 130px; }
 }
 @media (hover: none) { .hz-bulb, .hz-beam, .hz-boat { animation: none; } }
 @media (prefers-reduced-motion: reduce) {
@@ -648,23 +650,23 @@ html.ev-grande_chasse .wave-layer svg path:last-child { stroke: rgba(255, 190, 1
 }
 
 /* =====================================================================
-   Codex : cases de la collection (accueil)
+   Codex : cartes de la collection (accueil)
    ===================================================================== */
-.slot { animation: slot-in 0.35s cubic-bezier(0.2, 0.9, 0.3, 1.2) both; }
-.slot-on {
-  background-color: var(--cat);
-  background-size: cover;
-  background-position: center;
-  box-shadow: inset 0 0 0 1.5px color-mix(in srgb, var(--cat) 70%, #000), inset 0 -8px 10px -6px rgba(0, 0, 0, 0.35);
-  transition: transform 0.15s;
+.cat-card {
+  background: var(--felt);
+  border: 1px solid var(--rule);
+  border-top: 3px solid var(--cat);
+  box-shadow: 0 1px 0 rgba(255, 255, 255, 0.04) inset, 0 16px 30px -22px rgba(0, 0, 0, 0.9);
+  transition: border-color 0.15s, background-color 0.15s, transform 0.15s;
 }
-.slot-on:hover { transform: translateY(-2px) scale(1.08); box-shadow: inset 0 0 0 2px var(--cat), 0 6px 14px -6px rgba(0, 0, 0, 0.8); }
-.slot-off {
-  border: 1.5px dashed color-mix(in srgb, var(--cat) 35%, var(--rule-2));
-  color: color-mix(in srgb, var(--cat) 45%, var(--rule-2));
-  transition: border-color 0.15s, color 0.15s;
+.cat-card:hover { background: var(--felt-2); border-color: color-mix(in srgb, var(--cat) 45%, var(--rule)); border-top-color: var(--cat); }
+.cat-card:active { transform: scale(0.98); }
+/* Bloc de section de l'accueil : un fond net pour bien séparer les parties. */
+.panel {
+  background: var(--felt);
+  border: 1px solid var(--rule);
+  border-radius: 0.85rem;
 }
-.slot-off:hover { border-color: var(--cat); color: var(--cat); }
 
 /* Planches (grilles de fiches) */
 .plate-on {
@@ -726,3 +728,4 @@ html.ev-grande_chasse .wave-layer svg path:last-child { stroke: rgba(255, 190, 1
 }
 .prose-codex h2 { font-size: 1.55em; margin-top: 1.8em; }
 .prose-codex h3 { font-size: 1.2em; }
+.bg-cat-soft { background: color-mix(in srgb, var(--cat) 16%, transparent); color: var(--cat); }

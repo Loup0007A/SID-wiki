@@ -12,7 +12,7 @@ export default function Backdrop() {
       aria-hidden
       className="waves-root pointer-events-none fixed inset-0 -z-10 overflow-hidden"
       style={{
-        backgroundColor: '#132420',
+        backgroundColor: '#0e1b18',
         backgroundImage: `${GRAIN}, radial-gradient(ellipse 65% 42% at 18% -8%, rgba(214, 170, 76, 0.11), transparent 70%), radial-gradient(ellipse 60% 50% at 100% 110%, rgba(8, 18, 16, 0.65), transparent 70%)`,
       }}
     />

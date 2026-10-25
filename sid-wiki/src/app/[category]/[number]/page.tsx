@@ -113,7 +113,7 @@ export default async function EntryPage({ params }: { params: { category: string
           </div>
 
           {/* Fiche signalétique : numéro, rareté, tags, découvreur, infos, actions */}
-          <aside className="entry-meta space-y-5">
+          <aside className="entry-meta panel space-y-5 p-4 sm:p-5">
             <div className="hidden lg:block">
               <p className="font-typewriter text-sm text-olive-600">
                 <Link href={`/${entry.category}`} className="inline-flex items-center gap-1.5 hover:text-ink">
