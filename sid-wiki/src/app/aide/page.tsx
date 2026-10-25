@@ -23,14 +23,14 @@ function Steps({ steps }: { steps: Step[] }) {
   );
 }
 
-const code = 'rounded bg-white/10 px-1.5 py-0.5 font-typewriter text-xs';
+const code = 'rounded bg-[color:var(--felt-2)] px-1.5 py-0.5 font-typewriter text-xs';
 
 export default async function HelpPage() {
   const { data: isAdmin } = await createClient().rpc('wiki_is_admin');
 
   return (
     <div className="mx-auto max-w-4xl">
-      <h1 className="title-grad mb-1 font-typewriter text-2xl font-bold text-olive-800 sm:text-3xl">
+      <h1 className="mb-1 font-typewriter text-[2.1rem] leading-tight text-olive-900 sm:text-[2.6rem]">
         <Icon name="aide" /> Mini-guide du wiki
       </h1>
       <p className="mb-6 text-olive-700">Tout ce qu’il faut savoir en une minute.</p>

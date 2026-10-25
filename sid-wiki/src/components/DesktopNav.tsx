@@ -5,40 +5,31 @@ import { usePathname } from 'next/navigation';
 import { CATEGORIES, CATEGORY_LABELS } from '@/lib/wiki';
 import Icon from './Icon';
 
-/** Onglets des catégories (ordinateur) avec l'onglet actif mis en valeur. */
+/** Onglets des catégories (ordinateur) : chaque tiroir a sa couleur, l'actif est souligné de cette couleur. */
 export default function DesktopNav() {
   const pathname = usePathname();
+  const tab = (active: boolean) =>
+    `relative -mb-px flex items-center gap-2 border-b-2 px-3.5 pb-2.5 pt-1.5 text-[0.95rem] font-semibold transition ${
+      active ? 'border-[color:var(--cat)] text-ink' : 'border-transparent text-olive-700 hover:border-[color:var(--rule-2)] hover:text-ink'
+    }`;
   return (
-    <nav className="hidden items-center gap-1 pb-2 md:flex" aria-label="Catégories et profils">
+    <nav className="hidden items-end gap-1 md:flex" aria-label="Catégories et profils">
       {CATEGORIES.map((c) => {
         const active = pathname === `/${c}` || pathname.startsWith(`/${c}/`);
         return (
-          <Link
-            key={c}
-            href={`/${c}`}
-            className={`relative rounded-full px-4 py-1.5 font-typewriter text-base font-bold transition ${
-              active ? 'bg-white/[0.14] text-white' : 'text-olive-800 hover:bg-white/[0.08] hover:text-white'
-            }`}
-          >
-            <Icon name={c} /> {CATEGORY_LABELS[c].label}
-            {active && <span className="absolute inset-x-4 -bottom-0.5 h-0.5 rounded-full bg-brass-400" />}
+          <Link key={c} href={`/${c}`} className={`cat-${c} ${tab(active)}`} aria-current={active ? 'page' : undefined}>
+            <Icon name={c} />
+            {CATEGORY_LABELS[c].label}
           </Link>
         );
       })}
 
-      {/* Onglet à part : les profils des chasseurs (porte-armure) */}
-      <span aria-hidden className="mx-1 h-5 w-px bg-white/20" />
+      <span aria-hidden className="mx-2 mb-3 h-4 w-px bg-[color:var(--rule-2)]" />
       {(() => {
         const active = pathname === '/profils' || pathname.startsWith('/profils/');
         return (
-          <Link
-            href="/profils"
-            className={`relative rounded-full px-4 py-1.5 font-typewriter text-base font-bold transition ${
-              active ? 'bg-white/[0.14] text-white' : 'text-olive-800 hover:bg-white/[0.08] hover:text-white'
-            }`}
-          >
-            <Icon name="profils" /> Profils
-            {active && <span className="absolute inset-x-4 -bottom-0.5 h-0.5 rounded-full bg-brass-400" />}
+          <Link href="/profils" className={tab(active)} style={{ ['--cat' as string]: 'var(--brass)' }} aria-current={active ? 'page' : undefined}>
+            <Icon name="profils" className="text-brass-400" /> Profils
           </Link>
         );
       })()}

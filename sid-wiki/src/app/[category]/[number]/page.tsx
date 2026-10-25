@@ -15,7 +15,7 @@ import EntryTools from '@/components/EntryTools';
 import ReportButton from '@/components/ReportButton';
 import PersonalNote from '@/components/PersonalNote';
 import ViewTracker from '@/components/ViewTracker';
-import { SidIcon } from "@/components/icons/SidIcon";
+import Icon from '@/components/Icon';
 
 export const dynamic = 'force-dynamic';
 
@@ -34,22 +34,38 @@ export default async function EntryPage({ params }: { params: { category: string
   const showMasked = !entry.discovered;
   const infoRows = (entry.infobox ?? []).filter((r) => r.label);
 
+  const actions = (
+    <div className="no-print flex flex-wrap items-center gap-2">
+      <FavoriteButton category={entry.category} number={entry.number} initial={entry.favorited} />
+      <EntryTools title={entry.title ?? ''} />
+      {isAdmin && (
+        <Link href={`/admin/edit/${entry.category}/${pad(entry.number)}`} className="btn-ghost">
+          Modifier
+        </Link>
+      )}
+    </div>
+  );
+
   return (
-    <article className="mx-auto max-w-3xl">
-      <nav className="no-print mb-3 font-typewriter text-xs text-olive-700">
-        <Link href="/" className="hover:underline">Accueil</Link> /{' '}
-        <Link href={`/${entry.category}`} className="hover:underline">{label.label}</Link> / N° {pad(entry.number)}
+    <article className={`cat-${entry.category}`}>
+      <nav className="no-print mb-5 text-sm text-olive-700" aria-label="Fil d’Ariane">
+        <Link href="/" className="hover:text-ink hover:underline">Accueil</Link>
+        <span className="mx-2 text-olive-600">/</span>
+        <Link href={`/${entry.category}`} className="hover:text-ink hover:underline">{label.label}</Link>
+        <span className="mx-2 text-olive-600">/</span>
+        <span className="text-olive-800">N° {pad(entry.number)}</span>
       </nav>
 
       {showMasked ? (
-        <div className="card p-8 text-center sm:p-10">
-          <div className="text-8xl font-bold text-olive-800/50">?</div>
-          <p className="mt-3 font-typewriter">
-            {label.singular} N° {pad(entry.number)}
+        <div className="mx-auto max-w-xl rounded-xl border-[1.5px] border-dashed border-[color:var(--rule-2)] px-6 py-12 text-center">
+          <p className="catno text-[5.5rem] leading-none opacity-60">{pad(entry.number)}</p>
+          <p className="mt-2 font-typewriter text-5xl text-[color:var(--cat)] opacity-40">?</p>
+          <p className="mt-4 text-olive-800">
+            {label.singular} n° {pad(entry.number)} : personne ne l’a encore croisé.
           </p>
-          <span className="stamp mt-3">À découvrir en chasse !</span>
+          <span className="stamp mt-4">À découvrir en chasse</span>
           {isAdmin && (
-            <div className="mt-4">
+            <div className="mt-6">
               <Link href={`/admin/edit/${entry.category}/${pad(entry.number)}`} className="btn-ghost">
                 Modifier (admin)
               </Link>
@@ -57,111 +73,121 @@ export default async function EntryPage({ params }: { params: { category: string
           )}
         </div>
       ) : (
-        <div className="card p-4 sm:p-6">
-          <div className="flex flex-wrap items-start justify-between gap-2">
-            <div>
-              <h1 className="text-2xl font-bold sm:text-3xl">{entry.title}</h1>
-              <Rarity value={entry.rarity} className="text-xl" />
-            </div>
-            <div className="flex w-full flex-wrap items-center gap-2 sm:w-auto">
-              <FavoriteButton category={entry.category} number={entry.number} initial={entry.favorited} />
-              <EntryTools title={entry.title ?? ''} />
-              {isAdmin && (
-                <Link href={`/admin/edit/${entry.category}/${pad(entry.number)}`} className="btn-ghost">
-                  Modifier
-                </Link>
-              )}
-            </div>
-          </div>
-
-          {entry.tags && entry.tags.length > 0 && (
-            <div className="mt-2 flex flex-wrap gap-1">
-              {entry.tags.map((t) => (
-                <Link
-                  key={t}
-                  href={`/${entry.category}?tag=${encodeURIComponent(t)}`}
-                  className="rounded-full bg-brass-400/20 text-brass-300 px-2 py-0.5 font-typewriter text-xs hover:bg-brass-400/30"
-                >
-                  #{t}
-                </Link>
-              ))}
-            </div>
-          )}
-
-          {entry.discoverer && (
-            <p className="mt-3 text-sm text-olive-800">
-              <SidIcon name="trophy" /> Découvert par <Mention nickname={entry.discoverer} />
+        <div className="entry-grid">
+          {/* En-tête (téléphone : numéro + nom ; ordinateur : nom seulement) */}
+          <header className="entry-head">
+            <p className="catno text-[2.6rem] leading-none lg:hidden">
+              <span className="mr-1 align-top font-typewriter text-base text-olive-600">N°</span>
+              {pad(entry.number)}
             </p>
-          )}
-
-          {entry.summary && <p className="mt-4 text-lg italic text-olive-800">{entry.summary}</p>}
+            <h1 className="mt-1 font-typewriter text-[2.1rem] leading-[1.08] text-olive-900 sm:text-[2.7rem] lg:mt-0">{entry.title}</h1>
+            {entry.rarity ? <Rarity value={entry.rarity} className="mt-2 text-sm lg:hidden" /> : null}
+            {entry.summary && <p className="mt-3 max-w-[60ch] text-[1.08rem] italic leading-relaxed text-olive-800">{entry.summary}</p>}
+          </header>
 
           {/* Modèle 3D s'il y en a un, sinon l'image (l'image ne revient que si le
               modèle ne peut pas être chargé). L'image reste utilisée dans l'aperçu
               des liens et dans les listes (cartes du classement). */}
-          {entry.model_url ? (
-            <div className="mt-4">
-              {/* Le fichier du modèle commence à se télécharger tout de suite, en
-                  même temps que la page (au lieu d'attendre la visionneuse 3D). */}
-              <link rel="preload" href={entry.model_url} as="fetch" crossOrigin="anonymous" />
-              <ModelViewer
-                src={entry.model_url}
-                animation={entry.model_animation}
-                showAnimationPicker={false}
-                fallbackImage={entry.image_url}
-                fallbackAlt={entry.title ?? ''}
-              />
+          <div className="entry-media">
+            {entry.model_url ? (
+              <>
+                {/* Le fichier du modèle commence à se télécharger tout de suite, en
+                    même temps que la page (au lieu d'attendre la visionneuse 3D). */}
+                <link rel="preload" href={entry.model_url} as="fetch" crossOrigin="anonymous" />
+                <ModelViewer
+                  src={entry.model_url}
+                  animation={entry.model_animation}
+                  showAnimationPicker={false}
+                  fallbackImage={entry.image_url}
+                  fallbackAlt={entry.title ?? ''}
+                />
+              </>
+            ) : (
+              entry.image_url && (
+                <figure className="rounded-lg bg-[#0f1d1a] p-2 ring-1 ring-inset ring-[color:var(--rule)]">
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img src={entry.image_url} alt={entry.title ?? ''} className="max-h-[28rem] w-full rounded object-cover" />
+                </figure>
+              )
+            )}
+          </div>
+
+          {/* Fiche signalétique : numéro, rareté, tags, découvreur, infos, actions */}
+          <aside className="entry-meta space-y-5">
+            <div className="hidden lg:block">
+              <p className="font-typewriter text-sm text-olive-600">
+                <Link href={`/${entry.category}`} className="inline-flex items-center gap-1.5 hover:text-ink">
+                  <Icon name={entry.category} /> {label.singular}
+                </Link>
+              </p>
+              <p className="catno mt-1 text-[5.6rem] leading-[0.85]">{pad(entry.number)}</p>
+              {entry.rarity ? <Rarity value={entry.rarity} className="mt-3 text-base" /> : null}
             </div>
-          ) : (
-            entry.image_url && (
-              // eslint-disable-next-line @next/next/no-img-element
-              <img src={entry.image_url} alt={entry.title ?? ''} className="mt-4 max-h-96 w-full rounded-2xl border border-white/15 object-cover" />
-            )
-          )}
 
-          <div className="entry-body mt-4 flow-root">
-            <Infobox rows={infoRows} />
-            {entry.content && <Markdown toc>{entry.content}</Markdown>}
-          </div>
+            {entry.discoverer && (
+              <p className="text-sm text-olive-800">
+                <span className="stamp mr-1">Découvert</span> par <Mention nickname={entry.discoverer} />
+              </p>
+            )}
 
-          {entry.related.length > 0 && (
-            <section className="mt-8 border-t border-white/15 pt-4">
-              <h2 className="mb-2 font-typewriter text-lg font-bold text-olive-800">Voir aussi</h2>
-              <ul className="flex flex-wrap gap-x-5 gap-y-2">
-                {entry.related.map((r) => (
-                  <li key={`${r.category}/${r.number}`}>
-                    <EntryLink category={r.category} number={r.number}>
-                      {r.title ?? '?'}
-                    </EntryLink>
-                  </li>
+            {entry.tags && entry.tags.length > 0 && (
+              <div className="flex flex-wrap gap-1.5">
+                {entry.tags.map((t) => (
+                  <Link key={t} href={`/${entry.category}?tag=${encodeURIComponent(t)}`} className="chip">
+                    #{t}
+                  </Link>
                 ))}
-              </ul>
-            </section>
-          )}
+              </div>
+            )}
 
-          <div className="mt-6">
-            <ReportButton category={entry.category} number={entry.number} />
+            <Infobox rows={infoRows} rarity={null} />
+            {actions}
+          </aside>
+
+          <div className="entry-body min-w-0">
+            {entry.content && <Markdown toc>{entry.content}</Markdown>}
+
+            {entry.related.length > 0 && (
+              <section className="mt-10 border-t border-[color:var(--rule)] pt-5">
+                <h2 className="mb-3 font-typewriter text-xl text-olive-900">Voir aussi</h2>
+                <ul className="flex flex-wrap gap-x-5 gap-y-2">
+                  {entry.related.map((r) => (
+                    <li key={`${r.category}/${r.number}`}>
+                      <EntryLink category={r.category} number={r.number}>
+                        {r.title ?? '?'}
+                      </EntryLink>
+                    </li>
+                  ))}
+                </ul>
+              </section>
+            )}
+
+            <div className="mt-8">
+              <ReportButton category={entry.category} number={entry.number} />
+            </div>
+
+            <PersonalNote category={entry.category} number={entry.number} />
+
+            <ViewTracker category={entry.category} number={entry.number} title={entry.title ?? ''} />
+
+            <Comments category={entry.category} number={entry.number} />
           </div>
-
-          <PersonalNote category={entry.category} number={entry.number} />
-
-          <ViewTracker category={entry.category} number={entry.number} title={entry.title ?? ''} />
-
-          <Comments category={entry.category} number={entry.number} />
         </div>
       )}
 
-      <div className="no-print mt-4 flex justify-between gap-2 font-typewriter text-sm">
+      <div className="no-print mt-10 flex justify-between gap-2 border-t border-[color:var(--rule)] pt-5">
         {entry.prev !== null ? (
-          <Link href={`/${entry.category}/${pad(entry.prev)}`} className="btn-ghost">
-            ← N° {pad(entry.prev)}
+          <Link href={`/${entry.category}/${pad(entry.prev)}`} className="group text-olive-700 hover:text-ink">
+            <span className="block text-xs">Fiche précédente</span>
+            <span className="catno text-2xl">← {pad(entry.prev)}</span>
           </Link>
         ) : (
           <span />
         )}
         {entry.next !== null ? (
-          <Link href={`/${entry.category}/${pad(entry.next)}`} className="btn-ghost">
-            N° {pad(entry.next)} →
+          <Link href={`/${entry.category}/${pad(entry.next)}`} className="group text-right text-olive-700 hover:text-ink">
+            <span className="block text-xs">Fiche suivante</span>
+            <span className="catno text-2xl">{pad(entry.next)} →</span>
           </Link>
         ) : (
           <span />

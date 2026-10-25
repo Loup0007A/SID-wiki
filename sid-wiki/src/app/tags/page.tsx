@@ -13,7 +13,7 @@ export default async function TagsPage() {
 
   return (
     <div>
-      <h1 className="title-grad mb-1 font-typewriter text-2xl font-bold text-olive-800 sm:text-3xl"><Icon name="tags" /> Tous les tags</h1>
+      <h1 className="mb-1 font-typewriter text-[2.1rem] leading-tight text-olive-900 sm:text-[2.6rem]"><Icon name="tags" /> Tous les tags</h1>
       <p className="mb-6 text-olive-700">Clique sur un tag pour voir toutes les fiches découvertes qui le portent.</p>
 
       {rows.length === 0 ? (

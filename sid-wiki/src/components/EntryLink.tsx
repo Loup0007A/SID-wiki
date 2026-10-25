@@ -79,7 +79,7 @@ export default function EntryLink({
           role="tooltip"
           ref={tip}
           style={{ transform: `translateX(${shift}px)` }}
-          className="absolute left-0 top-full z-50 mt-1 block w-72 max-w-[calc(100vw-1rem)] rounded-xl border border-white/25 bg-[#0b1730] p-3 text-left text-sm font-normal not-italic leading-snug text-ink no-underline shadow-2xl shadow-black/60 ring-1 ring-black/40"
+          className="absolute left-0 top-full z-50 mt-1 block w-72 max-w-[calc(100vw-1rem)] rounded-xl border border-[color:var(--rule-2)] bg-[#172925] p-3 text-left text-sm font-normal not-italic leading-snug text-ink no-underline shadow-2xl shadow-black/60 ring-1 ring-black/40"
         >
           {!preview && <span className="italic text-olive-700">Chargement…</span>}
           {preview && !preview.exists && <span className="italic">Fiche inexistante.</span>}

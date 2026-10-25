@@ -79,13 +79,13 @@ export default function ModelViewer({ src, animation, onAnimations, showAnimatio
     // Modèle illisible (fichier abîmé, appareil sans 3D…) : l'image de la fiche, s'il y en a une.
     if (fallbackImage) {
       // eslint-disable-next-line @next/next/no-img-element
-      return <img src={fallbackImage} alt={fallbackAlt} className="max-h-96 w-full rounded-2xl border border-white/15 object-cover" />;
+      return <img src={fallbackImage} alt={fallbackAlt} className="max-h-96 w-full rounded-2xl border border-[color:var(--rule)] object-cover" />;
     }
-    return <p className="rounded-xl bg-white/[0.09] p-4 text-sm text-stamp">Impossible de charger le modèle 3D.</p>;
+    return <p className="rounded-xl bg-[color:var(--felt)] p-4 text-sm text-stamp">Impossible de charger le modèle 3D.</p>;
   }
 
   return (
-    <div className="overflow-hidden rounded-2xl border border-white/15 bg-gradient-to-b from-white/[0.1] to-sky-400/[0.08] backdrop-blur">
+    <div className="overflow-hidden rounded-lg border border-[color:var(--rule)] bg-[radial-gradient(ellipse_at_50%_35%,#2a443c,#0f1d1a_75%)]">
       {ready ? (
         <MV
           ref={ref}
@@ -103,7 +103,7 @@ export default function ModelViewer({ src, animation, onAnimations, showAnimatio
         <div className="flex h-64 items-center justify-center font-typewriter text-olive-700">Chargement du modèle 3D…</div>
       )}
 
-      <div className="flex flex-wrap items-center gap-2 border-t border-white/15 bg-white/[0.07] p-2 text-sm">
+      <div className="flex flex-wrap items-center gap-2 border-t border-[color:var(--rule)] bg-[color:var(--felt)] p-2 text-sm">
         <button type="button" className="btn-ghost !px-3 !py-0.5" onClick={togglePlay} disabled={!ready}>
           {playing ? '⏸ Pause' : '▶ Lecture'}
         </button>
@@ -116,7 +116,7 @@ export default function ModelViewer({ src, animation, onAnimations, showAnimatio
 
         {showAnimationPicker && anims.length > 1 && (
           <select
-            className="input !w-auto !rounded-full !py-0.5"
+            className="input !w-auto !py-0.5"
             value={current ?? anims[0]}
             onChange={(e) => {
               setCurrent(e.target.value);

@@ -5,8 +5,6 @@ import { useEffect, useMemo, useState } from 'react';
 import { pad, type EntrySummary } from '@/lib/wiki';
 import EntryCard from './EntryCard';
 import Rarity from './Rarity';
-import Icon from './Icon';
-import { SidIcon } from "@/components/icons/SidIcon";
 
 type Sort = 'number' | 'title' | 'rarity';
 const KEY = 'wiki-category-view';
@@ -49,7 +47,7 @@ export default function CategoryView({ entries }: { entries: EntrySummary[] }) {
   return (
     <div>
       <div className="mb-4 flex flex-wrap items-center gap-2">
-        <input type="search" className="input max-w-xs" placeholder="Filtrer cette liste…" value={q} onChange={(e) => setQ(e.target.value)} />
+        <input type="search" className="input max-w-xs" placeholder="Filtrer par nom, numéro, tag…" value={q} onChange={(e) => setQ(e.target.value)} aria-label="Filtrer cette liste" />
         <select
           className="input !w-auto"
           value={sort}
@@ -61,9 +59,9 @@ export default function CategoryView({ entries }: { entries: EntrySummary[] }) {
         >
           <option value="number">Tri : numéro</option>
           <option value="title">Tri : nom (A→Z)</option>
-          <option value="rarity">Tri : rareté ★</option>
+          <option value="rarity">Tri : rareté</option>
         </select>
-        <span className="inline-flex overflow-hidden rounded-full border border-white/20" role="group" aria-label="Affichage">
+        <span className="inline-flex overflow-hidden rounded-lg border border-[color:var(--rule-2)]" role="group" aria-label="Affichage">
           {(['grid', 'list'] as const).map((v) => (
             <button
               key={v}
@@ -72,38 +70,38 @@ export default function CategoryView({ entries }: { entries: EntrySummary[] }) {
                 setView(v);
                 persist({ view: v });
               }}
-              className={`px-3 py-1.5 text-sm font-bold ${view === v ? 'bg-brass-400 text-night' : 'hover:bg-white/10'}`}
+              className={`px-3 py-2 text-sm font-semibold ${view === v ? 'bg-[color:var(--felt-2)] text-ink shadow-[inset_0_-2px_0_var(--cat)]' : 'text-olive-700 hover:text-ink'}`}
               aria-pressed={view === v}
             >
-              {v === 'grid' ? '▦ Cartes' : '☰ Liste'}
+              {v === 'grid' ? 'Planches' : 'Liste'}
             </button>
           ))}
         </span>
-        <span className="text-sm text-olive-700">{shown.length} fiche{shown.length > 1 ? 's' : ''}</span>
+        <span className="ml-auto text-sm text-olive-700">{shown.length} fiche{shown.length > 1 ? 's' : ''}</span>
       </div>
 
       {shown.length === 0 ? (
         <p className="italic text-olive-700">Rien ici pour l’instant !</p>
       ) : view === 'grid' ? (
-        <div className="stagger grid grid-cols-2 gap-2 sm:grid-cols-3 sm:gap-3 lg:grid-cols-4">
+        <div className="grid grid-cols-2 gap-2.5 sm:grid-cols-3 sm:gap-4 lg:grid-cols-4">
           {shown.map((e) => (
             <EntryCard key={e.number} entry={e} />
           ))}
         </div>
       ) : (
-        <ul className="card divide-y divide-white/10 overflow-hidden">
+        <ul className="border-t border-[color:var(--rule)]">
           {shown.map((e) => (
-            <li key={e.number}>
-              <Link href={`/${e.category}/${pad(e.number)}`} className="flex items-center gap-3 px-3 py-2 transition hover:bg-white/[0.06]">
-                <span className="w-12 flex-none font-typewriter text-xs text-olive-700">N° {pad(e.number)}</span>
+            <li key={e.number} className={`cat-${e.category} border-b border-[color:var(--rule)]`}>
+              <Link href={`/${e.category}/${pad(e.number)}`} className="group flex items-center gap-4 px-1 py-2.5 transition hover:bg-[color:var(--felt)]">
+                <span className={`catno w-12 flex-none text-xl leading-none ${e.discovered ? '' : 'opacity-50'}`}>{pad(e.number)}</span>
                 {e.discovered && e.title ? (
                   <>
-                    <span className="min-w-0 flex-1 truncate font-bold">{e.title}</span>
+                    <span className="min-w-0 flex-1 truncate font-semibold group-hover:text-[color:var(--cat)]">{e.title}</span>
                     <Rarity value={e.rarity} className="hidden text-sm sm:inline" />
-                    {e.has_model && <span className="rounded-full bg-kraft-500/30 px-2 text-[10px] font-bold"><SidIcon name="film" /> 3D</span>}
+                    {e.has_model && <span className="rounded border border-[color:var(--cat)]/50 px-1 text-[10px] font-semibold text-[color:var(--cat)]">3D</span>}
                   </>
                 ) : (
-                  <span className="flex-1 text-xl font-extrabold text-olive-700/40">?</span>
+                  <span className="flex-1 font-typewriter text-xl text-[color:var(--cat)] opacity-35">?</span>
                 )}
               </Link>
             </li>

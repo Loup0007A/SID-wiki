@@ -5,7 +5,6 @@ import { useEffect, useState } from 'react';
 import { isCategory, pad, type Category } from '@/lib/wiki';
 import Icon from './Icon';
 import { RECENT_KEY, type Viewed } from './ViewTracker';
-import { SidIcon } from "@/components/icons/SidIcon";
 
 /** « Repris où tu t'étais arrêté » : fiches récemment consultées sur cet appareil. */
 export default function RecentlyViewed() {
@@ -28,17 +27,17 @@ export default function RecentlyViewed() {
   }
 
   return (
-    <section className="card mt-4 p-5">
+    <section className="mt-6" aria-labelledby="recent-views">
       <div className="mb-3 flex items-center justify-between gap-2">
-        <h2 className="font-typewriter text-xl font-bold text-olive-800"><SidIcon name="clock" /> Consultées récemment</h2>
-        <button type="button" className="text-xs text-olive-700 hover:underline" onClick={clear}>
+        <h2 id="recent-views" className="font-typewriter text-lg text-olive-800">Tu as consulté</h2>
+        <button type="button" className="text-xs text-olive-600 hover:text-ink hover:underline" onClick={clear}>
           Effacer
         </button>
       </div>
       <ul className="flex flex-wrap gap-2">
         {items.map((v) => (
           <li key={`${v.category}${v.number}`}>
-            <Link href={`/${v.category}/${pad(v.number)}`} className="btn-ghost !px-3 !py-1 text-sm">
+            <Link href={`/${v.category}/${pad(v.number)}`} className={`cat-${v.category} chip !py-1 !text-sm hover:!border-[color:var(--cat)] hover:!text-ink`}>
               <Icon name={v.category as Category} /> {v.title}
             </Link>
           </li>

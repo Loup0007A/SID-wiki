@@ -1,35 +1,14 @@
-ICÔNES PERSONNALISÉES DU WIKI
-=============================
+ICÔNES DU WIKI
+==============
 
-Dépose tes images dans ce dossier (public/icons/) avec EXACTEMENT ces noms.
-Format : PNG à fond transparent, carré, 96 x 96 px (affichées à la taille du texte : plus grand ne sert à rien et
-ralentit le chargement de chaque page ; vise moins de 10 ko par icône).
-Un fichier absent = l'emoji par défaut est utilisé. Tu peux donc en faire quelques-unes seulement.
+Depuis le Lot 50 (thème « Codex »), les icônes du wiki sont des emblèmes gravés
+dessinés dans le code : src/components/Emblem.tsx. Chaque catégorie prend sa
+couleur (Lieux vert-de-gris, Armes acier, Mobs sanguine, Objets ambre,
+Skills arcane), le reste suit la couleur du texte.
 
-Catégories
-  lieux.png      Lieux
-  armes.png      Armes
-  mobs.png       Mobs
-  objets.png     Objets
-  skills.png     Skills
-  profils.png    Profils (onglet des chasseurs)
+Les anciennes images de ce dossier (lieux.png, armes.png, …) ne sont plus
+affichées : elles étaient faites pour l'ancien thème bleu. Elles restent ici
+au cas où.
 
-Interface
-  logo.png       Logo à gauche de « Wiki du S.I.D. » (carré, ou haut de 64 px max si large)
-  accueil.png    Onglet Accueil (téléphone)
-  chercher.png   Onglet Chercher (téléphone)
-  favoris.png    Favoris
-  hasard.png     Fiche au hasard
-  tags.png       Tags
-  aide.png       Aide
-  admin.png      Dashboard admin
-  menu.png       Bouton Menu (téléphone)
-
-Application installée (PWA) et onglet du navigateur — déjà présents, remplace-les si tu veux :
-  icon-192.png            192 x 192
-  icon-512.png            512 x 512
-  icon-maskable-512.png   512 x 512, sujet dans le cercle central (80 %), fond plein
-  apple-touch-icon.png    180 x 180, fond plein (iPhone)
-
-Astuce : après avoir ajouté un fichier, fais un rafraîchissement forcé (Ctrl+F5) ; sur l'appli installée,
-désinstalle puis réinstalle pour voir la nouvelle icône d'écran d'accueil.
+Ce dossier sert toujours aux icônes de l'application (icon-192.png,
+icon-512.png, icon-maskable-512.png, apple-touch-icon.png).

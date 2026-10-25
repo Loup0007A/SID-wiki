@@ -67,7 +67,7 @@ export default function AdminReports({ reports, onChange }: { reports: Report[];
           {list.map((r) => (
             <li key={r.id} className={`card p-4 ${r.status === 'done' ? 'opacity-60' : ''}`}>
               <div className="flex flex-wrap items-center gap-2 text-sm">
-                <span className="rounded-full bg-white/10 px-2 py-0.5 font-bold"><GlyphText text={KIND[r.kind]} /></span>
+                <span className="rounded-full bg-[color:var(--felt-2)] px-2 py-0.5 font-bold"><GlyphText text={KIND[r.kind]} /></span>
                 <Link href={`/${r.category}/${pad(r.number)}`} className="font-bold text-olive-700 hover:underline">
                   <Icon name={r.category} /> {r.title} · N° {pad(r.number)}
                 </Link>

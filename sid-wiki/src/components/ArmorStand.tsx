@@ -33,7 +33,7 @@ function SlotFace({ slot, item, active }: { slot: GearSlot; item: GearItem | und
     <>
       <span
         className={`relative flex h-16 w-16 items-center justify-center overflow-hidden rounded-xl border-2 bg-black/45 shadow-[inset_0_3px_8px_rgba(0,0,0,0.7)] transition group-hover:border-brass-400 ${
-          active ? 'border-brass-400' : item ? 'border-white/35' : 'border-white/15'
+          active ? 'border-brass-400' : item ? 'border-white/35' : 'border-[color:var(--rule)]'
         }`}
       >
         {!item ? (
@@ -175,7 +175,7 @@ export default function ArmorStand({
     <section className="card p-4 sm:p-6">
       <div className="mx-auto grid max-w-md grid-cols-[auto_minmax(0,1fr)_auto] items-center gap-3 sm:gap-5">
         {column(LEFT)}
-        <div className="flex justify-center rounded-2xl border border-white/10 bg-gradient-to-b from-white/[0.08] to-sky-400/[0.06] px-2 py-4">
+        <div className="flex justify-center rounded-2xl border border-[color:var(--rule)] bg-gradient-to-b from-white/[0.08] to-sky-400/[0.06] px-2 py-4">
           <StandFigure gear={gear} standImage={standImage} active={hover ?? open} onSlot={canEdit ? pick : undefined} className="h-72 w-auto max-w-full sm:h-80" />
         </div>
         {column(RIGHT)}
@@ -187,7 +187,7 @@ export default function ArmorStand({
         </p>
       )}
 
-      <ul className="mx-auto mt-5 max-w-md divide-y divide-white/10 border-t border-white/15 text-sm">
+      <ul className="mx-auto mt-5 max-w-md divide-y divide-[color:var(--rule)] border-t border-[color:var(--rule)] text-sm">
         {[...LEFT, ...RIGHT].map((s) => {
           const item = by.get(s);
           return (
@@ -214,14 +214,14 @@ export default function ArmorStand({
       {open &&
         createPortal(
           <div className="fixed inset-0 z-[60] flex items-end justify-center sm:items-center sm:p-4">
-            <button type="button" className="absolute inset-0 bg-black/70 backdrop-blur-sm" aria-label="Fermer" onClick={() => setOpen(null)} />
+            <button type="button" className="absolute inset-0 bg-black/70" aria-label="Fermer" onClick={() => setOpen(null)} />
             <div
               ref={dialog}
               tabIndex={-1}
               role="dialog"
               aria-modal="true"
               aria-label={`Équiper : ${GEAR_SLOT_LABELS[open].label}`}
-              className="relative flex max-h-[85vh] w-full flex-col rounded-t-3xl border border-white/20 bg-[#0a1428] p-4 pb-[calc(1rem+env(safe-area-inset-bottom))] text-ink shadow-2xl outline-none sm:max-w-lg sm:rounded-3xl sm:pb-4"
+              className="relative flex max-h-[85vh] w-full flex-col rounded-t-3xl border border-[color:var(--rule-2)] bg-[#172925] p-4 pb-[calc(1rem+env(safe-area-inset-bottom))] text-ink shadow-2xl outline-none sm:max-w-lg sm:rounded-3xl sm:pb-4"
             >
               <div className="mb-3 flex items-start justify-between gap-3">
                 <div>
@@ -252,14 +252,14 @@ export default function ArmorStand({
 
               <div className="mb-2 flex flex-wrap items-center gap-2">
                 <input type="search" className="input min-w-0 flex-1" placeholder="Chercher (nom, n°, tag)…" value={q} onChange={(e) => setQ(e.target.value)} />
-                <span className="inline-flex overflow-hidden rounded-full border border-white/20" role="group" aria-label="Catégorie">
+                <span className="inline-flex overflow-hidden rounded-full border border-[color:var(--rule-2)]" role="group" aria-label="Catégorie">
                   {(['all', ...GEAR_CATEGORIES] as const).map((c) => (
                     <button
                       key={c}
                       type="button"
                       onClick={() => setCat(c)}
                       aria-pressed={cat === c}
-                      className={`px-3 py-1.5 text-sm font-bold ${cat === c ? 'bg-brass-400 text-night' : 'hover:bg-white/10'}`}
+                      className={`px-3 py-1.5 text-sm font-bold ${cat === c ? 'bg-brass-400 text-night' : 'hover:bg-[color:var(--felt-2)]'}`}
                     >
                       {c === 'all' ? 'Tout' : CATEGORY_LABELS[c].label}
                     </button>
@@ -269,14 +269,14 @@ export default function ArmorStand({
 
               {error && <p className="mb-2 text-sm text-stamp">{error}</p>}
 
-              <div className="min-h-[8rem] flex-1 overflow-y-auto rounded-xl border border-white/15 bg-white/[0.05]">
+              <div className="min-h-[8rem] flex-1 overflow-y-auto rounded-xl border border-[color:var(--rule)] bg-[color:var(--felt)]">
                 {!pool && !error && <p className="p-4 italic text-olive-700">Chargement…</p>}
                 {pool && shown.length === 0 && (
                   <p className="p-4 italic text-olive-700">
                     {pool.length === 0 ? 'Aucune arme ni objet découvert pour l’instant : à vos chasses !' : 'Rien ne correspond à ce filtre.'}
                   </p>
                 )}
-                <ul className="divide-y divide-white/10">
+                <ul className="divide-y divide-[color:var(--rule)]">
                   {shown.map((e) => {
                     const on = current?.category === e.category && current.number === e.number;
                     return (
@@ -285,9 +285,9 @@ export default function ArmorStand({
                           type="button"
                           disabled={busy || on}
                           onClick={() => equip(open, e)}
-                          className={`flex w-full items-center gap-3 px-3 py-2 text-left transition ${on ? 'bg-brass-400/15' : 'hover:bg-white/[0.1]'} disabled:cursor-default`}
+                          className={`flex w-full items-center gap-3 px-3 py-2 text-left transition ${on ? 'bg-brass-400/15' : 'hover:bg-[color:var(--felt-2)]'} disabled:cursor-default`}
                         >
-                          <span className="flex h-11 w-11 flex-none items-center justify-center overflow-hidden rounded-lg border border-white/15 bg-black/40 text-xl">
+                          <span className="flex h-11 w-11 flex-none items-center justify-center overflow-hidden rounded-lg border border-[color:var(--rule)] bg-black/40 text-xl">
                             {e.image_url ? (
                               // eslint-disable-next-line @next/next/no-img-element
                               <img src={e.image_url} alt="" className="h-full w-full object-cover" loading="lazy" />

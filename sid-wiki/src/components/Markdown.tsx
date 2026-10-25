@@ -28,11 +28,11 @@ export default function Markdown({ children, toc = false }: { children: string; 
       return (
         <Tag
           id={h.slug}
-          className={`group flow-root scroll-mt-24 font-typewriter text-olive-800 ${
-            tag === 'h2' ? 'border-b border-olive-800/30 pb-1' : ''
+          className={`group flow-root scroll-mt-36 font-typewriter !font-normal text-olive-900 ${
+            tag === 'h2' ? 'border-b border-[color:var(--rule)] pb-1.5' : ''
           }`}
         >
-          <span className="mr-2 text-olive-600/70">{h.number}</span>
+          <span className="mr-2.5 text-[color:var(--cat)] [font-variant-numeric:oldstyle-nums]">{h.number}</span>
           {children}
           <a href={`#${h.slug}`} className="ml-2 text-sm text-olive-600 no-underline opacity-0 transition group-hover:opacity-100" aria-label="Lien vers cette section">
             #
@@ -45,15 +45,15 @@ export default function Markdown({ children, toc = false }: { children: string; 
   const H3 = heading('h3');
 
   return (
-    <div className="prose prose-invert max-w-none prose-a:font-semibold prose-a:text-olive-700 prose-a:no-underline">
+    <div className="prose prose-invert prose-codex max-w-none prose-a:font-semibold prose-a:no-underline">
       {toc && headings.length >= 3 && (
-        <details open className="not-prose float-none mb-5 block w-full rounded-xl border border-white/15 bg-white/[0.09] p-3 backdrop-blur sm:float-right sm:clear-right sm:ml-5 sm:inline-block sm:w-auto sm:min-w-[16rem]">
-          <summary className="cursor-pointer select-none text-center font-typewriter font-bold text-olive-800">Sommaire</summary>
+        <details open className="not-prose float-none mb-6 block w-full rounded-lg border border-[color:var(--rule)] bg-[color:var(--felt)] px-4 py-3 sm:float-right sm:clear-right sm:ml-6 sm:inline-block sm:w-auto sm:min-w-[15rem]">
+          <summary className="cursor-pointer select-none font-typewriter text-olive-900">Sommaire</summary>
           <ol className="mt-2 space-y-0.5 text-sm">
             {headings.map((h) => (
               <li key={h.slug} className={h.level === 2 ? 'ml-4' : ''}>
-                <a href={`#${h.slug}`} className="text-olive-700 no-underline hover:text-stamp">
-                  <span className="mr-1.5 text-olive-600/70">{h.number}</span>
+                <a href={`#${h.slug}`} className="text-olive-700 no-underline hover:text-ink">
+                  <span className="mr-1.5 text-[color:var(--cat)]">{h.number}</span>
                   {h.text}
                 </a>
               </li>
@@ -66,8 +66,8 @@ export default function Markdown({ children, toc = false }: { children: string; 
         remarkPlugins={[remarkGfm]}
         components={{
           table: ({ children }) => (
-            <div className="not-prose my-4 overflow-x-auto rounded-xl border border-white/15 bg-white/[0.07]">
-              <table className="w-full min-w-[20rem] text-left text-sm [&_td]:border-t [&_td]:border-white/15 [&_td]:p-2 [&_th]:whitespace-nowrap [&_th]:bg-white/[0.1] [&_th]:p-2 [&_th]:font-typewriter">{children}</table>
+            <div className="not-prose my-4 overflow-x-auto rounded-xl border border-[color:var(--rule)] bg-[color:var(--felt)]">
+              <table className="w-full min-w-[20rem] text-left text-sm [&_td]:border-t [&_td]:border-[color:var(--rule)] [&_td]:p-2 [&_th]:whitespace-nowrap [&_th]:bg-[color:var(--felt)] [&_th]:p-2 [&_th]:font-typewriter">{children}</table>
             </div>
           ),
           img: ({ src, alt }) => (

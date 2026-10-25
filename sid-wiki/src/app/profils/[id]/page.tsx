@@ -37,7 +37,7 @@ export default async function ProfilePage({ params }: { params: { id: string } }
 
       <div className="mb-4 flex flex-wrap items-end justify-between gap-2">
         <div>
-          <h1 className="title-grad font-typewriter text-2xl font-bold text-olive-800 sm:text-3xl">@{profile.nickname}</h1>
+          <h1 className="font-typewriter text-[2.1rem] leading-tight text-olive-900 sm:text-[2.6rem]">@{profile.nickname}</h1>
           <p className="text-sm text-olive-700">
             {gear.length}/{GEAR_SLOTS.length} emplacement{gear.length > 1 ? 's' : ''} équipé{gear.length > 1 ? 's' : ''} · <SidIcon name="trophy" /> {profile.discoveries_total} découverte
             {profile.discoveries_total > 1 ? 's' : ''}
@@ -60,12 +60,12 @@ export default async function ProfilePage({ params }: { params: { id: string } }
           <>
             <ul className="grid gap-x-6 sm:grid-cols-2">
               {discoveries.map((d) => (
-                <li key={`${d.category}${d.number}`} className="flex items-center gap-3 border-b border-white/10 py-2">
+                <li key={`${d.category}${d.number}`} className="flex items-center gap-3 border-b border-[color:var(--rule)] py-2">
                   {d.image_url ? (
                     // eslint-disable-next-line @next/next/no-img-element
-                    <img src={d.image_url} alt="" className="h-10 w-10 flex-none rounded-lg border border-white/15 object-cover" />
+                    <img src={d.image_url} alt="" className="h-10 w-10 flex-none rounded-lg border border-[color:var(--rule)] object-cover" />
                   ) : (
-                    <span className="flex h-10 w-10 flex-none items-center justify-center rounded-lg bg-white/[0.1] text-xl">
+                    <span className="flex h-10 w-10 flex-none items-center justify-center rounded-lg bg-[color:var(--felt)] text-xl">
                       <Icon name={d.category} />
                     </span>
                   )}

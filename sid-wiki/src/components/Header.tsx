@@ -9,25 +9,28 @@ import DesktopNav from './DesktopNav';
 export function HeaderView({ signedIn, isAdmin }: { signedIn: boolean; isAdmin: boolean }) {
   return (
     <>
-      <header className="sticky top-0 z-40 border-b border-white/15 bg-[#050912]/60 pt-[env(safe-area-inset-top)] shadow-[0_4px_24px_rgba(0,0,0,0.4)] backdrop-blur-xl">
+      <header className="sticky top-0 z-40 border-b border-[color:var(--rule)] bg-[#10201c]/95 pt-[env(safe-area-inset-top)]">
         <div className="mx-auto max-w-6xl px-4">
-          {/* Ligne 1 : logo — recherche — favoris + menu */}
-          <div className="flex items-center gap-4 py-2.5 md:py-3">
-            <Link href="/" className="flex flex-none items-center gap-2 font-typewriter text-xl font-extrabold text-white md:text-2xl">
-              <Icon name="logo" /> <span>Wiki du <span className="rounded-lg bg-brass-400 px-2 text-night">S.I.D.</span></span>
+          {/* Ligne 1 : sceau et nom — recherche — favoris + menu */}
+          <div className="flex items-center gap-5 py-3 md:py-3.5">
+            <Link href="/" className="group flex flex-none items-center gap-2.5 text-ink" aria-label="Wiki du S.I.D. : accueil">
+              <span className="grid h-9 w-9 place-items-center rounded-full bg-brass-400 text-night shadow-[inset_0_0_0_2px_rgba(27,20,10,0.25),0_0_0_1px_rgba(214,170,76,0.35)] transition group-hover:rotate-[-8deg]">
+                <Icon name="logo" size="1.35em" />
+              </span>
+              <span className="font-typewriter text-[1.35rem] leading-none md:text-[1.55rem]">Wiki du S.I.D.</span>
             </Link>
 
             {signedIn && (
               <>
-                <div className="hidden min-w-0 flex-1 justify-center md:flex">
-                  <div className="w-full max-w-xl">
+                <div className="hidden min-w-0 flex-1 md:flex">
+                  <div className="w-full max-w-lg">
                     <SearchBox />
                   </div>
                 </div>
 
                 <div className="ml-auto hidden flex-none items-center gap-2 md:flex">
                   <Link href="/favoris" className="btn-ghost !min-h-[2.5rem] !px-3" title="Mes favoris" aria-label="Mes favoris">
-                    <Icon name="favoris" />
+                    <Icon name="favoris" className="text-brass-400" />
                   </Link>
                   <UserMenu isAdmin={isAdmin} />
                 </div>
@@ -35,7 +38,7 @@ export function HeaderView({ signedIn, isAdmin }: { signedIn: boolean; isAdmin: 
             )}
           </div>
 
-          {/* Ligne 2 : catégories */}
+          {/* Ligne 2 : les tiroirs du codex */}
           {signedIn && <DesktopNav />}
         </div>
       </header>

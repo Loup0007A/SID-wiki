@@ -5,7 +5,7 @@ export default function MigrationNeeded({ file }: { file: string }) {
       <span className="stamp">Bientôt disponible !</span>
       <p className="mt-4">
         Cette page a besoin d’une mise à jour de la base. Un admin doit exécuter{' '}
-        <code className="rounded bg-white/10 px-1.5 py-0.5 font-typewriter text-xs">supabase/migrations/{file}</code> dans le SQL Editor de Supabase.
+        <code className="rounded bg-[color:var(--felt-2)] px-1.5 py-0.5 font-typewriter text-xs">supabase/migrations/{file}</code> dans le SQL Editor de Supabase.
       </p>
     </div>
   );

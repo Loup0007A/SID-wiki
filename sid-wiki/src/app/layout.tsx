@@ -1,17 +1,13 @@
 import type { Metadata, Viewport } from 'next';
 // Polices servies par le site lui-même (pas d'appel à Google Fonts).
-import '@fontsource/baloo-2/500.css';
-import '@fontsource/baloo-2/700.css';
-import '@fontsource/baloo-2/800.css';
-import '@fontsource/nunito/400.css';
-import '@fontsource/nunito/600.css';
-import '@fontsource/nunito/700.css';
+import '@fontsource/young-serif/400.css';
+import '@fontsource-variable/schibsted-grotesk';
 import './globals.css';
 import TermsBanner from '@/components/legal/TermsBanner';
 import LegalFooter from '@/components/legal/LegalFooter';
 import Script from 'next/script';
 import Header from '@/components/Header';
-import Waves from '@/components/Waves';
+import Backdrop from '@/components/Backdrop';
 import SearchShortcut from '@/components/SearchShortcut';
 import EventDecor from '@/components/EventDecor';
 
@@ -38,7 +34,7 @@ export const viewport: Viewport = {
   width: 'device-width',
   initialScale: 1,
   viewportFit: 'cover',
-  themeColor: '#04070f',
+  themeColor: '#132420',
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
@@ -46,7 +42,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     <html lang="fr">
       <body className="min-h-screen">
         <Script id="polyfills" strategy="beforeInteractive" dangerouslySetInnerHTML={{ __html: POLYFILLS }} />
-        <Waves />
+        <Backdrop />
         <EventDecor variant="wiki" />
         <Header />
         <SearchShortcut />

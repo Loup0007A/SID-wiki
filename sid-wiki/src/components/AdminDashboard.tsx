@@ -301,13 +301,13 @@ export default function AdminDashboard() {
   return (
     <div>
       <div className="mb-4 flex flex-wrap items-center justify-between gap-3">
-        <h1 className="title-grad font-typewriter text-2xl font-bold text-olive-800 sm:text-3xl"><SidIcon name="tools" /> Dashboard</h1>
+        <h1 className="font-typewriter text-2xl font-bold text-olive-800 sm:text-3xl"><SidIcon name="tools" /> Dashboard</h1>
         <Link href={`/admin/edit/${category}/new`} className="btn">
           + Nouvelle fiche
         </Link>
       </div>
 
-      <div className="mb-4 flex flex-wrap gap-2 border-b border-white/15 pb-3">
+      <div className="mb-4 flex flex-wrap gap-2 border-b border-[color:var(--rule)] pb-3">
         <button onClick={() => setTab('entries')} className={tab === 'entries' ? 'btn' : 'btn-ghost'}><SidIcon name="book" /> Fiches</button>
         <button onClick={() => setTab('reports')} className={tab === 'reports' ? 'btn' : 'btn-ghost'}>
           <SidIcon name="flag" /> Signalements{openReports > 0 && <span className="ml-2 rounded-full bg-stamp px-2 text-xs font-bold text-white">{openReports}</span>}
@@ -380,7 +380,7 @@ export default function AdminDashboard() {
 
       <div className="card overflow-x-auto">
         <table className="w-full min-w-[22rem] text-left text-sm">
-          <thead className="border-b border-white/15 font-typewriter">
+          <thead className="border-b border-[color:var(--rule)] font-typewriter">
             <tr>
               <th className="p-2">
                 <input type="checkbox" checked={allShownSelected} onChange={toggleAll} aria-label="Tout sélectionner" />
@@ -404,7 +404,7 @@ export default function AdminDashboard() {
               </tr>
             )}
             {shown.map((r) => (
-              <tr key={r.id} className="border-b border-white/15">
+              <tr key={r.id} className="border-b border-[color:var(--rule)]">
                 <td className="p-2">
                   <input type="checkbox" checked={selected.has(r.id)} onChange={() => toggle(r.id)} aria-label={`Sélectionner ${r.title}`} />
                 </td>
@@ -455,7 +455,7 @@ export default function AdminDashboard() {
                     </Link>
                     <details className="relative">
                       <summary className="btn-ghost !px-3 !py-0.5 cursor-pointer list-none" aria-label="Plus d’actions">⋯</summary>
-                      <div className="absolute right-0 z-20 mt-1 flex w-40 flex-col gap-1 rounded-xl border border-white/20 bg-[#0b1730] p-2 shadow-2xl">
+                      <div className="absolute right-0 z-20 mt-1 flex w-40 flex-col gap-1 rounded-xl border border-[color:var(--rule-2)] bg-[#172925] p-2 shadow-2xl">
                         <button className="btn-ghost !px-3 !py-0.5" title="Créer une copie masquée" onClick={() => duplicate(r.id)}>
                           Dupliquer
                         </button>

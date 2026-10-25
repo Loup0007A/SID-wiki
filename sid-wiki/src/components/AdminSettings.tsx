@@ -93,7 +93,7 @@ export default function AdminSettings() {
           Remplace le mannequin en bois de l’onglet Profils par ton image : PNG ou WebP à <strong>fond transparent</strong>, format portrait <strong>2:3</strong> (par exemple 384 × 576 px), personnage centré de face. Les armures et les armes sont dessinées par-dessus.
         </p>
         <div className="flex flex-wrap items-start gap-5">
-          <div className="flex-none rounded-2xl border border-white/10 bg-gradient-to-b from-white/[0.08] to-sky-400/[0.06] px-3 py-2">
+          <div className="flex-none rounded-2xl border border-[color:var(--rule)] bg-gradient-to-b from-white/[0.08] to-sky-400/[0.06] px-3 py-2">
             <StandFigure className="h-48 w-auto" gear={[]} standImage={stand} />
           </div>
           <div className="min-w-[12rem] flex-1 space-y-3">

@@ -1,30 +1,28 @@
 import type { InfoRow } from '@/lib/wiki';
 import Rarity from './Rarity';
 
-/** Fiche technique à la Wikipédia (encadré à droite sur grand écran). */
+/** Fiche signalétique d'une entrée (colonne de gauche du Codex). */
 export default function Infobox({ rows, rarity }: { rows: InfoRow[]; rarity?: number | null }) {
   if (rows.length === 0 && !rarity) return null;
   return (
-    <aside className="mb-4 w-full overflow-hidden rounded-2xl border border-white/15 bg-white/[0.09] backdrop-blur sm:float-right sm:clear-right sm:ml-5 sm:w-64">
-      <div className="bg-gradient-to-r from-[#2f7fd1] to-[#1d4f9e] px-3 py-1.5 text-center font-typewriter font-bold text-white">
-        Fiche technique
-      </div>
-      <dl className="divide-y divide-white/10 text-sm">
+    <section aria-label="Fiche signalétique" className="w-full">
+      <h2 className="mb-1.5 font-typewriter text-base text-olive-800">Fiche signalétique</h2>
+      <dl className="border-t border-[color:var(--rule)] text-sm">
         {rarity ? (
-          <div className="flex items-center justify-between gap-3 px-3 py-1.5">
-            <dt className="font-bold text-olive-800">Rareté</dt>
+          <div className="flex items-center justify-between gap-3 border-b border-[color:var(--rule)] py-2">
+            <dt className="text-olive-700">Rareté</dt>
             <dd>
               <Rarity value={rarity} />
             </dd>
           </div>
         ) : null}
         {rows.map((r, i) => (
-          <div key={i} className="flex justify-between gap-3 px-3 py-1.5">
-            <dt className="font-bold text-olive-800">{r.label}</dt>
-            <dd className="text-right">{r.value}</dd>
+          <div key={i} className="flex justify-between gap-3 border-b border-[color:var(--rule)] py-2">
+            <dt className="text-olive-700">{r.label}</dt>
+            <dd className="text-right font-medium text-ink">{r.value}</dd>
           </div>
         ))}
       </dl>
-    </aside>
+    </section>
   );
 }

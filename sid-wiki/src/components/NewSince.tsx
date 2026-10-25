@@ -26,7 +26,7 @@ export default function NewSince({ dates }: { dates: (string | null)[] }) {
 
   if (count === 0) return null;
   return (
-    <p className="mb-4 rounded-2xl border border-brass-400/40 bg-brass-400/15 px-4 py-2 text-sm font-bold text-brass-300">
+    <p className="mb-5 rounded-lg border border-brass-400/40 bg-brass-400/10 px-4 py-2 text-sm font-semibold text-brass-300">
       <SidIcon name="sparkle" /> {count} nouvelle{count > 1 ? 's' : ''} découverte{count > 1 ? 's' : ''} depuis ta dernière visite !
     </p>
   );

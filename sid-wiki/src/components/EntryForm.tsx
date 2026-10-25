@@ -334,7 +334,7 @@ export default function EntryForm({ initial, standImage = null }: { initial: For
 
   return (
     <form onSubmit={save} className="mx-auto max-w-4xl space-y-5">
-      <h1 className="title-grad font-typewriter text-2xl font-bold text-olive-800 sm:text-3xl">
+      <h1 className="font-typewriter text-2xl font-bold text-olive-800 sm:text-3xl">
         {isNew ? 'Nouvelle fiche' : `Modifier ${initial.category} ${pad(initial.number)}`}
       </h1>
 
@@ -425,7 +425,7 @@ export default function EntryForm({ initial, standImage = null }: { initial: For
           </button>
         </div>
         {preview ? (
-          <div className="min-h-[16rem] rounded-xl border border-white/15 bg-white/[0.07] p-3">
+          <div className="min-h-[16rem] rounded-xl border border-[color:var(--rule)] bg-[color:var(--felt)] p-3">
             <Markdown toc>{content || '*Rien à afficher.*'}</Markdown>
           </div>
         ) : (
@@ -483,7 +483,7 @@ export default function EntryForm({ initial, standImage = null }: { initial: For
         <div className="card p-5">
           <label className="label">Apparence sur le porte-armure (onglet Profils)</label>
           <div className="flex flex-wrap items-start gap-5">
-            <div className="flex-none rounded-2xl border border-white/10 bg-gradient-to-b from-white/[0.08] to-sky-400/[0.06] px-3 py-2">
+            <div className="flex-none rounded-2xl border border-[color:var(--rule)] bg-gradient-to-b from-white/[0.08] to-sky-400/[0.06] px-3 py-2">
               <StandFigure
                 className="h-64 w-auto"
                 standImage={standImage}
@@ -523,7 +523,7 @@ export default function EntryForm({ initial, standImage = null }: { initial: For
                   <input
                     id="gear-color"
                     type="color"
-                    className="h-10 w-14 cursor-pointer rounded-lg border border-white/20 bg-transparent"
+                    className="h-10 w-14 cursor-pointer rounded-lg border border-[color:var(--rule-2)] bg-transparent"
                     value={GEAR_COLOR_RE.test(gearColor) ? gearColor : '#9db3c9'}
                     onChange={(e) => setGearColor(e.target.value)}
                   />
@@ -585,7 +585,7 @@ export default function EntryForm({ initial, standImage = null }: { initial: For
         <div className="flex flex-wrap items-center gap-3">
           {imageUrl && (
             // eslint-disable-next-line @next/next/no-img-element
-            <img src={imageUrl} alt="" className="h-20 w-20 rounded-lg border border-white/15 object-cover" />
+            <img src={imageUrl} alt="" className="h-20 w-20 rounded-lg border border-[color:var(--rule)] object-cover" />
           )}
           <input
             type="file"
@@ -619,7 +619,7 @@ export default function EntryForm({ initial, standImage = null }: { initial: For
         </div>
         <input className="input" placeholder="Chercher une fiche par titre…" value={q} onChange={(e) => searchCandidates(e.target.value)} />
         {candidates.length > 0 && (
-          <ul className="mt-2 divide-y divide-white/10 overflow-hidden rounded-xl border border-white/15 bg-white/[0.09]">
+          <ul className="mt-2 divide-y divide-[color:var(--rule)] overflow-hidden rounded-xl border border-[color:var(--rule)] bg-[color:var(--felt)]">
             {candidates.map((c) => (
               <li key={c.id}>
                 <button
@@ -645,7 +645,7 @@ export default function EntryForm({ initial, standImage = null }: { initial: For
           {revisions.length === 0 ? (
             <p className="mt-3 text-sm italic text-olive-700">Aucune ancienne version : elles sont conservées automatiquement à chaque modification du titre, résumé, contenu, tags ou fiche technique.</p>
           ) : (
-            <ul className="mt-3 divide-y divide-white/10">
+            <ul className="mt-3 divide-y divide-[color:var(--rule)]">
               {revisions.map((r) => (
                 <li key={r.id} className="flex items-center justify-between gap-3 py-2 text-sm">
                   <span>

@@ -52,7 +52,7 @@ export default function Comments({ category, number }: { category: string; numbe
   }
 
   return (
-    <section className="mt-8 border-t border-white/15 pt-5" id="commentaires">
+    <section className="mt-8 border-t border-[color:var(--rule)] pt-5" id="commentaires">
       <h2 className="mb-3 font-typewriter text-xl font-bold text-olive-800">
         <SidIcon name="chat" /> Commentaires {comments ? `(${comments.length})` : ''}
       </h2>
@@ -62,7 +62,7 @@ export default function Comments({ category, number }: { category: string; numbe
 
       <ul className="space-y-3">
         {comments?.map((c) => (
-          <li key={c.id} className="rounded-xl border border-white/15 bg-white/[0.09] p-3 backdrop-blur">
+          <li key={c.id} className="rounded-xl border border-[color:var(--rule)] bg-[color:var(--felt)] p-3">
             <div className="mb-1 flex items-center justify-between gap-2 text-sm">
               <span>
                 <span className="font-typewriter font-bold text-olive-800">@{c.author_nickname}</span>

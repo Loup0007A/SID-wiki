@@ -17,7 +17,7 @@ export default async function FavoritesPage() {
 
   return (
     <div>
-      <h1 className="title-grad mb-4 font-typewriter text-3xl font-bold text-olive-800"><Icon name="favoris" /> Mes favoris et notes</h1>
+      <h1 className="mb-4 font-typewriter text-3xl font-bold text-olive-800"><Icon name="favoris" /> Mes favoris et notes</h1>
       {entries.length === 0 ? (
         <p className="italic text-olive-700">Pas encore de favori. Clique sur « ☆ Ajouter aux favoris » sur une fiche !</p>
       ) : (

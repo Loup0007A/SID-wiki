@@ -42,7 +42,7 @@ export default function PersonalNote({ category, number }: { category: string; n
   const dirty = text.trim() !== saved;
 
   return (
-    <section className="no-print mt-8 border-t border-white/15 pt-4">
+    <section className="no-print mt-8 border-t border-[color:var(--rule)] pt-4">
       <button type="button" className="flex w-full items-center justify-between text-left" onClick={() => setOpen((o) => !o)} aria-expanded={open}>
         <h2 className="font-typewriter text-lg font-bold text-olive-800"><SidIcon name="memo" /> Mes notes {saved && <span className="text-sm font-normal text-olive-700">(enregistrées)</span>}</h2>
         <span className="text-olive-700">{open ? '▲' : '▼'}</span>

@@ -19,10 +19,10 @@ export default async function SearchPage({ searchParams }: { searchParams: { q?:
 
   return (
     <div>
-      <h1 className="title-grad mb-4 font-typewriter text-2xl font-bold text-olive-800 sm:text-3xl">Recherche</h1>
+      <h1 className="mb-4 font-typewriter text-[2.1rem] leading-tight text-olive-900 sm:text-[2.6rem]">Recherche</h1>
       <form className="mb-6 flex gap-2">
         <input name="q" defaultValue={q} type="search" autoFocus placeholder="Monstre, arme, lieu, tag, numéro…" className="input" />
-        <button className="btn">Fouiner !</button>
+        <button className="btn flex-none whitespace-nowrap">Chercher</button>
       </form>
 
       {q && results.length === 0 && <p className="italic text-olive-700">Rien trouvé pour « {q} »… peut-être pas encore découvert !</p>}
@@ -35,7 +35,7 @@ export default async function SearchPage({ searchParams }: { searchParams: { q?:
             <h2 className="mb-2 font-typewriter text-lg">
               <Icon name={c} /> {CATEGORY_LABELS[c].label} ({list.length})
             </h2>
-            <div className="stagger grid grid-cols-2 gap-2 sm:grid-cols-3 sm:gap-3 lg:grid-cols-4">
+            <div className="grid grid-cols-2 gap-2.5 sm:grid-cols-3 sm:gap-4 lg:grid-cols-4">
               {list.map((e) => (
                 <EntryCard key={`${e.category}${e.number}`} entry={e} />
               ))}

@@ -25,7 +25,7 @@ export default function WelcomeTip() {
 
   if (!show) return null;
   return (
-    <div className="mb-4 flex flex-wrap items-center gap-3 rounded-2xl border border-white/20 bg-white/[0.08] px-4 py-3">
+    <div className="mb-5 flex flex-wrap items-center gap-3 rounded-lg border border-[color:var(--rule-2)] bg-[color:var(--felt)] px-4 py-3">
       <span className="text-sm"><SidIcon name="hello" /> Première visite ? Le mini-guide t’explique tout en 1 minute.</span>
       <span className="ml-auto flex gap-2">
         <Link href="/aide" className="btn !px-3 !py-1 text-sm" onClick={close}>

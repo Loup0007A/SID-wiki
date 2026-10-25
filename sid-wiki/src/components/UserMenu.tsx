@@ -25,7 +25,7 @@ export default function UserMenu({ isAdmin }: { isAdmin: boolean }) {
     };
   }, [open]);
 
-  const item = 'flex items-center gap-2 rounded-xl px-3 py-2 text-left font-typewriter text-sm font-bold text-olive-800 hover:bg-white/10';
+  const item = 'flex items-center gap-2.5 rounded-md px-3 py-2 text-left text-sm font-semibold text-olive-800 hover:bg-[color:var(--felt-2)] hover:text-ink';
 
   return (
     <div ref={ref} className="relative">
@@ -33,7 +33,7 @@ export default function UserMenu({ isAdmin }: { isAdmin: boolean }) {
         <Icon name="menu" />
       </button>
       {open && (
-        <div role="menu" onClick={() => setOpen(false)} className="absolute right-0 top-full z-50 mt-2 flex w-56 flex-col rounded-2xl border border-white/20 bg-[#0b1730] p-2 shadow-2xl shadow-black/60">
+        <div role="menu" onClick={() => setOpen(false)} className="absolute right-0 top-full z-50 mt-2 flex w-56 flex-col rounded-xl border border-[color:var(--rule-2)] bg-[#172925] p-1.5 shadow-[0_18px_40px_-12px_rgba(0,0,0,0.85)]">
           <Link href="/profils" className={item} role="menuitem">
             <Icon name="profils" /> Profils
           </Link>
@@ -57,7 +57,7 @@ export default function UserMenu({ isAdmin }: { isAdmin: boolean }) {
           <button
             type="button"
             role="menuitem"
-            className={`${item} mt-1 border-t border-white/10 pt-3`}
+            className={`${item} mt-1 rounded-t-none border-t border-[color:var(--rule)] pt-3`}
             onClick={async () => {
               await createClient().auth.signOut();
               router.replace('/login');

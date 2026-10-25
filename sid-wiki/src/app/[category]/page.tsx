@@ -42,32 +42,42 @@ export default async function CategoryPage({
     return s ? `${base}?${s}` : base;
   };
 
-  return (
-    <div>
-      <h1 className="title-grad mb-4 font-typewriter text-2xl font-bold text-olive-800 sm:text-3xl">
-        <Icon name={category} /> {CATEGORY_LABELS[category].label}
-      </h1>
+  const all = (data ?? []) as EntrySummary[];
+  const found = all.filter((e) => e.discovered).length;
 
-      <details className="mb-4 text-sm" open={!!tag || onlyFound}>
-          <summary className="cursor-pointer select-none text-olive-700">
-            Plus de filtres{tag ? ` : #${tag}` : ''}{onlyFound ? ' · découverts seulement' : ''}
-          </summary>
-      <div className="mt-3 flex flex-wrap items-center gap-2 text-sm">
-        <Link href={q({ show: onlyFound ? undefined : 'found' })} className="btn-ghost">
-          {onlyFound ? 'Afficher tout' : 'Découverts seulement'}
+  return (
+    <div className={`cat-${category}`}>
+      <header className="mb-6 flex flex-wrap items-end justify-between gap-x-8 gap-y-2 border-b border-[color:var(--rule)] pb-5">
+        <h1 className="flex items-center gap-3 font-typewriter text-[2.3rem] leading-none text-olive-900 sm:text-[2.8rem]">
+          <Icon name={category} size="0.95em" />
+          {CATEGORY_LABELS[category].label}
+        </h1>
+        <p className="leading-none">
+          <span className="catno text-[2.2rem]">{found}</span>
+          <span className="font-typewriter text-xl text-olive-600"> / {all.length}</span>
+          <span className="block pt-1 text-sm text-olive-700">fiches découvertes</span>
+        </p>
+      </header>
+
+      <div className="mb-5 flex flex-wrap items-center gap-1.5 text-sm">
+        <Link
+          href={q({ show: onlyFound ? undefined : 'found' })}
+          className={`chip !py-1 ${onlyFound ? '!border-[color:var(--cat)] !text-ink' : ''}`}
+          aria-pressed={onlyFound}
+        >
+          Découvertes seulement
         </Link>
         {tags.map((t) => (
           <Link
             key={t}
             href={q({ tag: tag === t ? undefined : t })}
-            className={tag === t ? 'btn' : 'btn-ghost'}
+            className={`chip !py-1 ${tag === t ? '!border-[color:var(--cat)] !text-ink' : ''}`}
+            aria-pressed={tag === t}
           >
             #{t}
           </Link>
         ))}
       </div>
-
-      </details>
 
       <CategoryView entries={entries} />
     </div>

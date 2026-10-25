@@ -71,7 +71,7 @@ export default function EntryTools({ title }: { title: string }) {
     }
   }
 
-  const item = 'flex w-full items-center gap-2 rounded-xl px-3 py-2 text-left text-sm font-bold hover:bg-white/10';
+  const item = 'flex w-full items-center gap-2 rounded-xl px-3 py-2 text-left text-sm font-bold hover:bg-[color:var(--felt-2)]';
 
   return (
     <div ref={ref} className="no-print relative">
@@ -79,7 +79,7 @@ export default function EntryTools({ title }: { title: string }) {
         ⋯
       </button>
       {open && (
-        <div className="absolute left-0 top-full z-40 mt-2 w-60 rounded-2xl border border-white/20 bg-[#0b1730] p-2 shadow-2xl shadow-black/60 sm:left-auto sm:right-0">
+        <div className="absolute left-0 top-full z-40 mt-2 w-60 rounded-2xl border border-[color:var(--rule-2)] bg-[#172925] p-2 shadow-2xl shadow-black/60 sm:left-auto sm:right-0">
           <button type="button" className={item} onClick={share}>
             {copied ? <><SidIcon name="check" /> Lien copié</> : <><SidIcon name="link" /> Partager</>}
           </button>
@@ -88,11 +88,11 @@ export default function EntryTools({ title }: { title: string }) {
           </button>
           <div className="flex items-center justify-between gap-2 px-3 py-2 text-sm font-bold">
             Taille du texte
-            <span className="inline-flex overflow-hidden rounded-full border border-white/20">
-              <button type="button" className="px-3 py-1 hover:bg-white/10 disabled:opacity-30" onClick={() => change(-1)} disabled={size === 0} aria-label="Réduire le texte">
+            <span className="inline-flex overflow-hidden rounded-full border border-[color:var(--rule-2)]">
+              <button type="button" className="px-3 py-1 hover:bg-[color:var(--felt-2)] disabled:opacity-30" onClick={() => change(-1)} disabled={size === 0} aria-label="Réduire le texte">
                 A−
               </button>
-              <button type="button" className="px-3 py-1 hover:bg-white/10 disabled:opacity-30" onClick={() => change(1)} disabled={size === SIZES.length - 1} aria-label="Agrandir le texte">
+              <button type="button" className="px-3 py-1 hover:bg-[color:var(--felt-2)] disabled:opacity-30" onClick={() => change(1)} disabled={size === SIZES.length - 1} aria-label="Agrandir le texte">
                 A+
               </button>
             </span>

@@ -1,41 +1,44 @@
 import type { Config } from 'tailwindcss';
 import typography from '@tailwindcss/typography';
 
-// Thème sombre : les noms de tokens historiques sont conservés mais inversés.
-//   ink / olive-* = textes clairs (bleu glacier)   kraft = bleus d'accent
-//   brass = jaune soleil                           stamp = corail   night = texte foncé (sur jaune)
+// Thème « Codex » (Lot 50). Les noms de tokens historiques sont conservés :
+//   ink / olive-* = textes clairs (os → lichen)   kraft = vert-de-gris
+//   brass = laiton   stamp = sanguine   night = texte foncé (sur laiton)
+// Les couleurs de catégorie et des surfaces sont des variables CSS (globals.css).
 const config: Config = {
   content: ['./src/**/*.{ts,tsx}'],
   theme: {
     extend: {
       colors: {
         kraft: {
-          50: '#f4fbff',
-          100: '#e3f4ff',
-          200: '#c9e9fb',
-          300: '#a5d8f5',
-          400: '#7cc3ee',
-          500: '#4fa8e0',
+          50: '#f1f8f5',
+          100: '#ddeee8',
+          200: '#bfe0d6',
+          300: '#98ccbe',
+          400: '#76bba9',
+          500: '#5fb3a1',
         },
         olive: {
-          600: '#6fb8f2',
-          700: '#8cc9ff',
-          800: '#c5e3ff',
-          900: '#e3f3ff',
+          600: '#93a493',
+          700: '#b5c0b2',
+          800: '#dcd5c4',
+          900: '#f2ebdc',
         },
         brass: {
-          300: '#ffe08a',
-          400: '#ffcb45',
-          500: '#f5a623',
-          600: '#d98614',
+          300: '#f0d48f',
+          400: '#d6aa4c',
+          500: '#c4923a',
+          600: '#a8782a',
         },
-        ink: '#e8f3ff',
-        night: '#0b1a33',
-        stamp: '#ff6b5b',
+        ink: '#ece4d2',
+        night: '#1b140a',
+        stamp: '#d8664d',
+        felt: '#1a2e29',
+        sapin: '#132420',
       },
       fontFamily: {
-        typewriter: ['"Baloo 2"', 'system-ui', 'sans-serif'],
-        body: ['Nunito', 'system-ui', 'sans-serif'],
+        typewriter: ['"Young Serif"', 'Georgia', 'serif'],
+        body: ['"Schibsted Grotesk Variable"', 'system-ui', 'sans-serif'],
       },
     },
   },
