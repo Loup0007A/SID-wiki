@@ -1,6 +1,8 @@
 import Link from 'next/link';
 import { CATEGORY_LABELS, type Category, type EntrySummary } from '@/lib/wiki';
 import Icon from './Icon';
+import MedalBadge from './MedalBadge';
+import { medalFor } from '@/lib/paliers';
 
 const MAX_SEGMENTS = 60;
 
@@ -18,6 +20,7 @@ export default function Collection({ lists }: { lists: { category: Category; ent
         const left = total - found;
         const label = CATEGORY_LABELS[category].label;
         const segmented = total > 0 && total <= MAX_SEGMENTS;
+        const pal = medalFor(found, total);
         return (
           <li key={category} className={`cat-${category}`}>
             <Link
@@ -35,7 +38,10 @@ export default function Collection({ lists }: { lists: { category: Category; ent
                 </span>
               </span>
 
-              <span className="mt-3 font-typewriter text-[1.3rem] leading-tight text-ink sm:text-[1.5rem]">{label}</span>
+              <span className="mt-3 flex items-center gap-2">
+                <span className="font-typewriter text-[1.3rem] leading-tight text-ink sm:text-[1.5rem]">{label}</span>
+                <MedalBadge medal={pal.medal} size={20} />
+              </span>
 
               {segmented ? (
                 <span className="mt-3 flex gap-[3px]" aria-hidden>
@@ -53,7 +59,15 @@ export default function Collection({ lists }: { lists: { category: Category; ent
               )}
 
               <span className="mt-2.5 flex items-center justify-between gap-2 text-[13px] text-olive-700 sm:text-sm">
-                <span>{left > 0 ? `${left} à découvrir` : total > 0 ? 'Tout est découvert' : 'Aucune fiche'}</span>
+                <span>
+                  {left > 0 ? `${left} à découvrir` : total > 0 ? 'Tout est découvert' : 'Aucune fiche'}
+                  {pal.next && total > 0 && (
+                    <span className="hidden sm:inline">
+                      {' '}
+                      · {pal.next.label} dans {pal.missing} fiche{pal.missing > 1 ? 's' : ''}
+                    </span>
+                  )}
+                </span>
                 <span aria-hidden className="text-[color:var(--cat)] transition group-hover:translate-x-0.5">→</span>
               </span>
             </Link>

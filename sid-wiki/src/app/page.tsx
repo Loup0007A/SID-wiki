@@ -11,6 +11,8 @@ import ProieDuJour, { preyOfTheDay, type Prey } from '@/components/ProieDuJour';
 import { SidIcon } from '@/components/icons/SidIcon';
 import EnigmeDuJour from '@/components/EnigmeDuJour';
 import { enigmeOfTheDay } from '@/lib/enigme';
+import { codexRank, medalFor } from '@/lib/paliers';
+import PalierWatcher from '@/components/PalierWatcher';
 
 export const dynamic = 'force-dynamic';
 
@@ -41,6 +43,10 @@ export default async function HomePage() {
     total += r.total;
     found += r.discovered_count;
   }
+  // Paliers de la collection (Lot 60) : médaille par catégorie, rang du Codex.
+  const rank = codexRank(found, total);
+  const medalLevels = Object.fromEntries(byCat.map((l) => [l.category, medalFor(l.entries.filter((e) => e.discovered).length, l.entries.length).level]));
+  const catLabels = Object.fromEntries(CATEGORIES.map((c) => [c, CATEGORY_LABELS[c].label]));
   const recent = (recentData ?? []) as RecentEntry[];
   const top = (topData ?? []) as { nickname: string; total: number }[];
 
@@ -55,6 +61,7 @@ export default async function HomePage() {
       {hunt && <ProieDuJour prey={prey} />}
       <WelcomeTip />
       <NewSince dates={recent.map((r) => r.discovered_at)} />
+      {total > 0 && <PalierWatcher levels={medalLevels} labels={catLabels} codex={{ level: rank.level, label: rank.label }} />}
 
       {/* Sur téléphone, la recherche tout de suite sous la main. */}
       <form action="/recherche" role="search" className="mb-5 md:hidden">
@@ -66,6 +73,12 @@ export default async function HomePage() {
           <h1 id="collection" className="font-typewriter text-[2rem] leading-tight text-olive-900 sm:text-[2.6rem]">La collection</h1>
           <p className="text-[0.95rem] text-olive-700">
             <span className="font-typewriter text-[1.35rem] text-brass-300 [font-variant-numeric:oldstyle-nums]">{found}</span> fiches découvertes sur {total}
+            {total > 0 && (
+              <span className="block text-right text-[0.85rem]">
+                <span className="codex-rank">{rank.label}</span>
+                {rank.next && <> · « {rank.next} » dans {rank.missing} fiche{rank.missing > 1 ? 's' : ''}</>}
+              </span>
+            )}
           </p>
         </div>
         <Collection lists={byCat} />

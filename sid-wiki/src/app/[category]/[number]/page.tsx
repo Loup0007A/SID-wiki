@@ -1,5 +1,6 @@
 import Link from 'next/link';
 import EntryKeys from '@/components/EntryKeys';
+import ListenButton from '@/components/ListenButton';
 import { notFound } from 'next/navigation';
 import { createClient } from '@/lib/supabase/server';
 import { CATEGORY_LABELS, isCategory, pad, parseNumber, type EntryFull } from '@/lib/wiki';
@@ -39,6 +40,7 @@ export default async function EntryPage({ params }: { params: { category: string
     <div className="no-print flex flex-wrap items-center gap-2">
       <FavoriteButton category={entry.category} number={entry.number} initial={entry.favorited} />
       <EntryTools title={entry.title ?? ''} />
+      <ListenButton title={entry.title ?? ''} summary={entry.summary ?? null} rows={infoRows} content={entry.content ?? null} />
       {isAdmin && (
         <Link href={`/admin/edit/${entry.category}/${pad(entry.number)}`} className="btn-ghost">
           Modifier
