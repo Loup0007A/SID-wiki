@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { createClient } from '@/lib/supabase/client';
+import LoginIntro from '@/components/LoginIntro';
 
 export default function LoginPage() {
   const router = useRouter();
@@ -10,6 +11,7 @@ export default function LoginPage() {
   const [password, setPassword] = useState('');
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
+  const [intro, setIntro] = useState(false);
 
   // Déjà connecté (session valable) : directement à l'accueil.
   useEffect(() => {
@@ -30,14 +32,23 @@ export default function LoginPage() {
       setLoading(false);
       return;
     }
-    router.replace('/');
-    router.refresh();
+    // Petite animation, puis l'accueil (préchargé pendant ce temps).
+    router.prefetch('/');
+    setIntro(true);
   }
 
   const applyUrl = process.env.NEXT_PUBLIC_DOSSIER_CENTRAL_URL;
 
   return (
     <div className="mx-auto mt-6 max-w-sm sm:mt-16">
+      {intro && (
+        <LoginIntro
+          onDone={() => {
+            router.replace('/');
+            router.refresh();
+          }}
+        />
+      )}
       <div className="card p-6">
         <span className="stamp">Chasseurs uniquement !</span>
         <h1 className="mb-1 mt-3 font-typewriter text-2xl font-bold text-olive-800">

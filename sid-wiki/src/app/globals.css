@@ -729,3 +729,53 @@ html.ev-grande_chasse .wave-layer svg path:last-child { stroke: rgba(255, 190, 1
 .prose-codex h2 { font-size: 1.55em; margin-top: 1.8em; }
 .prose-codex h3 { font-size: 1.2em; }
 .bg-cat-soft { background: color-mix(in srgb, var(--cat) 16%, transparent); color: var(--cat); }
+
+/* Animation de connexion (Lot 57) : le Codex s'ouvre. */
+.codex-intro {
+  background: radial-gradient(ellipse 55% 45% at 50% 42%, rgba(214, 170, 76, 0.14), transparent 70%), #0e1b18;
+  animation: codex-fade 0.35s ease-out both;
+}
+@keyframes codex-fade { from { opacity: 0; } }
+.codex-book { position: relative; height: 11rem; width: 8.5rem; perspective: 900px; animation: codex-in 0.55s cubic-bezier(0.22, 1, 0.36, 1) both; }
+@keyframes codex-in { from { opacity: 0; transform: translateY(30px) rotate(-6deg); } }
+.codex-pages {
+  position: absolute;
+  inset: 4px 0 4px 6px;
+  border-radius: 2px 6px 6px 2px;
+  background: #ece4d2;
+  box-shadow: 0 16px 34px -10px rgba(0, 0, 0, 0.7), inset 6px 0 10px -6px rgba(0, 0, 0, 0.35);
+  padding: 1.1rem 0.9rem 0 1.2rem;
+}
+.codex-pages span { display: block; height: 3px; margin-bottom: 0.65rem; border-radius: 2px; background: rgba(43, 47, 40, 0.22); }
+.codex-pages span:nth-child(2) { width: 80%; }
+.codex-pages span:nth-child(3) { width: 60%; }
+.codex-cover, .codex-flip {
+  position: absolute;
+  inset: 0;
+  transform-origin: left center;
+  backface-visibility: hidden;
+  border-radius: 3px 8px 8px 3px;
+}
+.codex-cover {
+  z-index: 3;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  color: var(--brass);
+  background:
+    radial-gradient(circle at 1px 1px, rgba(255, 255, 255, 0.05) 1px, transparent 0) 0 0 / 5px 5px,
+    linear-gradient(160deg, #26473f, #183229);
+  box-shadow: inset 0 0 0 4px #183229, inset 0 0 0 5px var(--brass), inset 0 0 0 8px #183229, inset 0 0 0 9px rgba(214, 170, 76, 0.5), 0 18px 34px -10px rgba(0, 0, 0, 0.75);
+  animation: codex-open 0.75s cubic-bezier(0.55, 0.05, 0.3, 1) 0.55s forwards;
+}
+.codex-cover-title { font-family: 'Young Serif', Georgia, serif; font-size: 1.1rem; letter-spacing: 0.08em; }
+.codex-flip { z-index: 2; inset: 4px 0 4px 6px; background: #f3ecdc; opacity: 0; animation: codex-turn 0.5s ease-in-out forwards; }
+@keyframes codex-open { to { transform: rotateY(-165deg); } }
+@keyframes codex-turn { 0% { opacity: 1; transform: rotateY(0); } 100% { opacity: 0.2; transform: rotateY(-160deg); } }
+.codex-intro-title { animation: codex-fade 0.4s ease-out 1s both; }
+.codex-intro-line { animation: codex-fade 0.4s ease-out 1.15s both; }
+@media (prefers-reduced-motion: reduce) {
+  .codex-intro *, .codex-intro { animation-duration: 0.01ms !important; animation-delay: 0s !important; }
+}
