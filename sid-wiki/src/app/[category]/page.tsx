@@ -63,7 +63,7 @@ export default async function CategoryPage({
         <Link
           href={q({ show: onlyFound ? undefined : 'found' })}
           className={`chip !py-1 ${onlyFound ? '!border-[color:var(--cat)] !text-ink' : ''}`}
-          aria-pressed={onlyFound}
+          aria-current={onlyFound ? 'true' : undefined}
         >
           Découvertes seulement
         </Link>
@@ -72,7 +72,7 @@ export default async function CategoryPage({
             key={t}
             href={q({ tag: tag === t ? undefined : t })}
             className={`chip !py-1 ${tag === t ? '!border-[color:var(--cat)] !text-ink' : ''}`}
-            aria-pressed={tag === t}
+            aria-current={tag === t ? 'true' : undefined}
           >
             #{t}
           </Link>

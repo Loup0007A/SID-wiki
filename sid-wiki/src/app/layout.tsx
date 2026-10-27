@@ -44,9 +44,10 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <Script id="polyfills" strategy="beforeInteractive" dangerouslySetInnerHTML={{ __html: POLYFILLS }} />
         <Backdrop />
         <EventDecor variant="wiki" />
+        <a href="#contenu" className="skip-link">Aller au contenu</a>
         <Header />
         <SearchShortcut />
-        <main className="mx-auto max-w-6xl overflow-x-hidden px-4 py-5 pb-28 md:overflow-x-visible md:py-6 md:pb-6">
+        <main id="contenu" tabIndex={-1} className="mx-auto outline-none max-w-6xl overflow-x-hidden px-4 py-5 pb-28 md:overflow-x-visible md:py-6 md:pb-6">
           <TermsBanner />
           {children}
           <LegalFooter />

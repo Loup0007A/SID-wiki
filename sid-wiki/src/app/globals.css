@@ -597,6 +597,9 @@ html.ev-grande_chasse .wave-layer svg path:last-child { stroke: rgba(255, 190, 1
 .hz-glow { fill: #ffb347; filter: drop-shadow(0 0 5px rgba(255, 150, 50, 0.9)); }
 .hz-glow.is-flicker { animation: hz-flicker 4.4s steps(1) infinite; }
 @keyframes hz-flicker { 0%, 100% { opacity: 1; } 31% { opacity: 0.35; } 33% { opacity: 0.9; } 58% { opacity: 0.5; } 60% { opacity: 1; } 84% { opacity: 0.2; } 87% { opacity: 1; } }
+.hz-rim { fill: none; stroke: #5d4f86; stroke-width: 1.6; stroke-linejoin: round; opacity: 0.55; }
+.hz-vane { fill: none; stroke: #120b1f; stroke-width: 2; }
+.hz-door { fill: #e8892f; opacity: 0.85; filter: drop-shadow(0 0 6px rgba(255, 150, 50, 0.7)); }
 .hz-tree { fill: none; stroke: #090e1e; stroke-width: 6; stroke-linecap: round; }
 .hz-rail { fill: none; stroke: #090e1e; stroke-width: 2; }
 .hz-snowcap { fill: #dfe9f7; opacity: 0.45; }
@@ -779,3 +782,11 @@ html.ev-grande_chasse .wave-layer svg path:last-child { stroke: rgba(255, 190, 1
 @media (prefers-reduced-motion: reduce) {
   .codex-intro *, .codex-intro { animation-duration: 0.01ms !important; animation-delay: 0s !important; }
 }
+
+/* Lien « Aller au contenu » (Lot 58) : apparaît au premier appui sur Tab. */
+.skip-link {
+  position: fixed; left: 12px; top: -60px; z-index: 10000;
+  padding: 10px 16px; border-radius: 10px; background: var(--brass, #d6aa4c); color: #1d2318;
+  font-weight: 700; font-size: 14px; box-shadow: 0 6px 20px rgb(0 0 0 / 0.3); transition: top 0.15s;
+}
+.skip-link:focus { top: calc(env(safe-area-inset-top) + 12px); }

@@ -113,7 +113,7 @@ export default async function EntryPage({ params }: { params: { category: string
           </div>
 
           {/* Fiche signalétique : numéro, rareté, tags, découvreur, infos, actions */}
-          <aside className="entry-meta panel space-y-5 p-4 sm:p-5">
+          <section aria-label="Informations de la fiche" className="entry-meta panel space-y-5 p-4 sm:p-5">
             <div className="hidden lg:block">
               <p className="font-typewriter text-sm text-olive-600">
                 <Link href={`/${entry.category}`} className="inline-flex items-center gap-1.5 hover:text-ink">
@@ -142,7 +142,7 @@ export default async function EntryPage({ params }: { params: { category: string
 
             <Infobox rows={infoRows} rarity={null} />
             {actions}
-          </aside>
+          </section>
 
           <div className="entry-body min-w-0">
             {entry.content && <Markdown toc>{entry.content}</Markdown>}
