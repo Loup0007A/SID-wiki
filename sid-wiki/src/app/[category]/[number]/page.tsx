@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import EntryKeys from '@/components/EntryKeys';
 import { notFound } from 'next/navigation';
 import { createClient } from '@/lib/supabase/server';
 import { CATEGORY_LABELS, isCategory, pad, parseNumber, type EntryFull } from '@/lib/wiki';
@@ -175,10 +176,14 @@ export default async function EntryPage({ params }: { params: { category: string
         </div>
       )}
 
+      <EntryKeys
+        prev={entry.prev !== null ? `/${entry.category}/${pad(entry.prev)}` : null}
+        next={entry.next !== null ? `/${entry.category}/${pad(entry.next)}` : null}
+      />
       <div className="no-print mt-10 flex justify-between gap-2 border-t border-[color:var(--rule)] pt-5">
         {entry.prev !== null ? (
           <Link href={`/${entry.category}/${pad(entry.prev)}`} className="group text-olive-700 hover:text-ink">
-            <span className="block text-xs">Fiche précédente</span>
+            <span className="block text-xs">Fiche précédente <kbd className="kbd-hint">←</kbd></span>
             <span className="catno text-2xl">← {pad(entry.prev)}</span>
           </Link>
         ) : (
@@ -186,7 +191,7 @@ export default async function EntryPage({ params }: { params: { category: string
         )}
         {entry.next !== null ? (
           <Link href={`/${entry.category}/${pad(entry.next)}`} className="group text-right text-olive-700 hover:text-ink">
-            <span className="block text-xs">Fiche suivante</span>
+            <span className="block text-xs"><kbd className="kbd-hint">→</kbd> Fiche suivante</span>
             <span className="catno text-2xl">{pad(entry.next)} →</span>
           </Link>
         ) : (

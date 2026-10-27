@@ -790,3 +790,40 @@ html.ev-grande_chasse .wave-layer svg path:last-child { stroke: rgba(255, 190, 1
   font-weight: 700; font-size: 14px; box-shadow: 0 6px 20px rgb(0 0 0 / 0.3); transition: top 0.15s;
 }
 .skip-link:focus { top: calc(env(safe-area-inset-top) + 12px); }
+
+/* L'énigme du jour (Lot 59) */
+.enigme { position: relative; border-top: 3px solid var(--cat); }
+.enigme-frame {
+  position: relative; aspect-ratio: 1; width: 100%; max-width: 11rem; margin: 0 auto; border-radius: 16px; overflow: hidden;
+  background: radial-gradient(circle at 50% 40%, color-mix(in srgb, var(--cat) 35%, transparent), transparent 70%), rgb(0 0 0 / .25);
+  border: 1px solid color-mix(in srgb, var(--cat) 50%, transparent);
+}
+.enigme-frame img {
+  width: 100%; height: 100%; object-fit: contain; padding: 10%; user-select: none;
+  /* Flou sombre : marche aussi pour les photos sans fond transparent. */
+  filter: blur(14px) grayscale(1) brightness(.55); transform: scale(1.15);
+  transition: filter .9s ease, transform .9s cubic-bezier(.2,.9,.3,1.2), padding .9s;
+}
+.enigme-frame.is-hint img { filter: blur(6px) grayscale(.6) brightness(.75); }
+.enigme-frame.is-revealed img { filter: none; transform: scale(1); padding: 0; object-fit: cover; }
+.enigme-q {
+  position: absolute; inset: 0; display: grid; place-items: center; pointer-events: none;
+  font: 400 3.2rem/1 "Young Serif", Georgia, serif; color: color-mix(in srgb, var(--cat) 80%, white);
+  text-shadow: 0 2px 12px rgb(0 0 0 / .7); animation: enigme-bob 3s ease-in-out infinite;
+}
+@keyframes enigme-bob { 0%, 100% { transform: translateY(0) rotate(-4deg); } 50% { transform: translateY(-5px) rotate(4deg); } }
+.enigme-opt {
+  display: flex; align-items: center; gap: .5rem; min-height: 2.75rem; padding: .55rem .85rem; border-radius: 10px; text-align: left;
+  border: 1px solid var(--rule, rgb(255 255 255 / .15)); background: rgb(255 255 255 / .04); font-weight: 600;
+  transition: transform .15s, border-color .15s, background .2s, opacity .3s;
+}
+.enigme-opt:not(:disabled):hover { transform: translateY(-1px); border-color: var(--cat); background: color-mix(in srgb, var(--cat) 12%, transparent); }
+.enigme-opt.is-good { border-color: #6fbf87; background: rgb(111 191 135 / .18); color: #c9f0d4; }
+.enigme-opt.is-bad { border-color: #e07a6a; background: rgb(224 122 106 / .16); color: #f6c9c1; animation: enigme-shake .4s; }
+.enigme-opt.is-dim { opacity: .45; }
+.enigme-miss { color: #f0907f; }
+@keyframes enigme-shake { 25% { transform: translateX(-4px); } 75% { transform: translateX(4px); } }
+@media (prefers-reduced-motion: reduce) { .enigme-q, .enigme-opt.is-bad { animation: none; } .enigme-frame img { transition: none; } }
+/* Touches ← → sous les fiches (Lot 59), seulement sur ordinateur. */
+.kbd-hint { display: none; padding: 0 .3em; border: 1px solid var(--rule, rgb(255 255 255 / .2)); border-bottom-width: 2px; border-radius: 4px; font: 600 .7rem/1.4 ui-monospace, monospace; }
+@media (hover: hover) and (pointer: fine) { .kbd-hint { display: inline-block; } }

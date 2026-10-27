@@ -9,6 +9,8 @@ import NewSince from '@/components/NewSince';
 import RecentlyViewed from '@/components/RecentlyViewed';
 import ProieDuJour, { preyOfTheDay, type Prey } from '@/components/ProieDuJour';
 import { SidIcon } from '@/components/icons/SidIcon';
+import EnigmeDuJour from '@/components/EnigmeDuJour';
+import { enigmeOfTheDay } from '@/lib/enigme';
 
 export const dynamic = 'force-dynamic';
 
@@ -29,6 +31,9 @@ export default async function HomePage() {
   // Grande Chasse (réglée sur le Dossier Central) : une proie du jour parmi les mobs découverts.
   const hunt = !!(decor as { grande_chasse?: boolean } | null)?.grande_chasse;
   const prey: Prey | null = hunt ? preyOfTheDay((byCat.find((l) => l.category === 'mobs')?.entries ?? []).filter((m) => m.discovered && m.title) as unknown as Prey[]) : null;
+
+  // L'énigme du jour : une fiche illustrée déjà découverte, floutée.
+  const enigme = enigmeOfTheDay(byCat.flatMap((l) => l.entries));
 
   let total = 0;
   let found = 0;
@@ -65,6 +70,12 @@ export default async function HomePage() {
         </div>
         <Collection lists={byCat} />
       </section>
+
+      {enigme && (
+        <div className="mt-8">
+          <EnigmeDuJour enigme={enigme} />
+        </div>
+      )}
 
       <RecentlyViewed />
 
