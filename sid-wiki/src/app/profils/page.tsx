@@ -21,7 +21,7 @@ export default async function ProfilesPage() {
         <Icon name="profils" /> Profils des chasseurs
       </h1>
       <p className="mb-5 text-olive-700">
-        Chaque chasseur a son porte-armure : casque, plastron, jambières, bottes, une arme dans chaque main et un arc dans le dos. Ouvre le tien pour l’équiper !
+        Le porte-armure de chaque chasseur.
       </p>
       <ProfilesView profiles={profiles} standImage={typeof stand === 'string' && stand ? stand : null} />
     </div>

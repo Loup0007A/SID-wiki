@@ -183,7 +183,7 @@ export default function ArmorStand({
 
       {canEdit && (
         <p className="mt-4 text-center text-sm text-olive-700">
-          Clique une case — ou une partie du mannequin — pour y poser une arme ou un objet découvert.
+          Touche une case pour l’équiper.
         </p>
       )}
 
