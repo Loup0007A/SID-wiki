@@ -97,7 +97,7 @@ export default function CategoryView({ entries }: { entries: EntrySummary[] }) {
                 {e.discovered && e.title ? (
                   <>
                     <span className="min-w-0 flex-1 truncate font-semibold group-hover:text-[color:var(--cat)]">{e.title}</span>
-                    <Rarity value={e.rarity} className="hidden text-sm sm:inline" />
+                    <Rarity value={e.rarity} className="hidden text-sm sm:inline-flex" />
                     {e.has_model && <span className="rounded border border-[color:var(--cat)]/50 px-1 text-[10px] font-semibold text-[color:var(--cat)]">3D</span>}
                   </>
                 ) : (
