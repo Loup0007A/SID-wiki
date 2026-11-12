@@ -846,3 +846,13 @@ html.ev-grande_chasse .wave-layer svg path:last-child { stroke: rgba(255, 190, 1
 @keyframes palier-in { from { opacity: 0; transform: translateY(-6px); } }
 @keyframes palier-pop { from { opacity: 0; transform: scale(.3) rotate(-30deg); } }
 @media (prefers-reduced-motion: reduce) { .medal-or, .medal-complet, .palier-news, .palier-pop { animation: none; } }
+
+/* Lot 78 : site fermé depuis le Dossier Central (bandeau équipe, page de connexion). */
+.closed-note {
+  background: #3a2a12;
+  color: #f0c27a;
+  text-align: center;
+  font-size: 0.75rem;
+  font-weight: 700;
+  padding: 0.4rem 1rem;
+}

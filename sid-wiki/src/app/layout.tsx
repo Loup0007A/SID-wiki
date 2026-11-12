@@ -11,6 +11,7 @@ import Backdrop from '@/components/Backdrop';
 import SearchShortcut from '@/components/SearchShortcut';
 import EventDecor from '@/components/EventDecor';
 import { BrandProvider } from '@/components/BrandProvider';
+import SiteGate from '@/components/SiteGate';
 import { brandify } from '@/lib/brand';
 import { getBrand } from '@/lib/brand-server';
 
@@ -55,13 +56,15 @@ export default async function RootLayout({ children }: { children: React.ReactNo
           <Backdrop />
           <EventDecor variant="wiki" />
           <a href="#contenu" className="skip-link">Aller au contenu</a>
-          <Header />
-          <SearchShortcut />
-          <main id="contenu" tabIndex={-1} className="mx-auto outline-none max-w-6xl overflow-x-hidden px-4 py-5 pb-28 md:overflow-x-visible md:py-6 md:pb-6">
-            <TermsBanner />
-            {children}
-            <LegalFooter />
-          </main>
+          <SiteGate>
+            <Header />
+            <SearchShortcut />
+            <main id="contenu" tabIndex={-1} className="mx-auto outline-none max-w-6xl overflow-x-hidden px-4 py-5 pb-28 md:overflow-x-visible md:py-6 md:pb-6">
+              <TermsBanner />
+              {children}
+              <LegalFooter />
+            </main>
+          </SiteGate>
         </BrandProvider>
       </body>
     </html>

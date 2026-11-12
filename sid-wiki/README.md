@@ -16,6 +16,9 @@ règlent dans `app_config` : voir `SETUP.md` dans le dépôt du Dossier Central
 (sid-website). Les fichiers `src/lib/brand.ts` et `src/brand/` sont des copies
 de ceux du Dossier Central : les garder identiques.
 
+Le site peut être fermé aux membres depuis le Dossier Central (Modération →
+Sites et rubriques, Lot 78) : voir `src/components/SiteGate.tsx`.
+
 ## Fonctionnement
 
 - **Numérotation** : chaque fiche a un numéro 000–999, unique par catégorie.
