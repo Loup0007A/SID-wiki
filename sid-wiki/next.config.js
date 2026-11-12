@@ -38,6 +38,12 @@ const nextConfig = {
   images: { unoptimized: true },
   // @gltf-transform embarque un lecteur Node (fs/path) inutile dans le navigateur
   webpack: (config, { isServer, webpack }) => {
+    // Lot 77 : le JSX passe par src/brand (tsconfig jsxImportSource). Le cache
+    // de compilation gardé d'un build à l'autre (Vercel compris) ne doit pas
+    // resservir les modules compilés avant ce changement.
+    if (config.cache && typeof config.cache === 'object') {
+      config.cache.version = `${config.cache.version || ''}|jsx-brand-1`;
+    }
     if (!isServer) {
       config.plugins.push(
         new webpack.NormalModuleReplacementPlugin(/^node:/, (res) => {

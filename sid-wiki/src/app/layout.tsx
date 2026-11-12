@@ -10,6 +10,9 @@ import Header from '@/components/Header';
 import Backdrop from '@/components/Backdrop';
 import SearchShortcut from '@/components/SearchShortcut';
 import EventDecor from '@/components/EventDecor';
+import { BrandProvider } from '@/components/BrandProvider';
+import { brandify } from '@/lib/brand';
+import { getBrand } from '@/lib/brand-server';
 
 // Anciens iPhone (iOS 15.0 à 15.3) : fonctions JavaScript récentes absentes, utilisées par les bibliothèques.
 const POLYFILLS = `(function(){
@@ -21,14 +24,19 @@ if(!Array.prototype.findLast){Object.defineProperty(Array.prototype,'findLast',{
 if(typeof structuredClone!=='function'){window.structuredClone=function(v){return JSON.parse(JSON.stringify(v))}}
 })();`;
 
-export const metadata: Metadata = {
-  title: 'Wiki du S.I.D.',
-  description: 'Le wiki de la S.I.D. : lieux, armes, monstres et trésors à découvrir !',
-  applicationName: 'Wiki du S.I.D.',
-  appleWebApp: { capable: true, title: 'Wiki S.I.D.', statusBarStyle: 'default' },
-  icons: { icon: '/icons/icon-192.png', apple: '/icons/apple-touch-icon.png' },
-  formatDetection: { telephone: false },
-};
+// Noms tirés de app_config (Lot 77, voir SETUP.md du site principal).
+export async function generateMetadata(): Promise<Metadata> {
+  await getBrand();
+  const name = brandify('Wiki du S.I.D.');
+  return {
+    title: { default: name, template: `%s · ${name}` },
+    description: brandify('Le wiki de la S.I.D. : lieux, armes, monstres et trésors à découvrir !'),
+    applicationName: name,
+    appleWebApp: { capable: true, title: brandify('Wiki S.I.D.'), statusBarStyle: 'default' },
+    icons: { icon: '/icons/icon-192.png', apple: '/icons/apple-touch-icon.png' },
+    formatDetection: { telephone: false },
+  };
+}
 
 export const viewport: Viewport = {
   width: 'device-width',
@@ -37,21 +45,24 @@ export const viewport: Viewport = {
   themeColor: '#0e1b18',
 };
 
-export default function RootLayout({ children }: { children: React.ReactNode }) {
+export default async function RootLayout({ children }: { children: React.ReactNode }) {
+  const brand = await getBrand();
   return (
     <html lang="fr">
       <body className="min-h-screen">
         <Script id="polyfills" strategy="beforeInteractive" dangerouslySetInnerHTML={{ __html: POLYFILLS }} />
-        <Backdrop />
-        <EventDecor variant="wiki" />
-        <a href="#contenu" className="skip-link">Aller au contenu</a>
-        <Header />
-        <SearchShortcut />
-        <main id="contenu" tabIndex={-1} className="mx-auto outline-none max-w-6xl overflow-x-hidden px-4 py-5 pb-28 md:overflow-x-visible md:py-6 md:pb-6">
-          <TermsBanner />
-          {children}
-          <LegalFooter />
-        </main>
+        <BrandProvider brand={brand}>
+          <Backdrop />
+          <EventDecor variant="wiki" />
+          <a href="#contenu" className="skip-link">Aller au contenu</a>
+          <Header />
+          <SearchShortcut />
+          <main id="contenu" tabIndex={-1} className="mx-auto outline-none max-w-6xl overflow-x-hidden px-4 py-5 pb-28 md:overflow-x-visible md:py-6 md:pb-6">
+            <TermsBanner />
+            {children}
+            <LegalFooter />
+          </main>
+        </BrandProvider>
       </body>
     </html>
   );

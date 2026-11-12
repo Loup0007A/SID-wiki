@@ -2,6 +2,7 @@ import Link from 'next/link';
 import { createClient } from '@/lib/supabase/server';
 import Icon, { type IconName } from '@/components/Icon';
 import { SidIcon } from '@/components/icons/SidIcon';
+import { getBrand } from '@/lib/brand-server';
 
 export const dynamic = 'force-dynamic';
 
@@ -26,6 +27,7 @@ function Steps({ steps }: { steps: Step[] }) {
 const code = 'rounded bg-[color:var(--felt-2)] px-1.5 py-0.5 font-typewriter text-xs';
 
 export default async function HelpPage() {
+  await getBrand();
   const { data: isAdmin } = await createClient().rpc('wiki_is_admin');
 
   return (

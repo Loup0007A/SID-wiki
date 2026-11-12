@@ -13,10 +13,12 @@ import EnigmeDuJour from '@/components/EnigmeDuJour';
 import { enigmeOfTheDay } from '@/lib/enigme';
 import { codexRank, medalFor } from '@/lib/paliers';
 import PalierWatcher from '@/components/PalierWatcher';
+import { getBrand } from '@/lib/brand-server';
 
 export const dynamic = 'force-dynamic';
 
 export default async function HomePage() {
+  await getBrand();
   const supabase = createClient();
   const [{ data, error }, { data: recentData }, { data: topData }, { data: announcement }, { data: decor }, ...lists] = await Promise.all([
     supabase.rpc('wiki_stats'),

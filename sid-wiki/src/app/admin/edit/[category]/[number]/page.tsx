@@ -2,10 +2,12 @@ import { notFound, redirect } from 'next/navigation';
 import { createClient } from '@/lib/supabase/server';
 import { isCategory, parseNumber } from '@/lib/wiki';
 import EntryForm, { type FormEntry } from '@/components/EntryForm';
+import { getBrand } from '@/lib/brand-server';
 
 export const dynamic = 'force-dynamic';
 
 export default async function EditPage({ params }: { params: { category: string; number: string } }) {
+  await getBrand();
   if (!isCategory(params.category)) notFound();
   const category = params.category;
 

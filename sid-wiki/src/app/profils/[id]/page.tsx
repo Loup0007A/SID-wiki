@@ -7,12 +7,14 @@ import ArmorStand from '@/components/ArmorStand';
 import Icon from '@/components/Icon';
 import MigrationNeeded, { isMissingFunction } from '@/components/MigrationNeeded';
 import { SidIcon } from "@/components/icons/SidIcon";
+import { getBrand } from '@/lib/brand-server';
 
 export const dynamic = 'force-dynamic';
 
 const UUID_RE = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 
 export default async function ProfilePage({ params }: { params: { id: string } }) {
+  await getBrand();
   if (!UUID_RE.test(params.id)) notFound();
 
   const supabase = createClient();

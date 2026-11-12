@@ -18,10 +18,12 @@ import ReportButton from '@/components/ReportButton';
 import PersonalNote from '@/components/PersonalNote';
 import ViewTracker from '@/components/ViewTracker';
 import Icon from '@/components/Icon';
+import { getBrand } from '@/lib/brand-server';
 
 export const dynamic = 'force-dynamic';
 
 export default async function EntryPage({ params }: { params: { category: string; number: string } }) {
+  await getBrand();
   const n = parseNumber(params.number);
   if (!isCategory(params.category) || n === null) notFound();
 

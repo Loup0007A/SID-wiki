@@ -5,10 +5,12 @@ import EntryCard from '@/components/EntryCard';
 import Icon from '@/components/Icon';
 import AccessDenied from '@/components/AccessDenied';
 import { SidIcon } from "@/components/icons/SidIcon";
+import { getBrand } from '@/lib/brand-server';
 
 export const dynamic = 'force-dynamic';
 
 export default async function FavoritesPage() {
+  await getBrand();
   const supabase = createClient();
   const [{ data, error }, { data: notesData }] = await Promise.all([supabase.rpc('wiki_favorites_list'), supabase.rpc('wiki_notes_list')]);
   if (error) return <AccessDenied />;

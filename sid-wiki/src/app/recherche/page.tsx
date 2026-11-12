@@ -4,10 +4,12 @@ import { CATEGORIES, CATEGORY_LABELS, firstParam } from '@/lib/wiki';
 import EntryCard from '@/components/EntryCard';
 import AccessDenied from '@/components/AccessDenied';
 import Icon from '@/components/Icon';
+import { getBrand } from '@/lib/brand-server';
 
 export const dynamic = 'force-dynamic';
 
 export default async function SearchPage({ searchParams }: { searchParams: { q?: string | string[] } }) {
+  await getBrand();
   const q = (firstParam(searchParams.q) ?? '').trim();
   let results: EntrySummary[] = [];
 

@@ -9,6 +9,13 @@ Wiki RP (lieux, armes, mobs, objets, skills) branché sur le **même projet Supa
 3. Donne la permission `manage_wiki` à un rôle (bloc commenté en fin de migration — adapte les noms de colonnes de `role_permissions`). Le Fondateur l'a d'office via `has_permission`.
 4. `npm install && npm run dev`
 
+## Noms et adresses (Lot 77)
+
+Le nom du RP, des sites, de la monnaie et les adresses des trois sites se
+règlent dans `app_config` : voir `SETUP.md` dans le dépôt du Dossier Central
+(sid-website). Les fichiers `src/lib/brand.ts` et `src/brand/` sont des copies
+de ceux du Dossier Central : les garder identiques.
+
 ## Fonctionnement
 
 - **Numérotation** : chaque fiche a un numéro 000–999, unique par catégorie.

@@ -1,6 +1,7 @@
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import EntryLink from './EntryLink';
+import { brandify } from '@/lib/brand';
 import Mention from './Mention';
 import { ENTRY_HREF_RE, extractHeadings, isCategory, preprocessMentions, preprocessWikiLinks, safeDecode } from '@/lib/wiki';
 
@@ -15,7 +16,8 @@ export default function Markdown({ children, toc = false }: { children: string; 
   // serveur et le navigateur ne télécharge pas l'outil de mise en forme.
   // (Utilisable aussi depuis un composant navigateur : éditeur, commentaires.)
   const headings = extractHeadings(children);
-  const source = preprocessMentions(preprocessWikiLinks(children));
+  // Noms du jeu (Lot 77) : react-markdown a sa propre couche JSX, on remplace donc avant.
+  const source = preprocessMentions(preprocessWikiLinks(brandify(children)));
 
   const byLine = new Map(headings.map((h) => [h.line, h]));
   const heading =

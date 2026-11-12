@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useRef, useState } from 'react';
+import { brandify } from '@/lib/brand';
 import { SidIcon } from '@/components/icons/SidIcon';
 
 const SIZES = [0.9, 1, 1.125, 1.25, 1.4];
@@ -55,7 +56,7 @@ export default function EntryTools({ title }: { title: string }) {
     const url = window.location.href;
     try {
       if (navigator.share) {
-        await navigator.share({ title: `${title} — Wiki du S.I.D.`, url });
+        await navigator.share({ title: brandify(`${title} — Wiki du S.I.D.`), url });
         setOpen(false);
         return;
       }

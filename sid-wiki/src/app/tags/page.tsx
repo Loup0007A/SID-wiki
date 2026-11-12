@@ -3,10 +3,12 @@ import { createClient } from '@/lib/supabase/server';
 import { CATEGORIES, CATEGORY_LABELS, type Category } from '@/lib/wiki';
 import Icon from '@/components/Icon';
 import AccessDenied from '@/components/AccessDenied';
+import { getBrand } from '@/lib/brand-server';
 
 export const dynamic = 'force-dynamic';
 
 export default async function TagsPage() {
+  await getBrand();
   const { data, error } = await createClient().rpc('wiki_all_tags');
   if (error) return <AccessDenied />;
   const rows = (data ?? []) as { category: Category; tag: string; total: number }[];

@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { createClient } from '@/lib/supabase/client';
 import LoginIntro from '@/components/LoginIntro';
+import { BRAND } from '@/lib/brand';
 
 export default function LoginPage() {
   const router = useRouter();
@@ -37,7 +38,8 @@ export default function LoginPage() {
     setIntro(true);
   }
 
-  const applyUrl = process.env.NEXT_PUBLIC_DOSSIER_CENTRAL_URL;
+  // Adresse du site principal : variable d'environnement, sinon app_config.url_site (Lot 77).
+  const applyUrl = process.env.NEXT_PUBLIC_DOSSIER_CENTRAL_URL || `${BRAND.urls.site}/register`;
 
   return (
     <div className="mx-auto mt-6 max-w-sm sm:mt-16">

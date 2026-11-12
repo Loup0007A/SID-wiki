@@ -1,5 +1,6 @@
 import Link from 'next/link';
 import { pad } from '@/lib/wiki';
+import { BRAND } from '@/lib/brand';
 import { SidIcon } from '@/components/icons/SidIcon';
 
 /**
@@ -10,7 +11,6 @@ import { SidIcon } from '@/components/icons/SidIcon';
 
 export type Prey = { number: number; title: string | null; summary: string | null; image_url: string | null };
 
-const QUEST_URL = 'https://sid-quest.vercel.app';
 
 /** Choix du jour (heure de Paris), stable pour la journée. */
 export function preyOfTheDay(mobs: Prey[], now = new Date()): Prey | null {
@@ -53,7 +53,7 @@ export default function ProieDuJour({ prey }: { prey: Prey | null }) {
           )}
           <p className="proie-foot mt-2 text-xs">
             Sur le{' '}
-            <a href={`${QUEST_URL}/dashboard`} className="underline decoration-dotted underline-offset-2">
+            <a href={`${BRAND.urls.site}/dashboard`} className="underline decoration-dotted underline-offset-2">
               Dossier Central
             </a>
             , suis les traces de Brasombre : trois chasses, trois jours, et le titre de Grand Veneur est à toi.

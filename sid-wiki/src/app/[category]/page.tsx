@@ -5,6 +5,7 @@ import { CATEGORY_LABELS, firstParam, isCategory, type EntrySummary } from '@/li
 import CategoryView from '@/components/CategoryView';
 import Icon from '@/components/Icon';
 import AccessDenied from '@/components/AccessDenied';
+import { getBrand } from '@/lib/brand-server';
 
 export const dynamic = 'force-dynamic';
 
@@ -15,6 +16,7 @@ export default async function CategoryPage({
   params: { category: string };
   searchParams: { tag?: string | string[]; show?: string | string[] };
 }) {
+  await getBrand();
   if (!isCategory(params.category)) notFound();
   const category = params.category;
   const supabase = createClient();
