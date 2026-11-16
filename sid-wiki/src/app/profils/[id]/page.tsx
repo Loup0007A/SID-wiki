@@ -8,6 +8,7 @@ import Icon from '@/components/Icon';
 import MigrationNeeded, { isMissingFunction } from '@/components/MigrationNeeded';
 import { SidIcon } from "@/components/icons/SidIcon";
 import { getBrand } from '@/lib/brand-server';
+import { GlitchWhere } from '@/components/glitch/GlitchName';
 
 export const dynamic = 'force-dynamic';
 
@@ -40,6 +41,7 @@ export default async function ProfilePage({ params }: { params: { id: string } }
       <div className="mb-4 flex flex-wrap items-end justify-between gap-2">
         <div>
           <h1 className="font-typewriter text-[2.1rem] leading-tight text-olive-900 sm:text-[2.6rem]">@{profile.nickname}</h1>
+          <GlitchWhere name={profile.nickname} className="text-sm" />
           <p className="text-sm text-olive-700">
             {gear.length}/{GEAR_SLOTS.length} emplacement{gear.length > 1 ? 's' : ''} équipé{gear.length > 1 ? 's' : ''} · <SidIcon name="trophy" /> {profile.discoveries_total} découverte
             {profile.discoveries_total > 1 ? 's' : ''}

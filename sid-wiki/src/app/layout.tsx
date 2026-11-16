@@ -13,7 +13,8 @@ import EventDecor from '@/components/EventDecor';
 import { BrandProvider } from '@/components/BrandProvider';
 import SiteGate from '@/components/SiteGate';
 import { brandify } from '@/lib/brand';
-import { getBrand } from '@/lib/brand-server';
+import { getBrand, getGlitched } from '@/lib/brand-server';
+import { GlitchSync } from '@/components/glitch/GlitchSync';
 
 // Anciens iPhone (iOS 15.0 à 15.3) : fonctions JavaScript récentes absentes, utilisées par les bibliothèques.
 const POLYFILLS = `(function(){
@@ -47,12 +48,12 @@ export const viewport: Viewport = {
 };
 
 export default async function RootLayout({ children }: { children: React.ReactNode }) {
-  const brand = await getBrand();
+  const [brand, glitched] = await Promise.all([getBrand(), getGlitched()]);
   return (
     <html lang="fr">
       <body className="min-h-screen">
         <Script id="polyfills" strategy="beforeInteractive" dangerouslySetInnerHTML={{ __html: POLYFILLS }} />
-        <BrandProvider brand={brand}>
+        <BrandProvider brand={brand} glitched={glitched}>
           <Backdrop />
           <EventDecor variant="wiki" />
           <a href="#contenu" className="skip-link">Aller au contenu</a>
@@ -65,6 +66,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
               <LegalFooter />
             </main>
           </SiteGate>
+          <GlitchSync />
         </BrandProvider>
       </body>
     </html>
