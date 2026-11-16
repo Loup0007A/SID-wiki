@@ -856,3 +856,32 @@ html.ev-grande_chasse .wave-layer svg path:last-child { stroke: rgba(255, 190, 1
   font-weight: 700;
   padding: 0.4rem 1rem;
 }
+
+/* Élection du Dictateur (Lot 80) : fanions, confettis, étiquette. */
+.el-wire { fill: none; stroke: #d9c08a; stroke-width: 1; }
+.el-flag-0 { fill: #7a1430; }
+.el-flag-1 { fill: #f0c27a; }
+.el-flag-2 { fill: #f6eedb; }
+.el-confetti { position: absolute; inset: -20px 0 0; overflow: hidden; pointer-events: none; }
+.el-confetti > i {
+  position: absolute; top: -16px; display: block; width: 7px; height: 11px; border-radius: 2px; opacity: 0.55;
+  animation-name: el-fall; animation-timing-function: linear; animation-iteration-count: infinite;
+}
+@keyframes el-fall {
+  0% { transform: translate3d(0, -20px, 0) rotate(0deg); }
+  100% { transform: translate3d(var(--sway), 110vh, 0) rotate(var(--spin)); }
+}
+.el-pill {
+  position: fixed; left: 12px; bottom: 12px; z-index: 46; max-width: calc(100vw - 24px); overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+  padding: 7px 14px; border-radius: 999px; border: 1px solid #f0c27a; background: rgb(60 8 26 / 0.88); color: #fff3d2;
+  font: 600 12px/1.2 ui-sans-serif, system-ui, sans-serif; box-shadow: 0 6px 20px rgb(0 0 0 / 0.35); text-decoration: none;
+}
+.el-pill:hover { background: #7a1430; }
+/* Carte sur téléphone : les commandes occupent le bas, les fanions suffisent. */
+.el-pill-map { display: none; }
+.el-pill-wiki { bottom: calc(env(safe-area-inset-bottom) + 76px); }
+@media (min-width: 768px) {
+  .el-pill-map { display: block; bottom: 16px; left: 50%; transform: translateX(-50%); }
+  .el-pill-wiki { bottom: 16px; }
+}
+@media (prefers-reduced-motion: reduce) { .el-confetti { display: none; } }
