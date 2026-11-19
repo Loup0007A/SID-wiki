@@ -5,10 +5,13 @@ import { useCallback, useEffect, useMemo, useState } from 'react';
 import { createClient } from '@/lib/supabase/client';
 import { CATEGORY_LABELS, pad, type Category, type InfoRow } from '@/lib/wiki';
 import ProposalDiff from './ProposalDiff';
+import Markdown from './Markdown';
+import Icon from './Icon';
 
 type Status = 'pending' | 'accepted' | 'rejected' | 'withdrawn';
 type Row = {
   id: string;
+  kind?: 'edit' | 'new';
   status: Status;
   created_at: string;
   reviewed_at: string | null;
@@ -17,13 +20,13 @@ type Row = {
   author: string | null;
   mine: boolean;
   category: Category;
-  number: number;
+  number: number | null;
   entry_title: string | null;
   title: string | null;
   outdated: boolean;
 };
 type Fields = { title: string | null; summary: string | null; content: string | null; tags: string[]; infobox: InfoRow[] };
-type Detail = Row & { reviewer: string | null; proposed: Fields; current: Fields };
+type Detail = Row & { reviewer: string | null; rarity?: number | null; proposed: Fields; current: Fields };
 
 const STATUS: Record<Status, { label: string; cls: string }> = {
   pending: { label: 'En attente', cls: 'st-pending' },
@@ -99,10 +102,13 @@ export default function ProposalsBoard() {
           <h1 className="font-typewriter text-4xl text-olive-900">Propositions</h1>
           <p className="mt-1 max-w-[60ch] text-olive-800">
             {admin
-              ? 'Les corrections proposées par les chasseurs. Compare avec la fiche actuelle, puis accepte ou refuse avec un mot.'
-              : 'Tes propositions de modification et leur réponse. Pour en faire une, ouvre une fiche et choisis « Proposer une modification ».'}
+              ? 'Les corrections et les nouvelles fiches proposées par les chasseurs. Compare, puis accepte ou refuse avec un mot.'
+              : 'Tes propositions et leur réponse. Pour corriger une fiche, ouvre-la et choisis « Proposer une modification ».'}
           </p>
         </div>
+        <Link href="/proposer/nouvelle" className="btn">
+          <Icon name="propose" /> Proposer une fiche
+        </Link>
       </header>
 
       <div className="flex flex-wrap items-center gap-2">
@@ -139,11 +145,11 @@ export default function ProposalsBoard() {
           {rows.map((r) => (
             <li key={r.id}>
               <button type="button" onClick={() => openRow(r.id)} className={`prop-row cat-${r.category} ${open?.id === r.id ? 'is-open' : ''}`}>
-                <span className="catno w-14 shrink-0 text-2xl leading-none">{pad(r.number)}</span>
+                <span className="catno w-14 shrink-0 text-2xl leading-none">{r.number !== null ? pad(r.number) : '+'}</span>
                 <span className="min-w-0 flex-1">
                   <span className="block truncate font-typewriter text-lg text-olive-900">{r.entry_title ?? r.title}</span>
                   <span className="block truncate text-xs text-olive-700">
-                    {CATEGORY_LABELS[r.category].singular} · par {r.mine ? 'toi' : r.author ?? 'un chasseur'} · {when(r.created_at)}
+                    {r.kind === 'new' ? `Nouvelle fiche (${CATEGORY_LABELS[r.category].singular.toLowerCase()})` : CATEGORY_LABELS[r.category].singular} · par {r.mine ? 'toi' : r.author ?? 'un chasseur'} · {when(r.created_at)}
                     {r.note ? ` · « ${r.note} »` : ''}
                   </span>
                 </span>
@@ -160,11 +166,16 @@ export default function ProposalsBoard() {
           <div className="flex flex-wrap items-start justify-between gap-3">
             <div>
               <p className="font-typewriter text-sm text-olive-600">
-                <Link href={`/${open.category}/${pad(open.number)}`} className="hover:text-ink">
-                  {CATEGORY_LABELS[open.category].singular} n° {pad(open.number)} →
-                </Link>
+                {open.number !== null ? (
+                  <Link href={`/${open.category}/${pad(open.number)}`} className="hover:text-ink">
+                    {CATEGORY_LABELS[open.category].singular} n° {pad(open.number)} →
+                  </Link>
+                ) : (
+                  <>Nouvelle fiche · {CATEGORY_LABELS[open.category].singular}</>
+                )}
               </p>
-              <h2 className="font-typewriter text-3xl text-olive-900">{open.current.title}</h2>
+              <h2 className="font-typewriter text-3xl text-olive-900">{open.kind === 'new' ? open.proposed.title : open.current.title}</h2>
+              {open.kind === 'new' && open.rarity && <p className="text-sm text-olive-700">Rareté suggérée : {open.rarity} sur 8</p>}
               <p className="mt-1 text-sm text-olive-700">
                 Proposée par {open.mine ? 'toi' : open.author ?? 'un chasseur'} le {when(open.created_at)}
               </p>
@@ -182,8 +193,30 @@ export default function ProposalsBoard() {
               La fiche a changé depuis cette proposition : la comparaison se fait avec la version actuelle. Accepter remplacera ces changements récents.
             </p>
           )}
-          {open.status !== 'pending' && <p className="text-xs text-olive-700">Comparaison avec la fiche telle qu&apos;elle était au moment de la proposition.</p>}
-          <ProposalDiff current={open.current} proposed={open.proposed} />
+          {open.kind === 'new' ? (
+            <div className="space-y-4">
+              {open.proposed.summary && <p className="italic text-olive-800">{open.proposed.summary}</p>}
+              {open.proposed.infobox.length > 0 && (
+                <dl className="grid grid-cols-[auto_1fr] gap-x-4 gap-y-1 text-sm">
+                  {open.proposed.infobox.map((r, i) => (
+                    <div key={i} className="contents">
+                      <dt className="text-olive-700">{r.label}</dt>
+                      <dd className="text-olive-900">{r.value}</dd>
+                    </div>
+                  ))}
+                </dl>
+              )}
+              {open.proposed.tags.length > 0 && <p className="text-sm text-olive-700">{open.proposed.tags.map((t) => `#${t}`).join(' ')}</p>}
+              <div className="card p-4">
+                <Markdown>{open.proposed.content || ''}</Markdown>
+              </div>
+            </div>
+          ) : (
+            <>
+              {open.status !== 'pending' && <p className="text-xs text-olive-700">Comparaison avec la fiche telle qu&apos;elle était au moment de la proposition.</p>}
+              <ProposalDiff current={open.current} proposed={open.proposed} />
+            </>
+          )}
           {open.review_note && (
             <blockquote className="prop-note">
               <span className="label !mb-1 block">Réponse de l&apos;équipe{open.reviewer ? ` (${open.reviewer})` : ''}</span>
@@ -196,7 +229,7 @@ export default function ProposalsBoard() {
               <textarea id="review-note" className="input min-h-[4.5rem]" maxLength={500} value={note} onChange={(e) => setNote(e.target.value)} />
               <div className="flex flex-wrap gap-2">
                 <button type="button" className="btn" disabled={busy} onClick={() => review(true)}>
-                  Accepter et publier
+                  {open.kind === 'new' ? 'Créer la fiche' : 'Accepter et publier'}
                 </button>
                 <button type="button" className="btn-danger" disabled={busy} onClick={() => review(false)}>
                   Refuser

@@ -54,6 +54,9 @@ export default async function CategoryPage({
           <Icon name={category} size="0.95em" />
           {CATEGORY_LABELS[category].label}
         </h1>
+        <Link href={`/proposer/nouvelle?categorie=${category}`} className="btn-ghost order-last sm:order-none">
+          <Icon name="propose" /> Proposer une fiche
+        </Link>
         <p className="leading-none">
           <span className="catno text-[2.2rem]">{found}</span>
           <span className="font-typewriter text-xl text-olive-600"> / {all.length}</span>
