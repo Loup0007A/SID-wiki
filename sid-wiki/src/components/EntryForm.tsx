@@ -108,6 +108,31 @@ export default function EntryForm({ initial, standImage = null }: { initial: For
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
+  // Lieux de la Cartographie liés à la fiche (migration 0118 de la Cartographie) :
+  // le premier membre qui atteint un de ces lieux découvre la fiche.
+  const [mapPlaces, setMapPlaces] = useState<{ id: string; name: string }[]>([]);
+  const [placeIds, setPlaceIds] = useState<string[]>([]);
+  const [placeQ, setPlaceQ] = useState('');
+  const [placesReady, setPlacesReady] = useState(false);
+  useEffect(() => {
+    supabase
+      .from('map_places')
+      .select('id, name')
+      .eq('is_published', true)
+      .order('name')
+      .then(({ data }) => setMapPlaces((data ?? []) as { id: string; name: string }[]));
+    if (!initial.id) return setPlacesReady(true);
+    supabase
+      .from('wiki_entry_places')
+      .select('place_id')
+      .eq('entry_id', initial.id)
+      .then(({ data, error }) => {
+        if (error) return; // table absente : le bloc reste caché
+        setPlaceIds(((data ?? []) as { place_id: string }[]).map((r) => r.place_id));
+        setPlacesReady(true);
+      });
+  }, [supabase, initial.id]);
+
   // Sélecteur de fiches à lier
   const [q, setQ] = useState('');
   const [candidates, setCandidates] = useState<LinkedEntry[]>([]);
@@ -322,6 +347,18 @@ export default function EntryForm({ initial, standImage = null }: { initial: For
       }
     }
 
+    if (placesReady) {
+      await supabase.from('wiki_entry_places').delete().eq('entry_id', id!);
+      if (placeIds.length) {
+        const { error } = await supabase.from('wiki_entry_places').insert(placeIds.map((place_id) => ({ entry_id: id!, place_id })));
+        if (error) {
+          setStatus(null);
+          setSaving(false);
+          return setError(`Fiche enregistrée, mais lieux de la carte en erreur : ${error.message}`);
+        }
+      }
+    }
+
     // Ménage dans le Storage : on supprime ce qui n'est plus utilisé (ancien modèle, anciennes images, brouillons).
     if (initial.model_url && initial.model_url !== finalModelUrl) await removeStoredFile(supabase, 'wiki-models', initial.model_url);
     if (initial.image_url && initial.image_url !== imageUrl) await removeStoredFile(supabase, 'wiki-images', initial.image_url);
@@ -416,6 +453,52 @@ export default function EntryForm({ initial, standImage = null }: { initial: For
           + Ajouter une ligne
         </button>
       </div>
+
+      {placesReady && (
+        <div className="card p-5">
+          <p className="label">Lieux de la carte</p>
+          <p className="mb-3 text-xs text-olive-700">
+            Si la fiche n&apos;est pas encore découverte, le premier chasseur qui atteint un de ces lieux sur la Cartographie la découvre, et en devient le découvreur. Les lieux apparaissent aussi sur la fiche.
+          </p>
+          {placeIds.length > 0 && (
+            <div className="mb-3 flex flex-wrap gap-1.5">
+              {placeIds.map((pid) => (
+                <button
+                  key={pid}
+                  type="button"
+                  className="chip chip-on"
+                  aria-label={`Retirer ${mapPlaces.find((m) => m.id === pid)?.name ?? 'ce lieu'}`}
+                  onClick={() => setPlaceIds((ids) => ids.filter((x) => x !== pid))}
+                >
+                  {mapPlaces.find((m) => m.id === pid)?.name ?? 'Lieu'} ×
+                </button>
+              ))}
+            </div>
+          )}
+          <input className="input" placeholder="Chercher un lieu…" value={placeQ} onChange={(e) => setPlaceQ(e.target.value)} aria-label="Chercher un lieu de la carte" />
+          {placeQ.trim() && (
+            <ul className="mt-2 flex flex-wrap gap-1.5">
+              {mapPlaces
+                .filter((m) => !placeIds.includes(m.id) && m.name.toLowerCase().includes(placeQ.trim().toLowerCase()))
+                .slice(0, 12)
+                .map((m) => (
+                  <li key={m.id}>
+                    <button
+                      type="button"
+                      className="chip"
+                      onClick={() => {
+                        setPlaceIds((ids) => [...ids, m.id]);
+                        setPlaceQ('');
+                      }}
+                    >
+                      + {m.name}
+                    </button>
+                  </li>
+                ))}
+            </ul>
+          )}
+        </div>
+      )}
 
       <div className="card p-5">
         <div className="mb-2 flex items-center justify-between">

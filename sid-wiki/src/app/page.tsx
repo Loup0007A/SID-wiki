@@ -107,14 +107,18 @@ export default async function HomePage() {
                     href={`/${r.category}/${pad(r.number)}`}
                     className="group flex items-center gap-3 rounded-lg border border-[color:var(--rule)] bg-[color:var(--bg)] p-2 pr-3 transition hover:border-[color:var(--cat)]"
                   >
-                    {r.image_url ? (
-                      // eslint-disable-next-line @next/next/no-img-element
-                      <img src={r.image_url} alt="" className="h-12 w-12 flex-none rounded-md object-cover" />
-                    ) : (
-                      <span className="bg-cat-soft grid h-12 w-12 flex-none place-items-center rounded-md">
-                        <Icon name={r.category} size="1.5em" />
-                      </span>
-                    )}
+                    <span className="mount mount-mini flex-none">
+                      <span className="mount-corner tl" aria-hidden />
+                      <span className="mount-corner br" aria-hidden />
+                      {r.image_url ? (
+                        // eslint-disable-next-line @next/next/no-img-element
+                        <img src={r.image_url} alt="" className="mount-img" />
+                      ) : (
+                        <span className="mount-icon">
+                          <Icon name={r.category} size="1.4em" />
+                        </span>
+                      )}
+                    </span>
                     <span className="min-w-0 flex-1">
                       <span className="block truncate font-semibold text-ink group-hover:text-[color:var(--cat)]">{r.title}</span>
                       <span className="mt-0.5 flex flex-wrap items-center gap-x-2 text-[13px] text-olive-700">

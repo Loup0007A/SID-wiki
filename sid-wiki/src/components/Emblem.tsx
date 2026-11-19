@@ -19,6 +19,7 @@ export type EmblemName =
   | 'tags'
   | 'aide'
   | 'admin'
+  | 'propose'
   | 'menu';
 
 const T = { fill: 'none', stroke: 'currentColor', strokeWidth: 1.6, strokeLinecap: 'round' as const, strokeLinejoin: 'round' as const };
@@ -68,6 +69,13 @@ function art(name: EmblemName) {
         <>
           <path {...F} d="M8 9.5V5.5l4-2 4 2v4c0 3-1.8 4.5-4 5.5-2.2-1-4-2.5-4-5.5z" />
           <path {...T} d="M8 9.5V5.5l4-2 4 2v4c0 3-1.8 4.5-4 5.5-2.2-1-4-2.5-4-5.5zM5 21c.6-3.2 3.2-5 7-5s6.4 1.8 7 5M12 15v6" />
+        </>
+      );
+    case 'propose':
+      return (
+        <>
+          <path {...F} d="M19.5 3.5c-6 .5-10.5 4.8-12 11.3l2.2 1.4c4.8-3.3 8.5-7.6 9.8-12.7z" />
+          <path {...T} d="M19.5 3.5c-6 .5-10.5 4.8-12 11.3l2.2 1.4c4.8-3.3 8.5-7.6 9.8-12.7zM7.5 14.8 4 20.5M9.7 16.2 12 13.5M3.5 20.5h8" />
         </>
       );
     case 'accueil':

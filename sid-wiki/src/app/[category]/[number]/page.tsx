@@ -19,6 +19,7 @@ import PersonalNote from '@/components/PersonalNote';
 import ViewTracker from '@/components/ViewTracker';
 import Icon from '@/components/Icon';
 import { getBrand } from '@/lib/brand-server';
+import SightingsMap from '@/components/SightingsMap';
 
 export const dynamic = 'force-dynamic';
 
@@ -33,6 +34,11 @@ export default async function EntryPage({ params }: { params: { category: string
   if (!data) notFound();
 
   const entry = data as EntryFull;
+  // Contributeurs (propositions acceptées, migration 0211) : absent avant la migration.
+  const { data: contribData } = entry.discovered
+    ? await supabase.rpc('wiki_contributors', { p_category: entry.category, p_number: n })
+    : { data: null };
+  const contributors = ((contribData ?? []) as { nickname: string; count: number }[]).filter((c) => c.nickname);
   const isAdmin = entry.id !== null;
   const label = CATEGORY_LABELS[entry.category];
   const showMasked = !entry.discovered;
@@ -48,6 +54,9 @@ export default async function EntryPage({ params }: { params: { category: string
           Modifier
         </Link>
       )}
+      <Link href={`/proposer/${entry.category}/${pad(entry.number)}`} className="btn-ghost">
+        <Icon name="propose" /> Proposer une modification
+      </Link>
     </div>
   );
 
@@ -109,9 +118,25 @@ export default async function EntryPage({ params }: { params: { category: string
               </>
             ) : (
               entry.image_url && (
-                <figure className="rounded-lg bg-[#0f1d1a] p-2 ring-1 ring-inset ring-[color:var(--rule)]">
-                  {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img src={entry.image_url} alt={entry.title ?? ''} className="max-h-[28rem] w-full rounded object-cover" />
+                <figure>
+                  <div className="mount mount-hero">
+                    <span className="mount-corner tl" aria-hidden />
+                    <span className="mount-corner tr" aria-hidden />
+                    <span className="mount-corner bl" aria-hidden />
+                    <span className="mount-corner br" aria-hidden />
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img src={entry.image_url} alt={entry.title ?? ''} className="mount-img max-h-[30rem] w-full object-cover" />
+                  </div>
+                  <figcaption className="specimen-label hero-label">
+                    <span className="specimen-pin" aria-hidden />
+                    <span className="flex items-center justify-between gap-2">
+                      <span className="specimen-no">
+                        {label.singular} n° {pad(entry.number)}
+                      </span>
+                      <Rarity value={entry.rarity} className="specimen-rarity text-xs" />
+                    </span>
+                    <span className="specimen-name">{entry.title}</span>
+                  </figcaption>
                 </figure>
               )
             )}
@@ -132,6 +157,18 @@ export default async function EntryPage({ params }: { params: { category: string
             {entry.discoverer && (
               <p className="text-sm text-olive-800">
                 <span className="stamp mr-1">Découvert</span> par <Mention nickname={entry.discoverer} />
+              </p>
+            )}
+
+            {contributors.length > 0 && (
+              <p className="text-sm text-olive-800">
+                <span className="label !mb-1 block">Avec les contributions de</span>
+                {contributors.map((c, i) => (
+                  <span key={c.nickname}>
+                    {i > 0 && ', '}
+                    <Mention nickname={c.nickname} />
+                  </span>
+                ))}
               </p>
             )}
 
@@ -166,6 +203,8 @@ export default async function EntryPage({ params }: { params: { category: string
                 </ul>
               </section>
             )}
+
+            <SightingsMap category={entry.category} number={entry.number} />
 
             <div className="mt-8">
               <ReportButton category={entry.category} number={entry.number} />

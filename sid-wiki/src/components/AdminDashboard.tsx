@@ -297,6 +297,7 @@ export default function AdminDashboard() {
   }
 
   const selIds = Array.from(selected);
+  const pendingProposals = usePendingProposals();
 
   return (
     <div>
@@ -313,6 +314,9 @@ export default function AdminDashboard() {
           <SidIcon name="flag" /> Signalements{openReports > 0 && <span className="ml-2 rounded-full bg-stamp px-2 text-xs font-bold text-white">{openReports}</span>}
         </button>
         <button onClick={() => setTab('settings')} className={tab === 'settings' ? 'btn' : 'btn-ghost'}><SidIcon name="gear" /> Réglages</button>
+        <Link href="/propositions" className="btn-ghost">
+          <SidIcon name="quill" /> Propositions{pendingProposals > 0 && <span className="ml-2 rounded-full bg-[color:var(--brass)] px-2 text-xs font-bold text-[#1b140a]">{pendingProposals}</span>}
+        </Link>
       </div>
 
       {tab === 'reports' && <AdminReports reports={reports} onChange={() => { loadReports(); load(); }} />}
@@ -480,4 +484,16 @@ export default function AdminDashboard() {
       )}
     </div>
   );
+}
+
+
+/** Propositions de modification en attente (migration 0211 ; 0 avant). */
+function usePendingProposals() {
+  const [n, setN] = useState(0);
+  useEffect(() => {
+    createClient()
+      .rpc('wiki_proposals_pending_count')
+      .then(({ data, error }) => !error && setN(Number(data) || 0));
+  }, []);
+  return n;
 }

@@ -40,6 +40,9 @@ export default function UserMenu({ isAdmin }: { isAdmin: boolean }) {
           <Link href="/hasard" className={item} role="menuitem">
             <Icon name="hasard" /> Fiche au hasard
           </Link>
+          <Link href="/propositions" className={item} role="menuitem">
+            <Icon name="propose" /> Propositions
+          </Link>
           <Link href="/tags" className={item} role="menuitem">
             <Icon name="tags" /> Tags
           </Link>

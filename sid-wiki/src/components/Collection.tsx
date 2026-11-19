@@ -7,8 +7,8 @@ import { medalFor } from '@/lib/paliers';
 const MAX_SEGMENTS = 60;
 
 /**
- * La collection (accueil du Codex) : une carte par catégorie, facile à
- * toucher. La réglette montre une encoche par fiche : pleine = découverte,
+ * La collection (accueil du Codex) : un tiroir du cabinet par catégorie,
+ * avec son porte-étiquette de laiton et sa poignée. La réglette montre une encoche par fiche : pleine = découverte,
  * creuse = encore à découvrir.
  */
 export default function Collection({ lists }: { lists: { category: Category; entries: EntrySummary[] }[] }) {
@@ -25,7 +25,7 @@ export default function Collection({ lists }: { lists: { category: Category; ent
           <li key={category} className={`cat-${category}`}>
             <Link
               href={`/${category}`}
-              className="cat-card group flex h-full flex-col rounded-xl p-3.5 sm:p-5"
+              className="cat-card drawer group flex h-full flex-col rounded-xl p-3.5 sm:p-5"
               aria-label={`${label} : ${found} fiches découvertes sur ${total}`}
             >
               <span className="flex items-start justify-between gap-2">
@@ -38,10 +38,13 @@ export default function Collection({ lists }: { lists: { category: Category; ent
                 </span>
               </span>
 
-              <span className="mt-3 flex items-center gap-2">
-                <span className="font-typewriter text-[1.3rem] leading-tight text-ink sm:text-[1.5rem]">{label}</span>
-                <MedalBadge medal={pal.medal} size={20} />
+              <span className="drawer-plate mt-3">
+                <span className="drawer-plate-card">
+                  <span className="truncate">{label}</span>
+                  <MedalBadge medal={pal.medal} size={18} />
+                </span>
               </span>
+              <span className="drawer-pull" aria-hidden />
 
               {segmented ? (
                 <span className="mt-3 flex gap-[3px]" aria-hidden>
@@ -75,15 +78,15 @@ export default function Collection({ lists }: { lists: { category: Category; ent
         );
       })}
       <li>
-        <Link href="/profils" className="cat-card group flex h-full flex-col rounded-xl p-3.5 sm:p-5" style={{ ['--cat' as string]: 'var(--brass)' }}>
+        <Link href="/profils" className="cat-card drawer group flex h-full flex-col rounded-xl p-3.5 sm:p-5" style={{ ['--cat' as string]: 'var(--brass)' }}>
           <span className="grid h-10 w-10 place-items-center rounded-lg bg-brass-400/15 text-brass-400 sm:h-12 sm:w-12">
             <Icon name="profils" size="1.6em" />
           </span>
-          <span className="mt-3 font-typewriter text-[1.3rem] leading-tight text-ink sm:text-[1.5rem]">Profils</span>
-          <span className="mt-1.5 text-[13px] leading-snug text-olive-700 sm:text-sm">Le porte-armure de chaque chasseur</span>
-          <span className="mt-auto flex justify-end pt-2 text-brass-400" aria-hidden>
-            →
+          <span className="drawer-plate mt-3">
+            <span className="drawer-plate-card">Profils</span>
           </span>
+          <span className="drawer-pull" aria-hidden />
+          <span className="mt-auto pt-3 text-center text-[13px] leading-snug text-olive-700 sm:text-sm">Le porte-armure de chaque chasseur</span>
         </Link>
       </li>
     </ul>

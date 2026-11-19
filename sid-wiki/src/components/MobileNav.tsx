@@ -71,10 +71,11 @@ export default function MobileNav({ isAdmin }: { isAdmin: boolean }) {
               ))}
             </div>
 
-            <div className="mt-2 grid grid-cols-4 gap-2 text-center text-xs font-bold">
+            <div className="mt-2 grid grid-cols-3 gap-2 text-center text-xs font-bold">
               {([
                 ['/profils', 'profils', 'Profils'],
                 ['/hasard', 'hasard', 'Hasard'],
+                ['/propositions', 'propose', 'Proposer'],
                 ['/tags', 'tags', 'Tags'],
                 ['/aide', 'aide', 'Aide'],
                 ['/confidentialite', 'aide', 'Données'],
