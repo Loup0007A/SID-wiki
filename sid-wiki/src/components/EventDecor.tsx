@@ -6,8 +6,8 @@
  * l'année : Saint-Valentin, poisson d'avril, Pâques, 1er mai, fête de la
  * musique, 14 juillet, 11 novembre) — même réglage que le Dossier Central (fonction site_decor,
  * Modération → Affichage événementiel). Fichier identique dans la
- * Cartographie et le Wiki ; seul le style change (variant). Au Wiki, il
- * choisit aussi le thème du fond (Lot 91).
+ * Cartographie et le Wiki ; seul le style change (variant). Il choisit
+ * aussi le thème du fond (Wiki : Lot 91, Cartographie : Lot 92).
  *
  * Ce fichier est léger : les dessins (EventDecorLayers) ne sont téléchargés
  * que si un événement est affiché. Hors saison, rien n'est chargé.
@@ -75,14 +75,14 @@ export function useEventDecor(): Decor | null {
   return decor;
 }
 
-// Thème du fond (Wiki, Lot 91) : le premier évent affiché de cette liste.
+// Thème du fond : le premier évent affiché de cette liste.
 const THEME_ORDER = ['election', 'grande_chasse', 'noel', 'halloween', ...HOLIDAYS] as const;
 
 export default function EventDecor({ variant }: { variant: 'map' | 'wiki' }) {
   const decor = useEventDecor();
   const holiday = HOLIDAYS.find((k) => decor?.[k]) ?? null;
   useEffect(() => {
-    if (!decor || variant !== 'wiki') return;
+    if (!decor) return;
     const root = document.documentElement;
     let t: string | undefined = THEME_ORDER.find((k) => decor[k]);
     if (t === 'election' && root.dataset.electionMode === 'force') t = 'election_force';
