@@ -30,7 +30,7 @@ export default function RecentlyViewed() {
     <section className="panel mt-5 p-4 sm:p-5" aria-labelledby="recent-views">
       <div className="mb-3 flex items-center justify-between gap-2">
         <h2 id="recent-views" className="section-title !text-xl">Tu as consulté</h2>
-        <button type="button" className="text-xs text-olive-600 hover:text-ink hover:underline" onClick={clear}>
+        <button type="button" className="py-1 text-xs text-olive-600 hover:text-ink hover:underline" onClick={clear}>
           Effacer
         </button>
       </div>

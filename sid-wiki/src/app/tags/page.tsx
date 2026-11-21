@@ -37,7 +37,7 @@ export default async function TagsPage() {
                       href={`/${c}?tag=${encodeURIComponent(r.tag)}`}
                       className="rounded-full bg-brass-400/20 px-3 py-1 font-typewriter text-sm text-brass-300 hover:bg-brass-400/30"
                     >
-                      #{r.tag} <span className="text-xs opacity-70">{r.total}</span>
+                      #{r.tag} <span className="text-xs font-semibold">{r.total}</span>
                     </Link>
                   ))}
                 </div>

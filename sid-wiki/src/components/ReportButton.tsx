@@ -35,7 +35,7 @@ export default function ReportButton({ category, number }: { category: string; n
 
   return (
     <div className="no-print">
-      <button type="button" className="text-sm text-olive-700 underline-offset-2 hover:underline" onClick={() => setOpen((o) => !o)} aria-expanded={open}>
+      <button type="button" className="py-1 text-sm text-olive-700 underline-offset-2 hover:underline" onClick={() => setOpen((o) => !o)} aria-expanded={open}>
         <SidIcon name="flag" /> Signaler un problème sur cette fiche
       </button>
       {open && (

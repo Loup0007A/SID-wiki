@@ -32,7 +32,7 @@ const config: Config = {
         brass: {
           300: v('brass3'),
           400: '#e8b13a',
-          500: '#c99526',
+          500: v('brass5'),
           600: '#a8782a',
         },
         ink: v('ink'),

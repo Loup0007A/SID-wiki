@@ -35,17 +35,19 @@
   --lichen: rgb(var(--creme) / 0.8);
   --t-ink: var(--creme);
   --t-o9: var(--creme);
-  --t-o8: 244 238 222;
-  --t-o7: 226 236 226;
-  --t-o6: 204 222 212;
-  --t-brass3: 248 220 150;
-  --t-stamp: 255 176 150;
+  --t-o8: 248 244 232;
+  --t-o7: 238 243 236;
+  --t-o6: 236 244 238;
+  --t-brass3: 253 238 196;
+  --t-brass5: 252 226 150;
+  --t-stamp: 255 196 176;
   --cat-lieux: #9ff0d6;
   --cat-armes: #d7e0f2;
-  --cat-mobs: #ffb39c;
+  --cat-mobs: #ffc4b2;
   --cat-objets: #ffd27a;
   --cat-skills: #d9c8ff;
   --titre-ombre: 0 0.07em 0 rgb(var(--encre));
+  --st-ok: #a6efc6;
 }
 .jour, .card, .panel, .cat-card, .prop-row, .diff-block, .enigme, .proie, .seg, .plate-on, .entry-body {
   --bg: rgb(var(--creme-2));
@@ -60,14 +62,16 @@
   --t-o8: 28 54 46;
   --t-o7: 48 74 66;
   --t-o6: 78 100 92;
-  --t-brass3: 138 96 20;
+  --t-brass3: 128 88 16;
+  --t-brass5: 138 96 20;
   --t-stamp: var(--accent-on-card);
-  --cat-lieux: #16735f;
+  --cat-lieux: #13695a;
   --cat-armes: #44557a;
-  --cat-mobs: #b4432a;
-  --cat-objets: #94650c;
+  --cat-mobs: #a33b24;
+  --cat-objets: #82570a;
   --cat-skills: #6447b8;
   --titre-ombre: none;
+  --st-ok: #1d6e47;
 }
 /* La couleur du texte se transmet déjà calculée : chaque niveau la redonne. */
 .nuit, .jour, .card, .panel, .cat-card, .prop-row, .diff-block, .enigme, .proie, .seg, .plate-on, .entry-body { color: var(--bone); }
@@ -259,7 +263,7 @@ h1.font-typewriter { -webkit-text-stroke: var(--titre-trait, 0) rgb(var(--encre)
     background: var(--cat);
   }
   .chip {
-    @apply inline-flex items-center gap-1 rounded-full border px-2.5 py-0.5 text-xs font-medium text-olive-700;
+    @apply inline-flex min-h-[1.5rem] items-center gap-1 rounded-full border px-2.5 py-0.5 text-xs font-medium text-olive-700;
     border-color: var(--rule-2);
   }
   a.chip:hover { border-color: var(--brass); color: var(--bone); }
@@ -314,7 +318,7 @@ select option {
 .legal li { margin: 0.3rem 0; }
 .legal a { text-decoration: underline; }
 .legal .legal-h2 { font-family: "Young Serif", Georgia, serif; font-weight: 400; font-size: 1.2rem; margin: 1.5rem 0 0.3rem; }
-.legal .legal-meta { font-size: 0.8rem; opacity: 0.7; }
+.legal .legal-meta { font-size: 0.8rem; opacity: 0.85; }
 
 /* =====================================================================
    Affichage événementiel : Halloween (réglé depuis Modération sur le
@@ -972,7 +976,7 @@ html.ev-grande_chasse .wave-layer svg path:last-child { stroke: rgba(255, 190, 1
 .medal { flex: none; filter: drop-shadow(0 2px 3px rgb(0 0 0 / .35)); }
 .medal-or, .medal-complet { animation: medal-shine 4s ease-in-out infinite; }
 @keyframes medal-shine { 0%, 85%, 100% { filter: drop-shadow(0 2px 3px rgb(0 0 0 / .35)); } 92% { filter: drop-shadow(0 0 6px rgb(255 214 120 / .9)); } }
-.codex-rank { font-family: "Young Serif", Georgia, serif; color: var(--brass); }
+.codex-rank { font-family: "Young Serif", Georgia, serif; color: rgb(var(--t-brass3)); }
 .palier-news { border-left: 4px solid var(--brass); animation: palier-in .5s cubic-bezier(.2,.9,.3,1.2); }
 .palier-pop { animation: palier-pop .7s cubic-bezier(.2,.9,.3,1.5) both; }
 .palier-pop:nth-child(2) { animation-delay: .12s; } .palier-pop:nth-child(3) { animation-delay: .24s; }
@@ -1127,10 +1131,11 @@ button.chip:hover { border-color: var(--brass); color: var(--bone); }
   text-transform: uppercase;
   border: 1px solid currentColor;
 }
-.st-pending { color: var(--brass); }
-.st-accepted { color: #7fcfa3; }
-.st-rejected { color: var(--sanguine); }
-.st-withdrawn { color: var(--lichen); opacity: 0.7; }
+/* Statuts : couleurs lisibles sur fiche crème comme sur plaque sombre (Lot 95). */
+.st-pending { color: rgb(var(--t-brass3)); }
+.st-accepted { color: var(--st-ok); }
+.st-rejected { color: rgb(var(--t-stamp)); }
+.st-withdrawn { color: var(--lichen); }
 .prop-note {
   border-left: 3px solid var(--brass);
   padding: 0.5rem 0.9rem;
@@ -1429,16 +1434,18 @@ html.calme *, html.calme *::before, html.calme *::after {
   --lichen: rgb(var(--creme) / 0.8);
   --t-ink: var(--creme);
   --t-o9: var(--creme);
-  --t-o8: 244 238 222;
-  --t-o7: 226 236 226;
-  --t-o6: 204 222 212;
-  --t-brass3: 248 220 150;
-  --t-stamp: 255 176 150;
+  --t-o8: 248 244 232;
+  --t-o7: 238 243 236;
+  --t-o6: 214 228 220;
+  --t-brass3: 252 230 172;
+  --t-brass5: 252 222 140;
+  --t-stamp: 255 186 162;
   --cat-lieux: #9ff0d6;
   --cat-armes: #d7e0f2;
   --cat-mobs: #ffb39c;
   --cat-objets: #ffd27a;
   --cat-skills: #d9c8ff;
+  --st-ok: #8fdcb2;
   color: var(--bone);
   border-color: rgb(0 0 0 / 0.6);
 }
@@ -1446,6 +1453,13 @@ html.calme *, html.calme *::before, html.calme *::after {
 :root.sombre .seg { background: rgb(var(--surface-2)); }
 :root.sombre .seg > button.is-on { background: rgb(var(--creme)); color: rgb(var(--encre)); }
 :root.sombre select option { background: rgb(22 50 44); color: rgb(var(--creme)); }
+/* Champs et boutons secondaires : plus de rectangles crème dans la nuit. */
+:root.sombre .input { background: rgb(var(--surface-2)); color: rgb(var(--creme)); border-color: rgb(var(--creme) / 0.4); }
+:root.sombre .input::placeholder { color: rgb(var(--creme) / 0.91); }
+:root.sombre :is(.btn-ghost, .btn-danger) { background: rgb(var(--surface)); color: rgb(var(--creme)); border-color: rgb(0 0 0 / 0.6); }
+:root.sombre .btn-ghost:hover:not(:disabled) { background: rgb(var(--surface-2)); }
+:root.sombre .btn-danger { color: #ffb39c; }
+:root.sombre .specimen-label { filter: brightness(0.88); }
 
 /* Mode épuré : fond uni, ni motif ni particules, contours fins sans ombre. */
 :root.epure, :root.epure .nuit {
@@ -1460,3 +1474,9 @@ html.calme *, html.calme *::before, html.calme *::after {
 :root.epure .site-bar { box-shadow: none; border-bottom-width: 2px; }
 :root.epure .site-bar-bas { border-top-width: 2px; }
 :root.epure .cat-card:hover, :root.epure :is(.btn, .btn-ghost, .btn-danger):hover:not(:disabled) { transform: none; box-shadow: none; }
+
+/* Un mot très long (pseudo, titre, lien) passe à la ligne plutôt que de
+   faire déborder la page sur téléphone (Lot 95). */
+body { overflow-wrap: break-word; } /* Lot 95 */
+/* Champs côte à côte (fiche technique…) : ils rétrécissent au lieu de déborder sur téléphone. */
+.flex > .input { min-width: 0; }

@@ -204,7 +204,7 @@ export default function ArmorStand({
                   </EntryLink>
                 </span>
               ) : (
-                <span className="italic text-olive-700/60">vide</span>
+                <span className="italic text-olive-600">vide</span>
               )}
             </li>
           );

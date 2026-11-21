@@ -1,6 +1,7 @@
 import { createServerClient, type CookieOptions } from '@supabase/ssr';
 import { NextResponse, type NextRequest } from 'next/server';
 import { sessionExpiry, sessionStillFresh } from '@/lib/supabase/sessionCookie';
+import { withComfortCookie } from '@/lib/comfortCookie';
 
 export async function middleware(request: NextRequest) {
   const isLogin = request.nextUrl.pathname.startsWith('/login');
@@ -19,7 +20,8 @@ export async function middleware(request: NextRequest) {
   const exp = sessionExpiry(request);
   if (exp === null) return isLogin || isPublic ? NextResponse.next() : go('/login');
   // (La page de connexion renvoie elle-même vers l'accueil si la session est bonne.)
-  if (sessionStillFresh(exp)) return NextResponse.next();
+  // (Appareil neuf : réglages d'affichage du compte posés avant la page.)
+  if (sessionStillFresh(exp)) return withComfortCookie(request, NextResponse.next());
 
   // Jeton expiré (ou presque) : Supabase le rafraîchit et pose les nouveaux cookies.
   let response = NextResponse.next({ request });
