@@ -11,6 +11,7 @@ import Script from 'next/script';
 import Header from '@/components/Header';
 import Backdrop from '@/components/Backdrop';
 import SearchShortcut from '@/components/SearchShortcut';
+import RechercheCommune from '@/components/RechercheCommune';
 import EventDecor from '@/components/EventDecor';
 import { BrandProvider } from '@/components/BrandProvider';
 import SiteGate from '@/components/SiteGate';
@@ -68,6 +69,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
           <SiteGate>
             <Header />
             <SearchShortcut />
+            <RechercheCommune ici="wiki" />
             <main id="contenu" tabIndex={-1} className="mx-auto outline-none max-w-6xl overflow-x-hidden px-4 py-5 pb-28 md:overflow-x-visible md:py-6 md:pb-6">
               <TermsBanner />
               {children}

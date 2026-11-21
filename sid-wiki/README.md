@@ -173,3 +173,13 @@ règlent sur le Dossier Central (Réglages → Affichage) et valent ici
   sombre et le défilement horizontal à 360 px. Captures dans `test-results/`.
   Un élément aux couleurs choisies par un membre peut porter
   `data-contraste-libre`.
+
+## Lot 96 — Sécurité, recherche commune
+
+- **Recherche commune** : `src/components/RechercheCommune.tsx` (identique sur
+  les trois sites) ; fenêtre ouverte par Ctrl+K ou le bouton « Trois sites » de
+  l'en-tête, styles `.rc-*` dans `globals.css`. Fonction en base :
+  `recherche_commune_limitee` (Dossier Central, migration 0121).
+- **En-têtes** : `en-tetes-securite.js` (identique sur les trois sites) : CSP,
+  HSTS, Permissions-Policy, nosniff, SAMEORIGIN, COOP.
+- **Secrets** : `npm run secrets` (`SCELLE_CLE=…` pour la phrase du sceau).

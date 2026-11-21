@@ -10,16 +10,8 @@ const ICONS = fs
   .map((f) => f.slice(0, -4))
   .join(',');
 
-// Contrôle technique (Lot 61) : en-têtes de sécurité sur toutes les pages.
-//  - nosniff : le navigateur ne devine pas le type d'un fichier ;
-//  - SAMEORIGIN : le site ne peut pas être affiché dans un cadre d'un autre site
-//    (protection contre le « clickjacking », ex. un faux bouton posé sur la Banque) ;
-//  - Referrer-Policy : les adresses complètes ne fuient pas vers les autres sites.
-const SECURITY_HEADERS = [
-  { key: 'X-Content-Type-Options', value: 'nosniff' },
-  { key: 'X-Frame-Options', value: 'SAMEORIGIN' },
-  { key: 'Referrer-Policy', value: 'strict-origin-when-cross-origin' },
-];
+// En-têtes de sécurité : en-tetes-securite.js (identique sur les trois sites).
+const { SECURITY_HEADERS } = require('./en-tetes-securite');
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {

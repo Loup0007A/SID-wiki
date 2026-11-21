@@ -5,6 +5,7 @@ import Icon from './Icon';
 import MobileNav from './MobileNav';
 import SearchBox from './SearchBox';
 import DesktopNav from './DesktopNav';
+import { BoutonRechercheCommune } from './RechercheCommune';
 
 export function HeaderView({ signedIn, isAdmin }: { signedIn: boolean; isAdmin: boolean }) {
   return (
@@ -28,7 +29,10 @@ export function HeaderView({ signedIn, isAdmin }: { signedIn: boolean; isAdmin: 
                   </div>
                 </div>
 
-                <div className="ml-auto hidden flex-none items-center gap-2 md:flex">
+                {/* Lot 96 : recherche sur les trois sites (Ctrl+K). */}
+                <BoutonRechercheCommune className="btn-ghost ml-auto !min-h-[2.5rem] !px-3 md:ml-0" />
+
+                <div className="hidden flex-none items-center gap-2 md:flex">
                   <Link href="/favoris" className="btn-ghost !min-h-[2.5rem] !px-3" title="Mes favoris" aria-label="Mes favoris">
                     <Icon name="favoris" className="text-brass-400" />
                   </Link>
