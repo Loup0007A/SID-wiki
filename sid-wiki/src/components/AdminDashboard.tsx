@@ -459,7 +459,7 @@ export default function AdminDashboard() {
                     </Link>
                     <details className="relative">
                       <summary className="btn-ghost !px-3 !py-0.5 cursor-pointer list-none" aria-label="Plus d’actions">⋯</summary>
-                      <div className="absolute right-0 z-20 mt-1 flex w-40 flex-col gap-1 rounded-xl border border-[color:var(--rule-2)] bg-[#172925] p-2 shadow-2xl">
+                      <div className="absolute right-0 z-20 mt-1 flex w-40 flex-col gap-1 rounded-xl border border-[color:var(--rule-2)] nuit bg-encre p-2 shadow-2xl">
                         <button className="btn-ghost !px-3 !py-0.5" title="Créer une copie masquée" onClick={() => duplicate(r.id)}>
                           Dupliquer
                         </button>

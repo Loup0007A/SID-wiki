@@ -3,6 +3,8 @@ import type { Metadata, Viewport } from 'next';
 import '@fontsource/young-serif/400.css';
 import '@fontsource-variable/schibsted-grotesk';
 import './globals.css';
+// Couleurs et motifs du fond, du Wiki et des évents (scripts/fonds.mjs).
+import './fonds.css';
 import TermsBanner from '@/components/legal/TermsBanner';
 import LegalFooter from '@/components/legal/LegalFooter';
 import Script from 'next/script';
@@ -13,7 +15,7 @@ import EventDecor from '@/components/EventDecor';
 import { BrandProvider } from '@/components/BrandProvider';
 import SiteGate from '@/components/SiteGate';
 import { brandify } from '@/lib/brand';
-import { getBrand, getGlitched } from '@/lib/brand-server';
+import { getBrand, getFondTheme, getGlitched } from '@/lib/brand-server';
 import { GlitchSync } from '@/components/glitch/GlitchSync';
 
 // Anciens iPhone (iOS 15.0 à 15.3) : fonctions JavaScript récentes absentes, utilisées par les bibliothèques.
@@ -44,13 +46,13 @@ export const viewport: Viewport = {
   width: 'device-width',
   initialScale: 1,
   viewportFit: 'cover',
-  themeColor: '#0e1b18',
+  themeColor: '#0B2621',
 };
 
 export default async function RootLayout({ children }: { children: React.ReactNode }) {
-  const [brand, glitched] = await Promise.all([getBrand(), getGlitched()]);
+  const [brand, glitched, theme] = await Promise.all([getBrand(), getGlitched(), getFondTheme()]);
   return (
-    <html lang="fr">
+    <html lang="fr" data-theme={theme ?? undefined}>
       <body className="min-h-screen">
         <Script id="polyfills" strategy="beforeInteractive" dangerouslySetInnerHTML={{ __html: POLYFILLS }} />
         <BrandProvider brand={brand} glitched={glitched}>

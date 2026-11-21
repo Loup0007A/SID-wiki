@@ -9,7 +9,7 @@ import DesktopNav from './DesktopNav';
 export function HeaderView({ signedIn, isAdmin }: { signedIn: boolean; isAdmin: boolean }) {
   return (
     <>
-      <header className="sticky top-0 z-40 border-b border-[color:var(--rule)] bg-[#10201c]/95 pt-[env(safe-area-inset-top)]">
+      <header className="site-bar nuit sticky top-0 z-40 pt-[env(safe-area-inset-top)]">
         <div className="mx-auto max-w-6xl px-4">
           {/* Ligne 1 : sceau et nom — recherche — favoris + menu */}
           <div className="flex items-center gap-5 py-3 md:py-3.5">

@@ -48,7 +48,7 @@ export default function MobileNav({ isAdmin }: { isAdmin: boolean }) {
       {open && (
         <div className="fixed inset-0 z-50" role="dialog" aria-modal="true" aria-label="Menu">
           <button className="absolute inset-0 bg-black/60" aria-label="Fermer le menu" onClick={() => setOpen(false)} />
-          <div className="absolute inset-x-0 bottom-0 max-h-[85vh] overflow-y-auto rounded-t-2xl border-t border-[color:var(--rule-2)] bg-[#172925] p-4 pb-[calc(1rem+env(safe-area-inset-bottom))] shadow-2xl">
+          <div className="absolute inset-x-0 bottom-0 max-h-[85vh] overflow-y-auto rounded-t-2xl border-t border-[color:var(--rule-2)] nuit bg-encre p-4 pb-[calc(1rem+env(safe-area-inset-bottom))] shadow-2xl">
             <div className="mx-auto mb-3 h-1 w-10 rounded-full bg-[color:var(--rule-2)]" />
 
             <form action="/recherche" className="mb-4">
@@ -108,7 +108,7 @@ export default function MobileNav({ isAdmin }: { isAdmin: boolean }) {
 
       {/* Barre d'onglets */}
       <nav
-        className="fixed inset-x-0 bottom-0 z-40 border-t border-[color:var(--rule)] bg-[#10201c]/95 pb-[env(safe-area-inset-bottom)]"
+        className="site-bar-bas nuit fixed inset-x-0 bottom-0 z-40 pb-[env(safe-area-inset-bottom)]"
         aria-label="Navigation principale"
       >
         <ul className="grid grid-cols-4">

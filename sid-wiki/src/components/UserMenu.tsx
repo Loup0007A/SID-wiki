@@ -33,7 +33,7 @@ export default function UserMenu({ isAdmin }: { isAdmin: boolean }) {
         <Icon name="menu" />
       </button>
       {open && (
-        <div role="menu" onClick={() => setOpen(false)} className="absolute right-0 top-full z-50 mt-2 flex w-56 flex-col rounded-xl border border-[color:var(--rule-2)] bg-[#172925] p-1.5 shadow-[0_18px_40px_-12px_rgba(0,0,0,0.85)]">
+        <div role="menu" onClick={() => setOpen(false)} className="absolute right-0 top-full z-50 mt-2 flex w-56 flex-col rounded-xl border border-[color:var(--rule-2)] nuit bg-encre p-1.5 shadow-[0_18px_40px_-12px_rgba(0,0,0,0.85)]">
           <Link href="/profils" className={item} role="menuitem">
             <Icon name="profils" /> Profils
           </Link>

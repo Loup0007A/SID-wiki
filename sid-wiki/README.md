@@ -62,7 +62,7 @@ Sites et rubriques, Lot 78) : voir `src/components/SiteGate.tsx`.
 
 ## Look & économie d'espace
 
-- **Thème** : fond noir, vagues bleues transparentes animées + bulles (100 % CSS, désactivées si le système demande moins de mouvement ; 2 vagues et les bulles masquées sur téléphone), cartes en verre, titres dégradés, apparition en fondu des pages et des cartes.
+- **Thème (Lot 91)** : herbier. Fond vert d'eau semé de fougères, plumes, ammonites, scarabées et champignons, feuilles qui tombent en se balançant (coupées si le système demande moins de mouvement). Fiches et blocs en parchemin à contour encre de 3 px et ombre pleine ; barre du haut encre avec un liseré or. Couleurs, motifs et particules générés par `scripts/fonds.mjs` (un thème `wiki` puis un par évent, et `election_force`) : `node scripts/fonds.mjs` réécrit `public/fonds/*.svg` et `src/app/fonds.css`. Le thème affiché suit l'affichage événementiel (`getFondTheme`, `src/lib/brand-server.ts`).
 - **En-tête ordinateur** : logo, grande barre de recherche centrée (raccourci `/`), accès favoris / hasard / admin / déconnexion, et onglets des catégories avec l'onglet actif souligné.
 - **Modèles 3D allégés** : à l'enregistrement, le site ne garde que l'animation (« action » Blender) choisie et supprime les autres et les caméras. Il **ne touche ni aux matériaux ni aux textures**. Si le fichier utilise une extension glTF que l'outil ne sait pas conserver, une confirmation est demandée (sinon l'envoi se fait avec le fichier d'origine intact).
 - **Fichiers .fbx** : acceptés dans le formulaire (Mixamo, Blender…). Le site les convertit en .glb dans ton navigateur (matériaux en PBR standard, textures intégrées au FBX conservées, toutes les animations listées pour que tu choisisses), puis applique le même allègement. Les textures *externes* (fichiers à côté du .fbx) ne sont pas lues : exporte avec « Embed Textures » ou utilise le .glb. Les shaders Blender personnalisés ne passent pas non plus en FBX : bake en texture.
@@ -141,3 +141,7 @@ Sites et rubriques, Lot 78) : voir `src/components/SiteGate.tsx`.
   (automatique du 15 octobre au 2 novembre, toujours, ou désactivé) —
   fonction `site_decor` (migration 0063 du site principal).
 - Composant `src/components/EventDecor.tsx` (identique dans la carte).
+- Élection du Dictateur prise par la force (Lot 91, réglée sur le Dossier
+  Central, migration 0111) : fond rouge sang, alarme sur les bords, bande
+  d'alerte sous la barre, étiquette « Coup d'État ». Même titre
+  « Dictateur ». `src/components/ElectionLayer.tsx` (identique dans la carte).

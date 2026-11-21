@@ -221,7 +221,7 @@ export default function ArmorStand({
               role="dialog"
               aria-modal="true"
               aria-label={`Équiper : ${GEAR_SLOT_LABELS[open].label}`}
-              className="relative flex max-h-[85vh] w-full flex-col rounded-t-3xl border border-[color:var(--rule-2)] bg-[#172925] p-4 pb-[calc(1rem+env(safe-area-inset-bottom))] text-ink shadow-2xl outline-none sm:max-w-lg sm:rounded-3xl sm:pb-4"
+              className="relative flex max-h-[85vh] w-full flex-col rounded-t-3xl border border-[color:var(--rule-2)] nuit bg-encre p-4 pb-[calc(1rem+env(safe-area-inset-bottom))] text-ink shadow-2xl outline-none sm:max-w-lg sm:rounded-3xl sm:pb-4"
             >
               <div className="mb-3 flex items-start justify-between gap-3">
                 <div>

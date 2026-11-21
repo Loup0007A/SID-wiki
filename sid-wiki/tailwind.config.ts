@@ -5,10 +5,15 @@ import typography from '@tailwindcss/typography';
 //   ink / olive-* = textes clairs (os → lichen)   kraft = vert-de-gris
 //   brass = laiton   stamp = sanguine   night = texte foncé (sur laiton)
 // Les couleurs de catégorie et des surfaces sont des variables CSS (globals.css).
+const v = (n: string) => `rgb(var(--t-${n}) / <alpha-value>)`;
+
 const config: Config = {
   content: ['./src/**/*.{ts,tsx}'],
   theme: {
     extend: {
+      // Refonte (Lot 91) : les textes clairs (ink, olive-*) et quelques
+      // accents lisent des variables qui changent sur une fiche crème
+      // (texte foncé) ou sur le fond vert (texte clair). Voir globals.css.
       colors: {
         kraft: {
           50: '#f1f8f5',
@@ -19,22 +24,25 @@ const config: Config = {
           500: '#5fb3a1',
         },
         olive: {
-          600: '#a3b3a2',
-          700: '#b5c0b2',
-          800: '#dcd5c4',
-          900: '#f2ebdc',
+          600: v('o6'),
+          700: v('o7'),
+          800: v('o8'),
+          900: v('o9'),
         },
         brass: {
-          300: '#f0d48f',
-          400: '#d6aa4c',
-          500: '#c4923a',
+          300: v('brass3'),
+          400: '#e8b13a',
+          500: '#c99526',
           600: '#a8782a',
         },
-        ink: '#ece4d2',
-        night: '#1b140a',
-        stamp: '#d8664d',
-        felt: '#1b302b',
-        sapin: '#0e1b18',
+        ink: v('ink'),
+        night: 'rgb(var(--encre) / <alpha-value>)',
+        stamp: v('stamp'),
+        felt: 'rgb(var(--encre) / <alpha-value>)',
+        sapin: 'rgb(var(--encre) / <alpha-value>)',
+        encre: 'rgb(var(--encre) / <alpha-value>)',
+        creme: 'rgb(var(--creme) / <alpha-value>)',
+        fond: 'rgb(var(--fond) / <alpha-value>)',
       },
       fontFamily: {
         typewriter: ['"Young Serif"', 'Georgia', 'serif'],

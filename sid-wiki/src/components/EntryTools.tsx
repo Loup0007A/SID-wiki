@@ -80,7 +80,7 @@ export default function EntryTools({ title }: { title: string }) {
         ⋯
       </button>
       {open && (
-        <div className="absolute left-0 top-full z-40 mt-2 w-60 rounded-2xl border border-[color:var(--rule-2)] bg-[#172925] p-2 shadow-2xl shadow-black/60 sm:left-auto sm:right-0">
+        <div className="absolute left-0 top-full z-40 mt-2 w-60 rounded-2xl border border-[color:var(--rule-2)] nuit bg-encre p-2 shadow-2xl shadow-black/60 sm:left-auto sm:right-0">
           <button type="button" className={item} onClick={share}>
             {copied ? <><SidIcon name="check" /> Lien copié</> : <><SidIcon name="link" /> Partager</>}
           </button>

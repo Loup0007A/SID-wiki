@@ -5,38 +5,83 @@
 @tailwind utilities;
 
 /* =====================================================================
-   Thème « Codex » (Lot 50) : le cabinet du chasseur, la nuit.
-   Fond vert sapin, surfaces de feutre, texte couleur os, filets laiton.
-   Chaque catégorie a sa couleur (--cat), utilisée pour les numéros,
-   les cases de la collection et les onglets.
+   Refonte (Lot 91) : l'herbier. Même manière que le Dossier Central (fond
+   vif à motifs, contours épais, ombres pleines), autre façon : vert-de-gris,
+   fougères et scarabées, fiches de parchemin aux coins vifs, ombres qui
+   tombent droit, titres en Young Serif.
+   La palette du thème (fond, encre, crème, accents, motif) vient de
+   src/app/fonds.css (scripts/fonds.mjs) ; les évents la remplacent.
+   Deux niveaux de couleurs :
+   - « sur le fond » (:root, .nuit) : texte clair posé sur le vert ;
+   - « sur fiche » (.card, .panel, .jour…) : texte encre sur parchemin.
    ===================================================================== */
-
 :root {
-  color-scheme: dark;
-  --bg: #0e1b18;
-  --felt: #1b302b;
-  --felt-2: #243f38;
-  --rule: #2f4c43;
-  --rule-2: #46685d;
-  --bone: #ece4d2;
-  --lichen: #a9b8a8;
-  --brass: #d6aa4c;
-  --sanguine: #d8664d;
+  color-scheme: light;
+  --trait: 3px;
+  --ombre: 0 6px 0 rgb(var(--encre));
+  --ombre-petite: 0 3px 0 rgb(var(--encre));
+  --rayon: 10px;
+  --brass: #e8b13a;
+  --sanguine: rgb(var(--accent));
   --cat: var(--brass);
-  --cat-lieux: #5fb3a1;
-  --cat-armes: #a9b8cc;
-  --cat-mobs: #d8664d;
-  --cat-objets: #e2a83e;
-  --cat-skills: #ab90ea;
 }
-.cat-lieux { --cat: var(--cat-lieux); }
-.cat-armes { --cat: var(--cat-armes); }
-.cat-mobs { --cat: var(--cat-mobs); }
-.cat-objets { --cat: var(--cat-objets); }
-.cat-skills { --cat: var(--cat-skills); }
+:root, .nuit {
+  --bg: rgb(var(--fond));
+  --felt: rgb(var(--encre));
+  --felt-2: rgb(var(--encre) / 0.82);
+  --rule: rgb(var(--creme) / 0.32);
+  --rule-2: rgb(var(--creme) / 0.55);
+  --bone: rgb(var(--creme));
+  --lichen: rgb(var(--creme) / 0.8);
+  --t-ink: var(--creme);
+  --t-o9: var(--creme);
+  --t-o8: 244 238 222;
+  --t-o7: 226 236 226;
+  --t-o6: 204 222 212;
+  --t-brass3: 248 220 150;
+  --t-stamp: 255 176 150;
+  --cat-lieux: #9ff0d6;
+  --cat-armes: #d7e0f2;
+  --cat-mobs: #ffb39c;
+  --cat-objets: #ffd27a;
+  --cat-skills: #d9c8ff;
+  --titre-ombre: 0 0.07em 0 rgb(var(--encre));
+}
+.jour, .card, .panel, .cat-card, .prop-row, .diff-block, .enigme, .proie, .seg, .plate-on, .entry-body {
+  --bg: rgb(var(--creme-2));
+  --felt: rgb(var(--creme));
+  --felt-2: rgb(var(--creme-2));
+  --rule: rgb(var(--encre) / 0.2);
+  --rule-2: rgb(var(--encre) / 0.42);
+  --bone: rgb(var(--encre));
+  --lichen: rgb(var(--encre) / 0.72);
+  --t-ink: var(--encre);
+  --t-o9: var(--encre);
+  --t-o8: 28 54 46;
+  --t-o7: 48 74 66;
+  --t-o6: 78 100 92;
+  --t-brass3: 138 96 20;
+  --t-stamp: var(--accent-on-card);
+  --cat-lieux: #16735f;
+  --cat-armes: #44557a;
+  --cat-mobs: #b4432a;
+  --cat-objets: #94650c;
+  --cat-skills: #6447b8;
+  --titre-ombre: none;
+}
+/* La couleur du texte se transmet déjà calculée : chaque niveau la redonne. */
+.nuit, .jour, .card, .panel, .cat-card, .prop-row, .diff-block, .enigme, .proie, .seg, .plate-on, .entry-body { color: var(--bone); }
+/* La couleur de catégorie est recalculée sur chaque fiche (claire sur le
+   fond, foncée sur le parchemin). */
+.cat-lieux, .cat-lieux :is(.card, .panel, .cat-card, .plate-on, .jour, .entry-body) { --cat: var(--cat-lieux); }
+.cat-armes, .cat-armes :is(.card, .panel, .cat-card, .plate-on, .jour, .entry-body) { --cat: var(--cat-armes); }
+.cat-mobs, .cat-mobs :is(.card, .panel, .cat-card, .plate-on, .jour, .entry-body) { --cat: var(--cat-mobs); }
+.cat-objets, .cat-objets :is(.card, .panel, .cat-card, .plate-on, .jour, .entry-body) { --cat: var(--cat-objets); }
+.cat-skills, .cat-skills :is(.card, .panel, .cat-card, .plate-on, .jour, .entry-body) { --cat: var(--cat-skills); }
 
 html {
-  background: var(--bg);
+  background: rgb(var(--fond));
+  scrollbar-color: rgb(var(--encre)) rgb(var(--fond));
 }
 
 body {
@@ -49,13 +94,73 @@ body {
   font-feature-settings: 'ss01';
 }
 
+/* Fond : couleur, deux halos, motif du thème (Backdrop). */
+.fond {
+  position: fixed;
+  inset: 0;
+  z-index: -10;
+  pointer-events: none;
+  background:
+    radial-gradient(60% 45% at 50% -8%, rgb(var(--fond-haut) / 0.45), transparent 70%),
+    radial-gradient(55% 50% at 50% 108%, rgb(var(--fond-bas) / 0.5), transparent 72%),
+    var(--motif) center / cover no-repeat,
+    rgb(var(--fond));
+}
+@media (orientation: portrait) {
+  .fond { background-size: 100% 100%, 100% 100%, auto 120vh, auto; background-position: center, center, 30% 0, center; }
+}
+/* Feuilles qui planent : elles tombent en se balançant (le Dossier
+   Central, lui, fait tourner ses éclats). */
+.fond-particules { position: fixed; inset: 0; z-index: -9; overflow: hidden; pointer-events: none; contain: strict; }
+.fond-particules i {
+  position: absolute;
+  top: -40px;
+  width: var(--s);
+  height: var(--s);
+  background: rgb(var(--k));
+  opacity: 0.8;
+  -webkit-mask: var(--particule) center / contain no-repeat;
+  mask: var(--particule) center / contain no-repeat;
+  animation: fond-tombe var(--t) linear var(--dl) infinite;
+  will-change: transform;
+}
+@keyframes fond-tombe {
+  0% { transform: translate3d(0, -40px, 0) rotate(-30deg); }
+  25% { transform: translate3d(var(--dx), 26vh, 0) rotate(25deg); }
+  50% { transform: translate3d(0, 55vh, 0) rotate(-25deg); }
+  75% { transform: translate3d(calc(var(--dx) * -1), 82vh, 0) rotate(25deg); }
+  100% { transform: translate3d(0, 112vh, 0) rotate(-20deg); }
+}
+@keyframes fond-monte {
+  0% { transform: translate3d(0, 40px, 0); }
+  25% { transform: translate3d(var(--dx), -26vh, 0); }
+  50% { transform: translate3d(0, -55vh, 0); }
+  75% { transform: translate3d(calc(var(--dx) * -1), -82vh, 0); }
+  100% { transform: translate3d(0, -112vh, 0); }
+}
+@media (max-width: 640px) { .fond-particules i:nth-child(2n) { display: none; } }
+@media (prefers-reduced-motion: reduce) { .fond-particules { display: none; } }
+
+/* Barre du haut : bandeau d'encre plein posé sur un filet de laiton
+   (le Dossier Central, lui, laisse voir son fond flouté). */
+.site-bar {
+  background: rgb(var(--encre));
+  border-bottom: 4px solid rgb(var(--accent-2));
+  box-shadow: 0 4px 0 rgb(var(--encre));
+}
+
+.site-bar-bas { background: rgb(var(--encre)); border-top: 4px solid rgb(var(--accent-2)); }
+
+/* Les anciens ciels et horizons d'évent sont remplacés par le fond. */
+.ev-back { display: none !important; }
+
 ::selection {
-  background: rgba(214, 170, 76, 0.4);
-  color: #fff8e8;
+  background: rgb(var(--accent-2));
+  color: rgb(var(--encre));
 }
 
 :focus-visible {
-  outline: 2px solid var(--brass);
+  outline: 3px solid rgb(var(--accent-2));
   outline-offset: 2px;
 }
 
@@ -85,49 +190,68 @@ h1, h2, h3 {
 .stagger > * { animation: none; }
 .title-grad { color: var(--bone); }
 
+/* Titres : Young Serif ; sur le fond, contour et ombre qui tombe droit. */
+h1.font-typewriter, h2.font-typewriter, .section-title {
+  text-shadow: var(--titre-ombre);
+}
+h1.font-typewriter { -webkit-text-stroke: var(--titre-trait, 0) rgb(var(--encre)); paint-order: stroke fill; }
+:root, .nuit { --titre-trait: 0.04em; }
+.jour, .card, .panel, .cat-card, .prop-row, .diff-block, .enigme, .proie, .seg, .plate-on, .entry-body { --titre-trait: 0; }
+
 @media (prefers-reduced-motion: reduce) {
   .reveal, .slot { animation: none !important; }
 }
 
 @layer components {
-  /* Surface de feutre : pleine, bord net, ombre portée courte. */
+  /* Fiche de parchemin : contour encre, coins vifs, ombre qui tombe droit. */
   .card {
-    @apply rounded-xl border bg-[var(--felt)] shadow-[0_1px_0_rgba(255,255,255,0.04)_inset,0_14px_30px_-22px_rgba(0,0,0,0.9)];
-    border-color: var(--rule);
+    @apply rounded-[10px];
+    background: rgb(var(--creme));
+    border: var(--trait) solid rgb(var(--encre));
+    box-shadow: var(--ombre);
   }
   .btn {
     @apply inline-flex min-h-[2.5rem] items-center justify-center gap-1.5 rounded-lg px-4 py-1.5 font-body text-[0.95rem] font-semibold transition disabled:opacity-50;
-    background: var(--brass);
-    color: #1b140a;
-    box-shadow: inset 0 -2px 0 rgba(0, 0, 0, 0.18);
+    background: rgb(var(--accent-2));
+    color: rgb(var(--encre));
+    border: 2px solid rgb(var(--encre));
+    box-shadow: var(--ombre-petite);
   }
-  .btn:hover:not(:disabled) { background: #e2b85b; }
+  .btn:hover:not(:disabled) { transform: translateY(-1px); box-shadow: 0 4px 0 rgb(var(--encre)); }
+  .btn:active:not(:disabled) { transform: translateY(3px); box-shadow: none; }
   .btn-ghost {
-    @apply inline-flex min-h-[2.5rem] items-center justify-center gap-1.5 rounded-lg border px-4 py-1.5 font-body text-[0.95rem] font-semibold text-ink transition disabled:opacity-50;
-    border-color: var(--rule-2);
-    background: transparent;
+    @apply inline-flex min-h-[2.5rem] items-center justify-center gap-1.5 rounded-lg px-4 py-1.5 font-body text-[0.95rem] font-semibold transition disabled:opacity-50;
+    color: rgb(var(--encre));
+    background: rgb(var(--creme));
+    border: 2px solid rgb(var(--encre));
+    box-shadow: var(--ombre-petite);
   }
-  .btn-ghost:hover:not(:disabled) { background: var(--felt-2); border-color: #4c6f64; }
+  .btn-ghost:hover:not(:disabled) { background: rgb(var(--creme-2)); transform: translateY(-1px); box-shadow: 0 4px 0 rgb(var(--encre)); }
+  .btn-ghost:active:not(:disabled) { transform: translateY(3px); box-shadow: none; }
   .btn-danger {
-    @apply inline-flex min-h-[2.5rem] items-center justify-center gap-1.5 rounded-lg border px-4 py-1.5 font-body text-[0.95rem] font-semibold transition disabled:opacity-50;
-    border-color: rgba(216, 102, 77, 0.6);
-    color: var(--sanguine);
+    @apply inline-flex min-h-[2.5rem] items-center justify-center gap-1.5 rounded-lg px-4 py-1.5 font-body text-[0.95rem] font-semibold transition disabled:opacity-50;
+    border: 2px solid rgb(var(--encre));
+    background: rgb(var(--creme));
+    color: rgb(var(--accent-on-card));
+    box-shadow: var(--ombre-petite);
   }
-  .btn-danger:hover:not(:disabled) { background: var(--sanguine); color: #fff; }
+  .btn-danger:hover:not(:disabled) { background: rgb(var(--accent)); color: #fff; }
   .input {
-    @apply w-full rounded-lg border px-3 py-2 font-body text-base text-ink outline-none transition placeholder:text-olive-600/70;
-    background: #0f1d1a;
-    border-color: var(--rule-2);
+    @apply w-full rounded-lg px-3 py-2 font-body text-base outline-none transition;
+    color: rgb(var(--encre));
+    background: rgb(var(--creme));
+    border: 2px solid rgb(var(--encre));
   }
-  .input:focus { border-color: var(--brass); box-shadow: 0 0 0 3px rgba(214, 170, 76, 0.18); }
+  .input::placeholder { color: rgb(var(--encre) / 0.45); }
+  .input:focus { box-shadow: 0 0 0 4px rgb(var(--accent-2) / 0.6); }
   .label {
     @apply mb-1 block font-body text-sm font-semibold text-olive-800;
   }
   /* Tampon « découvert », « à découvrir »… */
   .stamp {
     @apply inline-block rotate-[-3deg] rounded-md border-2 px-2.5 py-0.5 font-body text-xs font-bold;
-    border-color: var(--brass);
-    color: var(--brass);
+    border-color: currentColor;
+    color: rgb(var(--t-brass3));
   }
   /* Étiquette de catégorie : pastille à la couleur de la catégorie. */
   .cat-key {
@@ -151,13 +275,13 @@ h1, h2, h3 {
 }
 
 select option {
-  background: #10201c;
-  color: var(--bone);
+  background: rgb(var(--creme));
+  color: rgb(var(--encre));
 }
 
 /* Liens du contenu : une seule apparence, discrète (pas de soulignement natif) */
 .wiki-link {
-  color: #f0d48f;
+  color: rgb(var(--t-brass3));
   font-weight: 600;
   text-decoration: none;
   background-image: linear-gradient(currentColor, currentColor);
@@ -166,7 +290,7 @@ select option {
   background-size: 100% 1px;
   transition: color 0.15s, background-size 0.15s;
 }
-.wiki-link:hover { color: #fff3d0; background-size: 100% 2px; }
+.wiki-link:hover { color: var(--bone); background-size: 100% 2px; }
 .wiki-link-entry { background-image: linear-gradient(90deg, currentColor 50%, transparent 50%); background-size: 6px 1px; background-repeat: repeat-x; }
 .wiki-link-entry:hover { background-size: 6px 2px; }
 
@@ -560,8 +684,8 @@ html.ev-grande_chasse .wave-layer svg path:last-child { stroke: rgba(255, 190, 1
 @media (prefers-reduced-motion: reduce) { .skeleton { animation: none; } }
 
 /* Accueil pendant la Grande Chasse : bandeau « Proie du jour » (ProieDuJour.tsx). */
-.proie { position: relative; border: 1px solid rgba(255, 179, 92, 0.45); background: linear-gradient(135deg, rgba(70, 30, 16, 0.85), rgba(30, 14, 12, 0.9));
-  box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.35), 0 18px 40px -20px rgba(0, 0, 0, 0.8), 0 0 40px -14px rgba(255, 120, 40, 0.55); color: #f6e6c8; }
+.proie { position: relative; border: var(--trait) solid rgb(var(--encre)); background: linear-gradient(135deg, #4a1a0c, #22100b);
+  box-shadow: var(--ombre); color: #f6e6c8; }
 .proie::before { content: ''; position: absolute; inset: 0; pointer-events: none;
   background: radial-gradient(ellipse 60% 120% at 100% 100%, rgba(255, 120, 40, 0.22), transparent 60%), repeating-linear-gradient(115deg, transparent 0 22px, rgba(255, 255, 255, 0.015) 22px 23px); }
 .proie-inner { position: relative; }
@@ -657,32 +781,32 @@ html.ev-grande_chasse .wave-layer svg path:last-child { stroke: rgba(255, 190, 1
    ===================================================================== */
 .cat-card {
   background: var(--felt);
-  border: 1px solid var(--rule);
-  border-top: 3px solid var(--cat);
-  box-shadow: 0 1px 0 rgba(255, 255, 255, 0.04) inset, 0 16px 30px -22px rgba(0, 0, 0, 0.9);
-  transition: border-color 0.15s, background-color 0.15s, transform 0.15s;
+  border: var(--trait) solid rgb(var(--encre));
+  box-shadow: inset 0 5px 0 -1px var(--cat), var(--ombre);
+  transition: background-color 0.15s, transform 0.15s, box-shadow 0.15s;
 }
-.cat-card:hover { background: var(--felt-2); border-color: color-mix(in srgb, var(--cat) 45%, var(--rule)); border-top-color: var(--cat); }
+.cat-card:hover { background: var(--felt-2); transform: translateY(-2px); box-shadow: inset 0 5px 0 -1px var(--cat), 0 8px 0 rgb(var(--encre)); }
 .cat-card:active { transform: scale(0.98); }
 /* Bloc de section de l'accueil : un fond net pour bien séparer les parties. */
 .panel {
-  background: var(--felt);
-  border: 1px solid var(--rule);
-  border-radius: 0.85rem;
+  background: rgb(var(--creme));
+  border: var(--trait) solid rgb(var(--encre));
+  border-radius: var(--rayon);
+  box-shadow: var(--ombre);
 }
 
 /* Planches (grilles de fiches) */
 .plate-on {
-  background: var(--felt);
-  border: 1px solid var(--rule);
-  box-shadow: inset 0 3px 0 -1px var(--cat), 0 14px 28px -24px rgba(0, 0, 0, 0.95);
+  background: rgb(var(--creme));
+  border: var(--trait) solid rgb(var(--encre));
+  box-shadow: inset 0 5px 0 -1px var(--cat), var(--ombre);
 }
-.plate-on:hover { border-color: color-mix(in srgb, var(--cat) 55%, var(--rule)); transform: translateY(-2px); }
+.plate-on:hover { border-color: rgb(var(--encre)); transform: translateY(-3px); box-shadow: inset 0 5px 0 -1px var(--cat), 0 9px 0 rgb(var(--encre)); }
 .plate-off {
-  border: 1.5px dashed color-mix(in srgb, var(--cat) 30%, var(--rule));
-  background: rgba(15, 29, 26, 0.45);
+  border: 3px dashed rgb(var(--creme) / 0.55);
+  background: rgb(var(--encre) / 0.35);
 }
-.plate-off:hover { border-color: color-mix(in srgb, var(--cat) 70%, var(--rule)); }
+.plate-off:hover { border-color: rgb(var(--creme) / 0.85); }
 .plate-off .catno { opacity: 0.55; }
 
 /* Fiche : en-tête, média, fiche signalétique, texte (ordre adapté au téléphone) */
@@ -697,6 +821,15 @@ html.ev-grande_chasse .wave-layer svg path:last-child { stroke: rgba(255, 190, 1
 .entry-media:empty { display: none; }
 .entry-meta { grid-area: meta; }
 .entry-body { grid-area: body; }
+/* Le texte d'une fiche est posé sur une feuille de parchemin. */
+.entry-body {
+  padding: clamp(1rem, 3vw, 1.75rem);
+  background: rgb(var(--creme));
+  border: var(--trait) solid rgb(var(--encre));
+  border-radius: var(--rayon);
+  box-shadow: var(--ombre);
+}
+.entry-body:empty { display: none; }
 @media (min-width: 1024px) {
   .entry-grid {
     grid-template-columns: 15.5rem minmax(0, 1fr);
@@ -710,19 +843,19 @@ html.ev-grande_chasse .wave-layer svg path:last-child { stroke: rgba(255, 190, 1
 
 /* Texte des fiches */
 .prose-codex {
-  --tw-prose-invert-body: #dcd5c4;
-  --tw-prose-invert-headings: #f2ebdc;
-  --tw-prose-invert-lead: #b5c0b2;
-  --tw-prose-invert-links: #f0d48f;
-  --tw-prose-invert-bold: #f2ebdc;
-  --tw-prose-invert-counters: #93a493;
+  --tw-prose-invert-body: var(--bone);
+  --tw-prose-invert-headings: var(--bone);
+  --tw-prose-invert-lead: var(--lichen);
+  --tw-prose-invert-links: rgb(var(--t-brass3));
+  --tw-prose-invert-bold: var(--bone);
+  --tw-prose-invert-counters: var(--lichen);
   --tw-prose-invert-bullets: var(--cat);
   --tw-prose-invert-hr: var(--rule);
-  --tw-prose-invert-quotes: #dcd5c4;
+  --tw-prose-invert-quotes: var(--bone);
   --tw-prose-invert-quote-borders: var(--cat);
-  --tw-prose-invert-captions: #93a493;
-  --tw-prose-invert-code: #f2ebdc;
-  --tw-prose-invert-pre-bg: #0f1d1a;
+  --tw-prose-invert-captions: var(--lichen);
+  --tw-prose-invert-code: var(--bone);
+  --tw-prose-invert-pre-bg: rgb(var(--encre) / 0.08);
   --tw-prose-invert-th-borders: var(--rule-2);
   --tw-prose-invert-td-borders: var(--rule);
   font-size: 1.04rem;
@@ -735,7 +868,7 @@ html.ev-grande_chasse .wave-layer svg path:last-child { stroke: rgba(255, 190, 1
 
 /* Animation de connexion (Lot 57) : le Codex s'ouvre. */
 .codex-intro {
-  background: radial-gradient(ellipse 55% 45% at 50% 42%, rgba(214, 170, 76, 0.14), transparent 70%), #0e1b18;
+  background: radial-gradient(ellipse 55% 45% at 50% 42%, rgb(var(--accent-2) / 0.2), transparent 70%), rgb(var(--encre));
   animation: codex-fade 0.35s ease-out both;
 }
 @keyframes codex-fade { from { opacity: 0; } }
@@ -885,6 +1018,28 @@ html.ev-grande_chasse .wave-layer svg path:last-child { stroke: rgba(255, 190, 1
   .el-pill-wiki { bottom: 16px; }
 }
 @media (prefers-reduced-motion: reduce) { .el-confetti { display: none; } }
+/* Élection prise par la force (Lot 91) : alarme, bande d'alerte. */
+.el-alarm { position: absolute; inset: 0; animation: el-alarm 2.4s ease-in-out infinite; }
+@keyframes el-alarm {
+  0%, 100% { box-shadow: inset 0 0 40px 4px rgb(255 20 30 / 0.22); }
+  50% { box-shadow: inset 0 0 140px 34px rgb(255 20 30 / 0.5); }
+}
+/* Téléphone : bord plus fin, le contenu reste lisible. */
+@media (max-width: 640px) { .el-alarm { animation-name: el-alarm-s; } }
+@keyframes el-alarm-s {
+  0%, 100% { box-shadow: inset 0 0 24px 2px rgb(255 20 30 / 0.22); }
+  50% { box-shadow: inset 0 0 60px 10px rgb(255 20 30 / 0.45); }
+}
+.el-tape { overflow: hidden; height: 28px; border-block: 3px solid #14030a; background: repeating-linear-gradient(-45deg, #f2c94c 0 14px, #14030a 14px 28px); }
+.el-tape-track { display: inline-flex; white-space: nowrap; animation: el-tape 40s linear infinite; }
+.el-tape-track > span { margin: 2px 0; padding: 0 14px; background: #c1121f; color: #fff1ec; border: 2px solid #14030a; font: 800 12px/18px ui-monospace, monospace; letter-spacing: 0.14em; }
+@keyframes el-tape { to { transform: translateX(-50%); } }
+.el-pill.is-force { background: #8e0b14; border-color: #14030a; color: #fff1ec; }
+.el-pill.is-force:hover { background: #c1121f; }
+@media (prefers-reduced-motion: reduce) {
+  .el-alarm, .el-tape-track { animation: none; }
+  .el-alarm { box-shadow: inset 0 0 90px 20px rgb(255 20 30 / 0.35); }
+}
 
 /* Lieu inconnu (Lot 81) : pseudo et avatar d'un membre brouillé depuis
    L'Envers de la Cartographie (GlitchText, src/brand/glitch.ts).
@@ -931,8 +1086,9 @@ html.ev-grande_chasse .wave-layer svg path:last-child { stroke: rgba(255, 190, 1
   gap: 2px;
   padding: 3px;
   border-radius: 0.7rem;
-  border: 1px solid var(--rule);
-  background: rgba(0, 0, 0, 0.18);
+  border: 2px solid rgb(var(--encre));
+  background: rgb(var(--creme));
+  box-shadow: var(--ombre-petite);
 }
 .seg > button {
   border-radius: 0.5rem;
@@ -943,8 +1099,8 @@ html.ev-grande_chasse .wave-layer svg path:last-child { stroke: rgba(255, 190, 1
   transition: background 0.15s, color 0.15s;
 }
 .seg > button:hover { color: var(--bone); }
-.seg > button.is-on { background: var(--felt-2); color: var(--bone); box-shadow: inset 0 -2px 0 var(--brass); }
-.chip-on { border-color: var(--brass) !important; color: #1b140a !important; background: var(--brass); }
+.seg > button.is-on { background: rgb(var(--encre)); color: rgb(var(--creme)); box-shadow: inset 0 -3px 0 rgb(var(--accent-2)); }
+.chip-on { border-color: rgb(var(--encre)) !important; color: rgb(var(--encre)) !important; background: var(--brass); }
 button.chip:hover { border-color: var(--brass); color: var(--bone); }
 
 .prop-row {
@@ -1179,16 +1335,11 @@ button.chip:hover { border-color: var(--brass); color: var(--bone); }
 
 /* Tiroirs de la collection (accueil) */
 .drawer {
-  border-top-width: 1px !important;
   background:
-    linear-gradient(180deg, rgba(255, 255, 255, 0.035), transparent 30%),
-    linear-gradient(0deg, rgba(0, 0, 0, 0.22), transparent 35%),
+    linear-gradient(0deg, color-mix(in srgb, var(--cat) 10%, transparent), transparent 40%),
     var(--felt) !important;
-  box-shadow:
-    inset 0 0 0 4px rgba(0, 0, 0, 0.16),
-    inset 0 2px 0 color-mix(in srgb, var(--cat) 70%, transparent),
-    0 18px 30px -22px rgba(0, 0, 0, 0.95);
 }
+.drawer:hover { background: linear-gradient(0deg, color-mix(in srgb, var(--cat) 14%, transparent), transparent 45%), var(--felt-2) !important; }
 .drawer-plate {
   align-self: center;
   max-width: 100%;
