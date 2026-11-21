@@ -17,6 +17,8 @@ import SiteGate from '@/components/SiteGate';
 import { brandify } from '@/lib/brand';
 import { getBrand, getFondTheme, getGlitched } from '@/lib/brand-server';
 import { GlitchSync } from '@/components/glitch/GlitchSync';
+import ComfortSync from '@/components/ComfortSync';
+import { COMFORT_BOOT } from '@/lib/comfortPrefs';
 
 // Anciens iPhone (iOS 15.0 à 15.3) : fonctions JavaScript récentes absentes, utilisées par les bibliothèques.
 const POLYFILLS = `(function(){
@@ -52,7 +54,11 @@ export const viewport: Viewport = {
 export default async function RootLayout({ children }: { children: React.ReactNode }) {
   const [brand, glitched, theme] = await Promise.all([getBrand(), getGlitched(), getFondTheme()]);
   return (
-    <html lang="fr" data-theme={theme ?? undefined}>
+    <html lang="fr" data-theme={theme ?? undefined} suppressHydrationWarning>
+      <head>
+        {/* Réglages d'affichage du compte (Lot 94) : posés avant le premier affichage. */}
+        <script dangerouslySetInnerHTML={{ __html: COMFORT_BOOT }} />
+      </head>
       <body className="min-h-screen">
         <Script id="polyfills" strategy="beforeInteractive" dangerouslySetInnerHTML={{ __html: POLYFILLS }} />
         <BrandProvider brand={brand} glitched={glitched}>
@@ -69,6 +75,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
             </main>
           </SiteGate>
           <GlitchSync />
+          <ComfortSync />
         </BrandProvider>
       </body>
     </html>

@@ -6,6 +6,7 @@ import { useEffect, useRef, useState } from 'react';
 import { createClient } from '@/lib/supabase/client';
 import Icon from './Icon';
 import { SidIcon } from "@/components/icons/SidIcon";
+import { BRAND } from '@/lib/brand';
 
 /** Menu unique (ordinateur) : profils, hasard, tags, aide, admin, déconnexion. */
 export default function UserMenu({ isAdmin }: { isAdmin: boolean }) {
@@ -49,6 +50,9 @@ export default function UserMenu({ isAdmin }: { isAdmin: boolean }) {
           <Link href="/aide" className={item} role="menuitem">
             <Icon name="aide" /> Aide
           </Link>
+          <a href={`${BRAND.urls.site}/dashboard/settings#confort`} className={item} role="menuitem">
+            <SidIcon name="eye" /> Affichage (sombre, épuré…)
+          </a>
           <Link href="/confidentialite" className={item} role="menuitem">
             <SidIcon name="padlock" /> Confidentialité
           </Link>

@@ -1391,3 +1391,72 @@ button.chip:hover { border-color: var(--brass); color: var(--bone); }
 .mount-mini .mount-corner { width: 9px; height: 9px; }
 .mount-mini .mount-corner.tl { top: 1px; left: 1px; }
 .mount-mini .mount-corner.br { bottom: 1px; right: 1px; }
+
+/* =====================================================================
+   Réglages d'affichage du compte (Lot 94, réglés sur le Dossier Central :
+   Réglages → Affichage ; src/lib/comfortPrefs.ts). Classes sur <html>.
+   ===================================================================== */
+html.texte-grand { font-size: 112.5%; }
+html.texte-tres-grand { font-size: 125%; }
+html.calme .fond-particules { display: none; }
+html.calme *, html.calme *::before, html.calme *::after {
+  animation-duration: 0.01ms !important;
+  animation-iteration-count: 1 !important;
+  transition-duration: 0.01ms !important;
+  scroll-behavior: auto !important;
+}
+
+/* Mode sombre : vert de nuit, fiches en plaques sombres à texte clair. */
+:root.sombre {
+  color-scheme: dark;
+  --fond: 8 30 26;
+  --fond-haut: 26 104 86;
+  --fond-bas: 0 0 0;
+  --surface: 22 50 44;
+  --surface-2: 16 40 35;
+  --ombre: 0 6px 0 rgb(0 0 0 / 0.55);
+  --ombre-petite: 0 3px 0 rgb(0 0 0 / 0.55);
+}
+:root.sombre .fond::after { content: ""; position: absolute; inset: 0; background: rgb(var(--fond) / 0.55); }
+:root.sombre .fond-particules { opacity: 0.5; }
+:root.sombre :is(.jour, .card, .panel, .cat-card, .prop-row, .diff-block, .enigme, .seg, .plate-on, .entry-body) {
+  --bg: rgb(var(--surface-2));
+  --felt: rgb(var(--surface));
+  --felt-2: rgb(var(--surface-2));
+  --rule: rgb(var(--creme) / 0.2);
+  --rule-2: rgb(var(--creme) / 0.42);
+  --bone: rgb(var(--creme));
+  --lichen: rgb(var(--creme) / 0.8);
+  --t-ink: var(--creme);
+  --t-o9: var(--creme);
+  --t-o8: 244 238 222;
+  --t-o7: 226 236 226;
+  --t-o6: 204 222 212;
+  --t-brass3: 248 220 150;
+  --t-stamp: 255 176 150;
+  --cat-lieux: #9ff0d6;
+  --cat-armes: #d7e0f2;
+  --cat-mobs: #ffb39c;
+  --cat-objets: #ffd27a;
+  --cat-skills: #d9c8ff;
+  color: var(--bone);
+  border-color: rgb(0 0 0 / 0.6);
+}
+:root.sombre :is(.card, .panel, .plate-on, .entry-body, .diff-block, .enigme) { background: rgb(var(--surface)); }
+:root.sombre .seg { background: rgb(var(--surface-2)); }
+:root.sombre .seg > button.is-on { background: rgb(var(--creme)); color: rgb(var(--encre)); }
+:root.sombre select option { background: rgb(22 50 44); color: rgb(var(--creme)); }
+
+/* Mode épuré : fond uni, ni motif ni particules, contours fins sans ombre. */
+:root.epure, :root.epure .nuit {
+  --ombre: none;
+  --ombre-petite: none;
+  --trait: 2px;
+  --titre-ombre: none;
+}
+:root.epure .fond { background: rgb(var(--fond)); }
+:root.epure .fond::after, :root.epure .fond-particules { display: none; }
+:root.epure h1.font-typewriter { -webkit-text-stroke: 0; }
+:root.epure .site-bar { box-shadow: none; border-bottom-width: 2px; }
+:root.epure .site-bar-bas { border-top-width: 2px; }
+:root.epure .cat-card:hover, :root.epure :is(.btn, .btn-ghost, .btn-danger):hover:not(:disabled) { transform: none; box-shadow: none; }

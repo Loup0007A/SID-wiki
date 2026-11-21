@@ -6,6 +6,7 @@ import { useEffect, useState } from 'react';
 import { createClient } from '@/lib/supabase/client';
 import { CATEGORIES, CATEGORY_LABELS } from '@/lib/wiki';
 import Icon, { type IconName } from './Icon';
+import { BRAND } from '@/lib/brand';
 
 /** Barre d'onglets en bas + menu coulissant, affichés uniquement sur téléphone (< md). */
 export default function MobileNav({ isAdmin }: { isAdmin: boolean }) {
@@ -92,6 +93,13 @@ export default function MobileNav({ isAdmin }: { isAdmin: boolean }) {
                 </Link>
               ))}
             </div>
+
+            <a
+              href={`${BRAND.urls.site}/dashboard/settings#confort`}
+              className="mt-2 flex items-center justify-center gap-2 rounded-lg border border-[color:var(--rule)] bg-[color:var(--felt)] px-3 py-3 text-xs font-bold text-olive-800"
+            >
+              <Icon name="aide" className="text-xl" /> Affichage : sombre, épuré, taille du texte
+            </a>
 
             {isAdmin && (
               <Link href="/admin" className="btn mt-3 w-full !min-h-[3rem]">

@@ -145,3 +145,11 @@ Sites et rubriques, Lot 78) : voir `src/components/SiteGate.tsx`.
   Central, migration 0111) : fond rouge sang, alarme sur les bords, bande
   d'alerte sous la barre, étiquette « Coup d'État ». Même titre
   « Dictateur ». `src/components/ElectionLayer.tsx` (identique dans la carte).
+
+## Réglages d'affichage du compte (Lot 94)
+
+Mode sombre, mode épuré, taille du texte, animations et décors des fêtes se
+règlent sur le Dossier Central (Réglages → Affichage) et valent ici
+(`profiles.display_prefs`, migration 0116 du Dossier Central). Entrée
+« Affichage » dans le menu. `src/lib/comfortPrefs.ts` et
+`src/components/ComfortSync.tsx` sont identiques sur les trois sites.
