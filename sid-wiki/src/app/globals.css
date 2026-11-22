@@ -1215,6 +1215,15 @@ button.chip:hover { border-color: var(--brass); color: var(--bone); }
   box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.55), 0 6px 14px -6px rgba(0, 0, 0, 0.9);
   transition: transform 0.35s ease;
 }
+.mount:not(.mount-hero) > .mount-img {
+  /* Safari ne résout pas height: 100 % dans une grille à proportion fixe :
+     l'image restait à sa taille propre, collée en bas du cadre. */
+  position: absolute;
+  inset: 7px;
+  width: calc(100% - 14px);
+  height: calc(100% - 14px);
+}
+.mount.mount-mini > .mount-img { inset: 3px; width: calc(100% - 6px); height: calc(100% - 6px); }
 .mount-icon { color: var(--cat); opacity: 0.75; }
 .mount-unknown {
   font-family: 'Young Serif', Georgia, serif;

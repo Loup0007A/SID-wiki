@@ -94,8 +94,8 @@ export default async function HomePage() {
 
       <RecentlyViewed />
 
-      <div className="mt-8 grid gap-5 lg:grid-cols-[1fr_20rem] lg:items-start">
-        <section aria-labelledby="registre" className="panel p-4 sm:p-5">
+      <div className="mt-8 grid grid-cols-1 gap-5 lg:grid-cols-[minmax(0,1fr)_20rem] lg:items-start">
+        <section aria-labelledby="registre" className="panel min-w-0 p-4 sm:p-5">
           <h2 id="registre" className="section-title">Dernières découvertes</h2>
           {recent.length === 0 ? (
             <p className="mt-3 italic text-olive-700">Rien de découvert pour l’instant. À vos armes !</p>
@@ -136,7 +136,7 @@ export default async function HomePage() {
           )}
         </section>
 
-        <section aria-labelledby="podium" className="panel p-4 sm:p-5">
+        <section aria-labelledby="podium" className="panel min-w-0 p-4 sm:p-5">
           <h2 id="podium" className="section-title">Meilleurs découvreurs</h2>
           {top.length === 0 ? (
             <p className="mt-3 italic text-olive-700">Personne n’a encore été crédité.</p>

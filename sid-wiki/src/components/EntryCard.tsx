@@ -46,8 +46,8 @@ export default function EntryCard({ entry, showCategory = false }: { entry: Entr
 
       <div className={`specimen-label ${known ? '' : 'specimen-label-blank'}`}>
         <span className="specimen-pin" aria-hidden />
-        <span className="flex items-center justify-between gap-2">
-          <span className="specimen-no">
+        <span className="flex flex-wrap items-center justify-between gap-x-2 gap-y-0.5">
+          <span className="specimen-no whitespace-nowrap">
             {showCategory && <>{singular} </>}n° {pad(entry.number)}
           </span>
           {known && <Rarity value={entry.rarity} className="specimen-rarity text-[11px]" />}
