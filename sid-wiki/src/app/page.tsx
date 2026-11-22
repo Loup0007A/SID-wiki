@@ -19,7 +19,7 @@ export const dynamic = 'force-dynamic';
 
 export default async function HomePage() {
   await getBrand();
-  const supabase = createClient();
+  const supabase = await createClient();
   const [{ data, error }, { data: recentData }, { data: topData }, { data: announcement }, { data: decor }, ...lists] = await Promise.all([
     supabase.rpc('wiki_stats'),
     supabase.rpc('wiki_recent', { p_limit: 8 }),

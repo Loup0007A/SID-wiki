@@ -9,17 +9,18 @@ import { getBrand } from '@/lib/brand-server';
 
 export const dynamic = 'force-dynamic';
 
-export default async function CategoryPage({
-  params,
-  searchParams,
-}: {
-  params: { category: string };
-  searchParams: { tag?: string | string[]; show?: string | string[] };
-}) {
+export default async function CategoryPage(
+  props: {
+    params: Promise<{ category: string }>;
+    searchParams: Promise<{ tag?: string | string[]; show?: string | string[] }>;
+  }
+) {
+  const searchParams = await props.searchParams;
+  const params = await props.params;
   await getBrand();
   if (!isCategory(params.category)) notFound();
   const category = params.category;
-  const supabase = createClient();
+  const supabase = await createClient();
 
   const [{ data, error }, { data: tagData }] = await Promise.all([
     supabase.rpc('wiki_list', { p_category: category }),

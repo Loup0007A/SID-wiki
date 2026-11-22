@@ -8,13 +8,14 @@ import { getBrand } from '@/lib/brand-server';
 
 export const dynamic = 'force-dynamic';
 
-export default async function SearchPage({ searchParams }: { searchParams: { q?: string | string[] } }) {
+export default async function SearchPage(props: { searchParams: Promise<{ q?: string | string[] }> }) {
+  const searchParams = await props.searchParams;
   await getBrand();
   const q = (firstParam(searchParams.q) ?? '').trim();
   let results: EntrySummary[] = [];
 
   if (q) {
-    const { data, error } = await createClient().rpc('wiki_search', { p_query: q, p_limit: 60 });
+    const { data, error } = await (await createClient()).rpc('wiki_search', { p_query: q, p_limit: 60 });
     if (error) return <AccessDenied />;
     results = (data ?? []) as EntrySummary[];
   }

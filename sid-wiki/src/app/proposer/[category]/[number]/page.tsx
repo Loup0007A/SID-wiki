@@ -7,11 +7,12 @@ import { getBrand } from '@/lib/brand-server';
 
 export const dynamic = 'force-dynamic';
 
-export default async function ProposePage({ params }: { params: { category: string; number: string } }) {
+export default async function ProposePage(props: { params: Promise<{ category: string; number: string }> }) {
+  const params = await props.params;
   await getBrand();
   const n = parseNumber(params.number);
   if (!isCategory(params.category) || n === null) notFound();
-  const { data, error } = await createClient().rpc('wiki_get', { p_category: params.category, p_number: n });
+  const { data, error } = await (await createClient()).rpc('wiki_get', { p_category: params.category, p_number: n });
   if (error) return <AccessDenied />;
   if (!data) notFound();
   const e = data as EntryFull;

@@ -10,7 +10,7 @@ export const dynamic = 'force-dynamic';
 
 export default async function ProfilesPage() {
   await getBrand();
-  const supabase = createClient();
+  const supabase = await createClient();
   const [{ data, error }, { data: stand }] = await Promise.all([supabase.rpc('wiki_profiles_list'), supabase.rpc('wiki_stand_image_get')]);
   if (isMissingFunction(error)) return <MigrationNeeded file="0206_wiki_profiles.sql" />;
   if (error) return <AccessDenied />;

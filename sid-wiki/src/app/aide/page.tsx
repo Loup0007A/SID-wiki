@@ -28,7 +28,7 @@ const code = 'rounded bg-[color:var(--felt-2)] px-1.5 py-0.5 font-typewriter tex
 
 export default async function HelpPage() {
   await getBrand();
-  const { data: isAdmin } = await createClient().rpc('wiki_is_admin');
+  const { data: isAdmin } = await (await createClient()).rpc('wiki_is_admin');
 
   return (
     <div className="mx-auto max-w-4xl">

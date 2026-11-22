@@ -6,12 +6,13 @@ import { getBrand } from '@/lib/brand-server';
 
 export const dynamic = 'force-dynamic';
 
-export default async function EditPage({ params }: { params: { category: string; number: string } }) {
+export default async function EditPage(props: { params: Promise<{ category: string; number: string }> }) {
+  const params = await props.params;
   await getBrand();
   if (!isCategory(params.category)) notFound();
   const category = params.category;
 
-  const supabase = createClient();
+  const supabase = await createClient();
   const { data: isAdmin } = await supabase.rpc('wiki_is_admin');
   if (isAdmin !== true) redirect('/');
 

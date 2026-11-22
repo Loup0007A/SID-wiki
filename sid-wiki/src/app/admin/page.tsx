@@ -7,7 +7,7 @@ export const dynamic = 'force-dynamic';
 
 export default async function AdminPage() {
   await getBrand();
-  const supabase = createClient();
+  const supabase = await createClient();
   const { data: isAdmin } = await supabase.rpc('wiki_is_admin');
   if (isAdmin !== true) redirect('/');
   return <AdminDashboard />;

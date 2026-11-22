@@ -23,12 +23,13 @@ import SightingsMap from '@/components/SightingsMap';
 
 export const dynamic = 'force-dynamic';
 
-export default async function EntryPage({ params }: { params: { category: string; number: string } }) {
+export default async function EntryPage(props: { params: Promise<{ category: string; number: string }> }) {
+  const params = await props.params;
   await getBrand();
   const n = parseNumber(params.number);
   if (!isCategory(params.category) || n === null) notFound();
 
-  const supabase = createClient();
+  const supabase = await createClient();
   const { data, error } = await supabase.rpc('wiki_get', { p_category: params.category, p_number: n });
   if (error) return <AccessDenied />;
   if (!data) notFound();

@@ -14,11 +14,12 @@ export const dynamic = 'force-dynamic';
 
 const UUID_RE = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 
-export default async function ProfilePage({ params }: { params: { id: string } }) {
+export default async function ProfilePage(props: { params: Promise<{ id: string }> }) {
+  const params = await props.params;
   await getBrand();
   if (!UUID_RE.test(params.id)) notFound();
 
-  const supabase = createClient();
+  const supabase = await createClient();
   const [{ data, error }, { data: stand }] = await Promise.all([
     supabase.rpc('wiki_profile_get', { p_id: params.id }),
     supabase.rpc('wiki_stand_image_get'),

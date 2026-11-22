@@ -193,3 +193,10 @@ règlent sur le Dossier Central (Réglages → Affichage) et valent ici
   sites, migration 0125 du Dossier Central).
 - **Contraste renforcé** : classe `contraste-fort` (réglage du Dossier
   Central), règles en fin de `globals.css`.
+
+## Lot 100 — Next 16
+
+- Next 16.4.6 et React 19 (Next 14 n'est plus corrigé).
+- `createClient()` serveur asynchrone, `middleware.ts` devient `proxy.ts`,
+  build avec `--webpack`, `npm run lint` passe par ESLint.
+- Node 20.9 minimum sur Vercel. Détails : `CHANGELOG_LOT100_NEXT16.md`.

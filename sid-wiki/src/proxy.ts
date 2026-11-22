@@ -3,7 +3,7 @@ import { NextResponse, type NextRequest } from 'next/server';
 import { sessionExpiry, sessionStillFresh } from '@/lib/supabase/sessionCookie';
 import { withComfortCookie } from '@/lib/comfortCookie';
 
-export async function middleware(request: NextRequest) {
+export async function proxy(request: NextRequest) {
   const isLogin = request.nextUrl.pathname.startsWith('/login');
   // Pages légales : lisibles sans être connecté.
   const isPublic = ['/cgu', '/confidentialite'].some((p) => request.nextUrl.pathname.startsWith(p));

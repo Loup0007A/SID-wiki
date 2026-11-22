@@ -56,9 +56,12 @@ function plusGrand(l: Ligne): 'a' | 'b' | null {
   return x.n > y.n ? 'a' : 'b';
 }
 
-export default async function ComparerPage({ searchParams }: { searchParams: Record<string, string | string[] | undefined> }) {
+export default async function ComparerPage(
+  props: { searchParams: Promise<Record<string, string | string[] | undefined>> }
+) {
+  const searchParams = await props.searchParams;
   await getBrand();
-  const supabase = createClient();
+  const supabase = await createClient();
   const refA = lireRef(firstParam(searchParams.a));
   const refB = lireRef(firstParam(searchParams.b));
 

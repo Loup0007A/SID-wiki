@@ -9,7 +9,7 @@ export const dynamic = 'force-dynamic';
 
 export default async function TagsPage() {
   await getBrand();
-  const { data, error } = await createClient().rpc('wiki_all_tags');
+  const { data, error } = await (await createClient()).rpc('wiki_all_tags');
   if (error) return <AccessDenied />;
   const rows = (data ?? []) as { category: Category; tag: string; total: number }[];
 

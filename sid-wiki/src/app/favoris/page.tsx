@@ -11,7 +11,7 @@ export const dynamic = 'force-dynamic';
 
 export default async function FavoritesPage() {
   await getBrand();
-  const supabase = createClient();
+  const supabase = await createClient();
   const [{ data, error }, { data: notesData }] = await Promise.all([supabase.rpc('wiki_favorites_list'), supabase.rpc('wiki_notes_list')]);
   if (error) return <AccessDenied />;
   const notes = (notesData ?? []) as { category: Category; number: number; title: string; body: string }[];

@@ -53,8 +53,8 @@ export function HeaderView({ signedIn, isAdmin }: { signedIn: boolean; isAdmin: 
 }
 
 export default async function Header() {
-  const supabase = createClient();
-  // Session lue dans le cookie (déjà rafraîchi par le middleware) : pas
+  const supabase = await createClient();
+  // Session lue dans le cookie (déjà rafraîchi par le proxy) : pas
   // d'aller-retour vers le serveur d'authentification. La base vérifie le
   // jeton à chaque requête (wiki_is_admin ci-dessous comprise).
   const {
