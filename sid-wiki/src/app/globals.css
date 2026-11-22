@@ -1573,3 +1573,38 @@ body { overflow-wrap: break-word; } /* Lot 95 */
 }
 :root.sombre .rc-fenetre { --rc-ink: var(--creme); --rc-bg: var(--surface); border-color: rgb(0 0 0); }
 @media (max-width: 639px) { .rc-bouton-texte { display: none; } }
+
+/* =========================================================
+   Contraste renforcé (Lot 98, Réglages du Dossier Central) : textes
+   secondaires (olive-*) à la couleur du texte principal, fond uni,
+   bordures marquées, cadre de focus épais.
+   ========================================================= */
+:root.contraste-fort, :root.contraste-fort * { --t-o6: var(--t-ink); --t-o7: var(--t-ink); --t-o8: var(--t-ink); --t-brass3: var(--t-ink); }
+:root.contraste-fort .fond { background: rgb(var(--fond)); }
+:root.contraste-fort .fond::after, :root.contraste-fort .fond-particules { display: none; }
+:root.contraste-fort [class*="text-paper/"] { color: rgb(var(--t-ink)); }
+:root.contraste-fort :is(.opacity-60, .opacity-70, .opacity-75, .opacity-80) { opacity: 1; }
+:root.contraste-fort :focus-visible { outline: 3px solid rgb(var(--t-ink)) !important; outline-offset: 2px; }
+:root.contraste-fort ::placeholder { color: currentColor; opacity: 0.8; }
+
+/* --- Épingles (Lot 98, Epingles.tsx) --- */
+.epingle-bouton {
+  display: inline-flex; align-items: center; gap: 0.35rem; min-height: 2.5rem; padding: 0.3rem 0.9rem; border-radius: 0.5rem;
+  border: 2px solid currentColor; font-weight: 600;
+}
+.epingle-bouton[aria-pressed="true"] { background: rgb(var(--t-ink) / 0.14); }
+.epingle-bouton:disabled { opacity: 0.6; }
+.epingle-erreur { display: block; margin-top: 0.25rem; font-size: 0.85rem; color: rgb(var(--t-stamp)); }
+
+/* --- Comparateur de fiches (Lot 98) --- */
+.cmp-grille { display: grid; grid-template-columns: minmax(7rem, 0.8fr) 1fr 1fr; }
+.cmp-grille > * > *, .cmp-grille > * { min-width: 0; }
+.cmp-grille > [role="row"] > * { padding: 0.55rem 0.75rem; border-bottom: 1px solid var(--rule); }
+.cmp-label { font-weight: 600; color: rgb(var(--t-o8)); }
+.cmp-plus { font-weight: 700; }
+.cmp-plus::after { content: " ▲"; font-size: 0.7em; color: rgb(var(--t-stamp)); }
+.cmp-diff { background: rgb(var(--t-ink) / 0.06); }
+@media (max-width: 560px) {
+  .cmp-grille { grid-template-columns: 1fr 1fr; }
+  .cmp-grille > .cmp-label { grid-column: 1 / -1; border-bottom: 0; padding-bottom: 0; }
+}

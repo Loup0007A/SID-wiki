@@ -183,3 +183,13 @@ règlent sur le Dossier Central (Réglages → Affichage) et valent ici
 - **En-têtes** : `en-tetes-securite.js` (identique sur les trois sites) : CSP,
   HSTS, Permissions-Policy, nosniff, SAMEORIGIN, COOP.
 - **Secrets** : `npm run secrets` (`SCELLE_CLE=…` pour la phrase du sceau).
+
+## Lot 98 — Comparateur, épingles, contraste
+
+- **Comparateur** : `/comparer?a=<catégorie>/<numéro>&b=…`
+  (`src/app/comparer/page.tsx`), bouton « Comparer » des fiches, menu.
+- **Épingles** : les favoris sont les épingles des fiches ; elles s'affichent
+  en tête de Ctrl+K (`src/components/Epingles.tsx`, identique sur les trois
+  sites, migration 0125 du Dossier Central).
+- **Contraste renforcé** : classe `contraste-fort` (réglage du Dossier
+  Central), règles en fin de `globals.css`.

@@ -78,6 +78,7 @@ export default function MobileNav({ isAdmin }: { isAdmin: boolean }) {
                 ['/hasard', 'hasard', 'Hasard'],
                 ['/propositions', 'propose', 'Proposer'],
                 ['/tags', 'tags', 'Tags'],
+                ['/comparer', 'tags', 'Comparer'],
                 ['/aide', 'aide', 'Aide'],
                 ['/confidentialite', 'aide', 'Données'],
               ] as const).map(([href, icon, label]) => (

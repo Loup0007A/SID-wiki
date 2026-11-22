@@ -48,6 +48,11 @@ export default async function EntryPage({ params }: { params: { category: string
     <div className="no-print flex flex-wrap items-center gap-2">
       <FavoriteButton category={entry.category} number={entry.number} initial={entry.favorited} />
       <EntryTools title={entry.title ?? ''} />
+      {entry.discovered && (
+        <Link href={`/comparer?a=${entry.category}/${pad(entry.number)}`} className="btn-ghost">
+          Comparer
+        </Link>
+      )}
       <ListenButton title={entry.title ?? ''} summary={entry.summary ?? null} rows={infoRows} content={entry.content ?? null} />
       {isAdmin && (
         <Link href={`/admin/edit/${entry.category}/${pad(entry.number)}`} className="btn-ghost">
